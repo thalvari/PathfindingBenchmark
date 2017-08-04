@@ -5,7 +5,9 @@
  */
 package pathfindingbenchmark.gui;
 
+import pathfindingbenchmark.algos.Dijkstra;
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *
@@ -15,17 +17,13 @@ public class Main {
 
     public static void main(String[] args) {
         Grid grid = new Grid("dao", "arena");
-        String[][] mapData = grid.getMapData();
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                System.out.print(mapData[y][x]);
-            }
-            System.out.println("");
-        }
-        System.out.println(grid.getAdjList(53));
-        System.out.println(grid.getCost(53, 54));
-        System.out.println(grid.getCost(53, 101));
-        System.out.println(grid.getCost(53, 102));
-        System.out.println(grid.getCost(53, 103));
+        Dijkstra dijkstra = new Dijkstra(grid);
+//        Node s = new Node(1, 10, grid);
+//        Node t = new Node(46, 15, grid);
+        Node s = new Node(1, 7, grid);
+        Node t = new Node(47, 46, grid);
+        double cost = dijkstra.run(s, t);
+        dijkstra.printShortestPath(s, t);
+        System.out.println(cost);
     }
 }

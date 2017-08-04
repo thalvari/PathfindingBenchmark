@@ -18,8 +18,9 @@ public class Grid {
 
     private int height;
     private int width;
+    private int n;
     private String[][] mapData;
-    private List<Integer>[] adjList;
+    private List<Node>[] adjList;
 
     public Grid(String game, String map) {
         List<String> lines = readFile(game, map);
@@ -43,6 +44,7 @@ public class Grid {
     private void parseMapData(List<String> lines) {
         height = Integer.parseInt(lines.get(1).substring("height ".length()));
         width = Integer.parseInt(lines.get(2).substring("width ".length()));
+        n = height * width;
         mapData = new String[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -59,92 +61,58 @@ public class Grid {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (!isPassable(y, x)) {
+                if (!isPassable(x, y)) {
                     continue;
                 }
-                checkHorVer(y, x);
-                checkDiag(y, x);
+                checkNeighbours(x, y);
             }
         }
     }
 
-    private void checkHorVer(int y, int x) {
-        check(y, x, y - 1, x);
-        check(y, x, y + 1, x);
-        check(y, x, y, x - 1);
-        check(y, x, y, x + 1);
+    private void checkNeighbours(int x, int y) {
+        check(x, y, -1, 0);
+        check(x, y, 1, 0);
+        check(x, y, 0, -1);
+        check(x, y, 0, 1);
+        check(x, y, -1, -1);
+        check(x, y, -1, 1);
+        check(x, y, 1, -1);
+        check(x, y, 1, 1);
     }
 
-    private void check(int y0, int x0, int y1, int x1) {
-        if (isInBounds(y1, x1) && isPassable(y1, x1)) {
-            adjList[getIdx(y0, x0)].add(getIdx(y1, x1));
+    private void check(int x, int y, int xDiff, int yDiff) {
+        int x1 = x + xDiff;
+        int y1 = y + yDiff;
+        if (!isInBounds(x1, y1) || !isPassable(x1, y1)) {
+            return;
+        }
+
+        if (xDiff == 0 || yDiff == 0) {
+            adjList[getIdx(x, y)].add(new Node(x1, y1, getIdx(x1, y1), 1));
+        } else if (isPassable(x, y1) || isPassable(x1, y)) {
+            adjList[getIdx(x, y)].add(new Node(x1, y1, getIdx(x1, y1),
+                    Math.sqrt(2)));
         }
     }
 
-    private boolean isInBounds(int y, int x) {
-        return y >= 0 && y < height && x >= 0 && x < width;
-    }
-
-    private boolean isPassable(int y, int x) {
-        return mapData[y][x].equals(".");
-    }
-
-    private int getIdx(int y, int x) {
+    public Integer getIdx(int x, int y) {
         return y * width + x + 1;
     }
 
-    private void checkDiag(int y, int x) {
-        if (isInBounds(y - 1, x - 1) && isPassable(y - 1, x - 1)
-                && (isPassable(y - 1, x) || isPassable(y, x - 1))) {
-            adjList[getIdx(y, x)].add(getIdx(y - 1, x - 1));
-        }
-        if (isInBounds(y - 1, x + 1) && isPassable(y - 1, x + 1)
-                && (isPassable(y - 1, x) || isPassable(y, x + 1))) {
-            adjList[getIdx(y, x)].add(getIdx(y - 1, x + 1));
-        }
-        if (isInBounds(y + 1, x - 1) && isPassable(y + 1, x - 1)
-                && (isPassable(y + 1, x) || isPassable(y, x - 1))) {
-            adjList[getIdx(y, x)].add(getIdx(y + 1, x - 1));
-        }
-        if (isInBounds(y + 1, x + 1) && isPassable(y + 1, x + 1)
-                && (isPassable(y + 1, x) || isPassable(y, x + 1))) {
-            adjList[getIdx(y, x)].add(getIdx(y + 1, x + 1));
-        }
+    private boolean isInBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    public double getCost(int u, int v) {
-        if (!adjList[u].contains(v)) {
-            return Double.MAX_VALUE;
-        } else if (getY(u) != getY(v) && getX(u) != getX(v)) {
-            return Math.sqrt(2);
-        } else {
-            return 1;
-        }
+    private boolean isPassable(int x, int y) {
+        return mapData[y][x].equals(".");
     }
 
-    private int getY(int u) {
-        int y = 0;
-        while (u > 0) {
-            u -= width;
-            y++;
-        }
-        return y;
+    public List<Node> getAdjList(Node u) {
+        return adjList[u.getIdx()];
     }
 
-    private int getX(int u) {
-        return u % width;
-    }
-
-    public List<Integer> getAdjList(int u) {
-        return adjList[u];
-    }
-
-    public List<Integer>[] getAdjList() {
-        return adjList;
-    }
-
-    public String[][] getMapData() {
-        return mapData;
+    public String[][] cloneMapData() {
+        return mapData.clone();
     }
 
     public int getHeight() {
@@ -153,5 +121,26 @@ public class Grid {
 
     public int getWidth() {
         return width;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+    public int getX(int idx) {
+        return (idx - 1) % width;
+    }
+
+    public int getY(int idx) {
+        int y = 0;
+        while (true) {
+            idx -= width;
+            if (idx > 0) {
+                y++;
+            } else {
+                break;
+            }
+        }
+        return y;
     }
 }
