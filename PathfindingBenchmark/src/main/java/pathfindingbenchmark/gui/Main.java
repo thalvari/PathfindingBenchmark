@@ -16,14 +16,12 @@ import pathfindingbenchmark.grid.Node;
 public class Main {
 
     public static void main(String[] args) {
-        Grid grid = new Grid("dao", "arena");
+        Grid grid = new Grid("dao", "lak110d");
         Dijkstra dijkstra = new Dijkstra(grid);
-//        Node s = new Node(1, 10, grid);
-//        Node t = new Node(46, 15, grid);
-        Node s = new Node(1, 7, grid);
-        Node t = new Node(47, 46, grid);
-        double cost = dijkstra.run(s, t);
-        dijkstra.printShortestPath(s, t);
-        System.out.println(cost);
+        Node s = new Node(26, 15, grid);
+        Node t = new Node(3, 11, grid);
+        dijkstra.run(s);
+        dijkstra.printShortestPath(t);
+        System.out.println(dijkstra.getRoundedCost(t));
     }
 }

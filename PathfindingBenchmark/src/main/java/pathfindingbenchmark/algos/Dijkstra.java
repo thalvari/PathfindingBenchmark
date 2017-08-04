@@ -5,11 +5,17 @@
  */
 package pathfindingbenchmark.algos;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 
 /**
+ * Dijkstran algoritmin toteutus.
  *
  * @author thalvari
  */
@@ -20,6 +26,11 @@ public class Dijkstra {
     private final Node path[];
     private final boolean visited[];
 
+    /**
+     * Konstruktori luo aputietorakenteet.
+     *
+     * @param grid Verkko.
+     */
     public Dijkstra(Grid grid) {
         this.grid = grid;
         cost = new double[grid.getN() + 1];
@@ -27,7 +38,12 @@ public class Dijkstra {
         visited = new boolean[grid.getN() + 1];
     }
 
-    public double run(Node s, Node t) {
+    /**
+     * Itse algoritmi laskee jokaisen solmun etäisyyden lähtösolmuun.
+     *
+     * @param s Lähtösolmu.
+     */
+    public void run(Node s) {
         init(s);
         PriorityQueue<Node> heap = new PriorityQueue();
         heap.add(new Node(s.getIdx(), 0.0, grid));
@@ -45,8 +61,6 @@ public class Dijkstra {
                 }
             }
         }
-
-        return cost[t.getIdx()];
     }
 
     private void init(Node s) {
@@ -66,21 +80,52 @@ public class Dijkstra {
         }
     }
 
-    public void printShortestPath(Node s, Node t) {
-        String[][] markedMapData = grid.cloneMapData();
-        markedMapData[t.getY()][t.getX()] = "X";
+    /**
+     * Palauttaa solmun etäisyyden lähtösolmuun.
+     *
+     * @param t Solmu.
+     * @return Etäisyys.
+     */
+    public double getCost(Node t) {
+        return cost[t.getIdx()];
+    }
+
+    /**
+     * Palauttaa solmun etäisyyden lähtösolmuun pyöristettynä kuten
+     * scenario-tiedostoissa.
+     *
+     * @param t Solmu.
+     * @return Etäisyys.
+     */
+    public String getRoundedCost(Node t) {
+        return new BigDecimal(getCost(t))
+                .round(new MathContext(6, RoundingMode.HALF_EVEN))
+                .stripTrailingZeros()
+                .toString();
+    }
+
+    /**
+     * Tulostaa verkon, jossa lyhin polku annettuun solmuun on merkitty.
+     *
+     * @param t Solmu.
+     */
+    public void printShortestPath(Node t) {
+        Grid tempGrid = grid.cloneGrid();
+        List<Node> nodesInPath = getShortestPath(t);
+//        tempGrid.markVisited(visited);
+        tempGrid.markPath(nodesInPath);
+        tempGrid.printGrid();
+    }
+
+    private List<Node> getShortestPath(Node t) {
+        List<Node> nodesInPath = new ArrayList();
+        nodesInPath.add(t);
         Node u = path[t.getIdx()];
         while (u != null) {
-            markedMapData[u.getY()][u.getX()] = "X";
+            nodesInPath.add(u);
             u = path[u.getIdx()];
         }
 
-        markedMapData[s.getY()][s.getX()] = "X";
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                System.out.print(markedMapData[y][x]);
-            }
-            System.out.println();
-        }
+        return nodesInPath;
     }
 }

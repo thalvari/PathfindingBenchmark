@@ -11,18 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Kartan esitys verkkona.
  *
  * @author thalvari
  */
 public class Grid {
 
+    private String game;
+    private String map;
     private int height;
     private int width;
-    private int n;
     private String[][] mapData;
     private List<Node>[] adjList;
 
+    /**
+     * Konstruktori lukee karttatiedoston ja ottaa talteen esitykset taulukkona
+     * ja vieruslistana.
+     *
+     * @param game Pelin nimen lyhenne.
+     * @param map Kartan nimi.
+     */
     public Grid(String game, String map) {
+        this.game = game;
+        this.map = map;
         List<String> lines = readFile(game, map);
         if (!lines.isEmpty()) {
             parseMapData(lines);
@@ -44,7 +55,6 @@ public class Grid {
     private void parseMapData(List<String> lines) {
         height = Integer.parseInt(lines.get(1).substring("height ".length()));
         width = Integer.parseInt(lines.get(2).substring("width ".length()));
-        n = height * width;
         mapData = new String[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -95,6 +105,13 @@ public class Grid {
         }
     }
 
+    /**
+     * Palauttaa koordinaatteja vastaavan solmun indeksin kartalla.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @return Solmun indeksi.
+     */
     public Integer getIdx(int x, int y) {
         return y * width + x + 1;
     }
@@ -107,30 +124,35 @@ public class Grid {
         return mapData[y][x].equals(".");
     }
 
+    /**
+     * Palauttaa solmun vieruslistan kartalla.
+     *
+     * @param u Solmu.
+     * @return Vieruslista.
+     */
     public List<Node> getAdjList(Node u) {
+        if (adjList == null) {
+            return null;
+        }
         return adjList[u.getIdx()];
     }
 
-    public String[][] cloneMapData() {
-        return mapData.clone();
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getN() {
-        return n;
-    }
-
+    /**
+     * Palauttaa indeksia vastaavan solmun x-koordinaatin.
+     *
+     * @param idx Indeksi.
+     * @return X-koordinaatti.
+     */
     public int getX(int idx) {
         return (idx - 1) % width;
     }
 
+    /**
+     * Palauttaa indeksia vastaavan solmun y-koordinaatin.
+     *
+     * @param idx Indeksi.
+     * @return Y-koordinaatti.
+     */
     public int getY(int idx) {
         int y = 0;
         while (true) {
@@ -143,4 +165,53 @@ public class Grid {
         }
         return y;
     }
+
+    /**
+     * Merkitsee polulla olevat solmut taulukkoesitykseen.
+     *
+     * @param nodesInPath Polun solmut.
+     */
+    public void markPath(List<Node> nodesInPath) {
+        for (Node node : nodesInPath) {
+            mapData[node.getY()][node.getX()] = "X";
+        }
+    }
+
+    /**
+     * Tulostaa taulukkoesityksen.
+     */
+    public void printGrid() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                System.out.print(mapData[y][x]);
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Kloonaa verkon.
+     *
+     * @return Verkko.
+     */
+    public Grid cloneGrid() {
+        return new Grid(game, map);
+    }
+
+    /**
+     * Palauttaa solmujen määrän.
+     *
+     * @return Solmujen määrä.
+     */
+    public int getN() {
+        return height * width;
+    }
+
+//    public void markVisited(boolean[] visited) {
+//        for (int i = 1; i <= getN(); i++) {
+//            if (visited[i]) {
+//                mapData[getY(i)][getX(i)] = "o";
+//            }
+//        }
+//    }
 }
