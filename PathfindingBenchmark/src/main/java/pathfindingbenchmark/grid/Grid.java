@@ -5,6 +5,7 @@
  */
 package pathfindingbenchmark.grid;
 
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -97,11 +98,13 @@ public class Grid {
             return;
         }
 
+        int idx = getIdx(x, y);
+        int idx1 = getIdx(x1, y1);
         if (xDiff == 0 || yDiff == 0) {
-            adjList[getIdx(x, y)].add(new Node(x1, y1, getIdx(x1, y1), 1));
-        } else if (isPassable(x, y1) || isPassable(x1, y)) {
-            adjList[getIdx(x, y)].add(new Node(x1, y1, getIdx(x1, y1),
-                    Math.sqrt(2)));
+            adjList[idx].add(new Node(x1, y1, idx1, BigDecimal.valueOf(1)));
+        } else if (isPassable(x, y1) && isPassable(x1, y)) {
+            adjList[idx].add(
+                    new Node(x1, y1, idx1, BigDecimal.valueOf(Math.sqrt(2))));
         }
     }
 

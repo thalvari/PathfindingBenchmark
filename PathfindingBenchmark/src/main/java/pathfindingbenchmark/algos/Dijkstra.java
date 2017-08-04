@@ -22,7 +22,7 @@ import pathfindingbenchmark.grid.Node;
 public class Dijkstra {
 
     private final Grid grid;
-    private final double cost[];
+    private final BigDecimal cost[];
     private final Node path[];
     private final boolean visited[];
 
@@ -33,7 +33,7 @@ public class Dijkstra {
      */
     public Dijkstra(Grid grid) {
         this.grid = grid;
-        cost = new double[grid.getN() + 1];
+        cost = new BigDecimal[grid.getN() + 1];
         path = new Node[grid.getN() + 1];
         visited = new boolean[grid.getN() + 1];
     }
@@ -46,7 +46,7 @@ public class Dijkstra {
     public void run(Node s) {
         init(s);
         PriorityQueue<Node> heap = new PriorityQueue();
-        heap.add(new Node(s.getIdx(), 0.0, grid));
+        heap.add(new Node(s.getIdx(), BigDecimal.valueOf(0), grid));
         while (!heap.isEmpty()) {
             Node u = heap.poll();
             if (visited[u.getIdx()]) {
@@ -66,16 +66,16 @@ public class Dijkstra {
     private void init(Node s) {
         for (int i = 1; i <= grid.getN(); i++) {
             visited[i] = false;
-            cost[i] = Double.MAX_VALUE;
+            cost[i] = BigDecimal.valueOf(Double.MAX_VALUE);
             path[i] = null;
         }
 
-        cost[s.getIdx()] = 0;
+        cost[s.getIdx()] = BigDecimal.valueOf(0);
     }
 
     private void relax(Node u, Node v) {
-        if (cost[v.getIdx()] > cost[u.getIdx()] + v.getCost()) {
-            cost[v.getIdx()] = cost[u.getIdx()] + v.getCost();
+        if (cost[v.getIdx()].compareTo(cost[u.getIdx()].add(v.getCost())) > 0) {
+            cost[v.getIdx()] = cost[u.getIdx()].add(v.getCost());
             path[v.getIdx()] = u;
         }
     }
@@ -86,7 +86,7 @@ public class Dijkstra {
      * @param t Solmu.
      * @return Etäisyys.
      */
-    public double getCost(Node t) {
+    public BigDecimal getCost(Node t) {
         return cost[t.getIdx()];
     }
 
@@ -98,7 +98,7 @@ public class Dijkstra {
      * @return Etäisyys.
      */
     public String getRoundedCost(Node t) {
-        return new BigDecimal(getCost(t))
+        return getCost(t)
                 .round(new MathContext(6, RoundingMode.HALF_EVEN))
                 .stripTrailingZeros()
                 .toString();

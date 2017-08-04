@@ -68,13 +68,13 @@ public class GridTest {
     @Test
     public void testGetAdjList2() {
         List<Node> adjList = grid.getAdjList(new Node(3, 1, grid));
-        assertEquals(4, adjList.size());
+        assertEquals(3, adjList.size());
     }
 
     @Test
     public void testGetAdjList3() {
         List<Node> adjList = grid.getAdjList(new Node(19, 1, grid));
-        assertEquals(3, adjList.size());
+        assertEquals(1, adjList.size());
     }
 
     @Test

@@ -62,6 +62,16 @@ public class DijkstraTest {
     }
 
     @Test
+    public void testRun5() {
+        grid = new Grid("dao", "ost100d");
+        dijkstra = new Dijkstra(grid);
+        Node s = new Node(753, 420, grid);
+        Node t = new Node(137, 561, grid);
+        dijkstra.run(s);
+        assertEquals("1122.11", dijkstra.getRoundedCost(t));
+    }
+
+    @Test
     public void testprintShortestPath() {
         grid = new Grid("dao", "lak110d");
         dijkstra = new Dijkstra(grid);
@@ -84,10 +94,10 @@ public class DijkstraTest {
         assertTrue(out.contains("@TTTTTTTT.......TTT.....TT..TT"));
         assertTrue(out.contains("@TTTTTTTT.......TTT.........TT"));
         assertTrue(out.contains("@TTX........................TT"));
-        assertTrue(out.contains("@TT.XXXXXXX.................TT"));
-        assertTrue(out.contains("@TT........XXXXXXXX.........TT"));
-        assertTrue(out.contains("@TT.............TTTXXXXX....TT"));
-        assertTrue(out.contains("TTTT.....TTTTTTTTTTTTTTTXXXTTT"));
+        assertTrue(out.contains("@TT.X.......................TT"));
+        assertTrue(out.contains("@TT..XXXXXXXXXXXXXXX........TT"));
+        assertTrue(out.contains("@TT.............TTT.XXXXX...TT"));
+        assertTrue(out.contains("TTTT.....TTTTTTTTTTTTTTT.XXTTT"));
         assertTrue(out.contains("TTTTTTTTTTTTTTTTTTTTTTTT...TTT"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));

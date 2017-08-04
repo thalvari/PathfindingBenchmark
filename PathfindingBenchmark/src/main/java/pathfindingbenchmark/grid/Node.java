@@ -5,6 +5,8 @@
  */
 package pathfindingbenchmark.grid;
 
+import java.math.BigDecimal;
+
 /**
  * Solmuolio.
  *
@@ -15,7 +17,7 @@ public class Node implements Comparable<Node> {
     private final int x;
     private final int y;
     private final Integer idx;
-    private Double cost;
+    private BigDecimal cost;
 
     /**
      * Konstruktori.
@@ -25,7 +27,7 @@ public class Node implements Comparable<Node> {
      * @param idx Solmun indeksi.
      * @param cost Solmuun siirtymisen hinta.
      */
-    public Node(int x, int y, int idx, double cost) {
+    public Node(int x, int y, int idx, BigDecimal cost) {
         this.x = x;
         this.y = y;
         this.idx = idx;
@@ -40,7 +42,7 @@ public class Node implements Comparable<Node> {
      * @param grid Verkko.
      */
     public Node(int x, int y, Grid grid) {
-        this(x, y, grid.getIdx(x, y), 0);
+        this(x, y, grid.getIdx(x, y), null);
     }
 
     /**
@@ -50,7 +52,7 @@ public class Node implements Comparable<Node> {
      * @param cost Solmuun siirtymisen hinta.
      * @param grid Verkko.
      */
-    public Node(int idx, double cost, Grid grid) {
+    public Node(int idx, BigDecimal cost, Grid grid) {
         this(grid.getX(idx), grid.getY(idx), idx, cost);
     }
 
@@ -86,17 +88,13 @@ public class Node implements Comparable<Node> {
      *
      * @return Hinta.
      */
-    public double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
     @Override
     public int compareTo(Node o) {
-        if (cost.equals(o.cost)) {
-            return getIdx().compareTo(o.getIdx());
-        } else {
-            return cost.compareTo(o.cost);
-        }
+        return cost.compareTo(o.cost);
     }
 
     @Override
