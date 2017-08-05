@@ -5,8 +5,6 @@
  */
 package pathfindingbenchmark.grid;
 
-import java.math.BigDecimal;
-
 /**
  * Solmuolio.
  *
@@ -16,22 +14,37 @@ public class Node implements Comparable<Node> {
 
     private final int x;
     private final int y;
-    private final Integer idx;
-    private BigDecimal cost;
+    private final double cost;
+    private final double h;
+    private final Grid grid;
 
     /**
      * Konstruktori.
      *
      * @param x X-koordinaatti.
      * @param y Y-koordinaatti.
-     * @param idx Solmun indeksi.
      * @param cost Solmuun siirtymisen hinta.
+     * @param h Heuristinen arvo.
+     * @param grid Verkko.
      */
-    public Node(int x, int y, int idx, BigDecimal cost) {
+    public Node(int x, int y, double cost, double h, Grid grid) {
         this.x = x;
         this.y = y;
-        this.idx = idx;
         this.cost = cost;
+        this.h = h;
+        this.grid = grid;
+    }
+
+    /**
+     * Vaihtoehtoinen konstruktori.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @param cost Solmuun siirtymisen hinta.
+     * @param grid Verkko.
+     */
+    public Node(int x, int y, double cost, Grid grid) {
+        this(x, y, cost, 0, grid);
     }
 
     /**
@@ -42,18 +55,16 @@ public class Node implements Comparable<Node> {
      * @param grid Verkko.
      */
     public Node(int x, int y, Grid grid) {
-        this(x, y, grid.getIdx(x, y), null);
+        this(x, y, 0, 0, grid);
     }
 
     /**
-     * Vaihtoehtoinen konstruktori.
+     * Palauttaa indeksin.
      *
-     * @param idx Solmun indeksi.
-     * @param cost Solmuun siirtymisen hinta.
-     * @param grid Verkko.
+     * @return Indeksi.
      */
-    public Node(int idx, BigDecimal cost, Grid grid) {
-        this(grid.getX(idx), grid.getY(idx), idx, cost);
+    public int getIdx() {
+        return grid.getIdx(x, y);
     }
 
     /**
@@ -75,31 +86,25 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Palauttaa indeksin.
-     *
-     * @return Indeksi.
-     */
-    public Integer getIdx() {
-        return idx;
-    }
-
-    /**
      * Palauttaa solmuun siirtymisen hinnan.
      *
      * @return Hinta.
      */
-    public BigDecimal getCost() {
+    public double getCost() {
         return cost;
+    }
+
+    /**
+     * Palauttaa solmun heuristisen arvon.
+     *
+     * @return Heuristinen arvo.
+     */
+    public double getH() {
+        return h;
     }
 
     @Override
     public int compareTo(Node o) {
-        return cost.compareTo(o.cost);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        Node o = (Node) obj;
-        return idx.equals(o.idx);
+        return Double.valueOf(cost).compareTo(o.cost);
     }
 }

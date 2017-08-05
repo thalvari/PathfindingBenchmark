@@ -5,6 +5,7 @@
  */
 package pathfindingbenchmark.grid;
 
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,53 +41,51 @@ public class GridTest {
     }
 
     @Test
-    public void testGetX() {
-        assertEquals(0, grid.getX(1));
-    }
-
-    @Test
-    public void testGetX2() {
-        assertEquals(0, grid.getX(50));
-    }
-
-    @Test
-    public void testGetY() {
-        assertEquals(0, grid.getY(1));
-    }
-
-    @Test
-    public void testGetY2() {
-        assertEquals(1, grid.getY(50));
-    }
-
-    @Test
     public void testGetAdjList() {
-        List<Node> adjList = grid.getAdjList(new Node(5, 0, grid));
-        assertEquals(0, adjList.size());
+        assertEquals(0, grid.getAdjList(new Node(5, 0, grid)).size());
     }
 
     @Test
     public void testGetAdjList2() {
-        List<Node> adjList = grid.getAdjList(new Node(3, 1, grid));
-        assertEquals(3, adjList.size());
+        assertEquals(3, grid.getAdjList(new Node(3, 1, grid)).size());
     }
 
     @Test
     public void testGetAdjList3() {
-        List<Node> adjList = grid.getAdjList(new Node(19, 1, grid));
-        assertEquals(1, adjList.size());
+        assertEquals(1, grid.getAdjList(new Node(19, 1, grid)).size());
     }
 
     @Test
     public void testGetAdjList4() {
-        List<Node> adjList = grid.getAdjList(new Node(5, 5, grid));
-        assertTrue(adjList.contains(new Node(4, 5, grid)));
-        assertTrue(adjList.contains(new Node(6, 5, grid)));
-        assertTrue(adjList.contains(new Node(5, 4, grid)));
-        assertTrue(adjList.contains(new Node(5, 6, grid)));
-        assertTrue(adjList.contains(new Node(4, 4, grid)));
-        assertTrue(adjList.contains(new Node(4, 6, grid)));
-        assertTrue(adjList.contains(new Node(6, 4, grid)));
-        assertTrue(adjList.contains(new Node(6, 6, grid)));
+        assertEquals(8, grid.getAdjList(new Node(5, 5, grid)).size());
+    }
+
+    @Test
+    public void testGetAdjList5() {
+        List<Node> adjList = grid.getAdjList(new Node(14, 3, grid));
+        List<Integer> adjListIdxs = new ArrayList();
+        for (Node u : adjList) {
+            adjListIdxs.add(u.getIdx());
+        }
+
+        assertTrue(adjListIdxs.contains(grid.getIdx(13, 3)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(15, 3)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(14, 2)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(14, 4)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(13, 2)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(13, 4)));
+        assertTrue(adjListIdxs.contains(grid.getIdx(15, 4)));
+    }
+
+    @Test
+    public void testGetAdjList6() {
+        grid = new Grid("local", "empty_64");
+        assertEquals(3, grid.getAdjList(new Node(0, 0, grid)).size());
+    }
+
+    @Test
+    public void testGetAdjList7() {
+        grid = new Grid("local", "empty_64");
+        assertEquals(3, grid.getAdjList(new Node(63, 63, grid)).size());
     }
 }

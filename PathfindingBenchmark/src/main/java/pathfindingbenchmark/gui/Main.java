@@ -5,7 +5,8 @@
  */
 package pathfindingbenchmark.gui;
 
-import pathfindingbenchmark.algos.Dijkstra;
+import pathfindingbenchmark.algo.Algo;
+import pathfindingbenchmark.algo.Dijkstra;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 
@@ -16,12 +17,12 @@ import pathfindingbenchmark.grid.Node;
 public class Main {
 
     public static void main(String[] args) {
-        Grid grid = new Grid("dao", "arena2");
-        Dijkstra dijkstra = new Dijkstra(grid);
-        Node s = new Node(101, 111, grid);
-        Node t = new Node(90, 123, grid);
-        dijkstra.run(s);
-        dijkstra.printShortestPath(t);
-        System.out.println(dijkstra.getRoundedCost(t));
+        Grid grid = new Grid("dao", "lak110d");
+        Algo algo = new Dijkstra(grid);
+        Node s = new Node(14, 4, grid);
+        Node t = new Node(27, 9, grid);
+        algo.run(s, t);
+        algo.printShortestPath();
+        System.out.println(algo.getRoundedCost());
     }
 }
