@@ -105,6 +105,6 @@ public class Node implements Comparable<Node> {
 
     @Override
     public int compareTo(Node o) {
-        return Double.valueOf(cost).compareTo(o.cost);
+        return Double.valueOf(cost + h).compareTo(o.cost + o.h);
     }
 }

@@ -63,6 +63,37 @@ public abstract class Algo {
     }
 
     /**
+     * Alustaa reitinhakualgon kentät ja aputietorakenteet.
+     *
+     * @param s Lähtösolmu.
+     * @param t Maalisolmu.
+     */
+    protected void init(Node s, Node t) {
+        this.s = s;
+        this.t = t;
+        for (int i = 1; i <= grid.getN(); i++) {
+            cost[i] = Double.MAX_VALUE;
+            path[i] = null;
+            visited[i] = false;
+        }
+
+        cost[s.getIdx()] = 0;
+    }
+
+    /**
+     * Päivittää aputietorakenteiden arvot.
+     *
+     * @param u Solmu.
+     * @param v Naapurisolmu.
+     */
+    protected void relax(Node u, Node v) {
+        if (cost[v.getIdx()] > cost[u.getIdx()] + v.getCost()) {
+            cost[v.getIdx()] = cost[u.getIdx()] + v.getCost();
+            path[v.getIdx()] = u;
+        }
+    }
+
+    /**
      * Laskee lyhimmän polun pituuden lähtösolmusta maalisolmuun ja ottaa
      * kyseisen polun talteen.
      *
@@ -93,11 +124,20 @@ public abstract class Algo {
      * merkitty.
      */
     public void printShortestPath() {
-        String[][] mapData = grid.getMapData().clone();
+        String[][] mapData = cloneMapData();
         List<Node> nodesInPath = getShortestPath();
-//        markVisited(mapData);
+        markVisited(mapData);
         markPath(mapData, nodesInPath);
         printMapData(mapData);
+    }
+
+    private String[][] cloneMapData() {
+        String[][] mapData = grid.getMapData().clone();
+        for (int i = 0; i < mapData.length; i++) {
+            mapData[i] = grid.getMapData()[i].clone();
+        }
+
+        return mapData;
     }
 
     private List<Node> getShortestPath() {
@@ -127,11 +167,11 @@ public abstract class Algo {
         }
     }
 
-//    public void markVisited(String[][] mapData) {
-//        for (int i = 1; i <= grid.getN(); i++) {
-//            if (visited[i]) {
-//                mapData[grid.getY(i)][grid.getX(i)] = "o";
-//            }
-//        }
-//    }
+    private void markVisited(String[][] mapData) {
+        for (int i = 1; i <= grid.getN(); i++) {
+            if (visited[i]) {
+                mapData[grid.getY(i)][grid.getX(i)] = "o";
+            }
+        }
+    }
 }

@@ -67,10 +67,9 @@ public class Grid {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (!isPassable(x, y)) {
-                    continue;
+                if (isPassable(x, y)) {
+                    createAdjListNode(x, y);
                 }
-                createAdjListNode(x, y);
             }
         }
     }
@@ -154,5 +153,34 @@ public class Grid {
      */
     public String[][] getMapData() {
         return mapData;
+    }
+
+    /**
+     * Palauttaa indeksia vastaavan solmun x-koordinaatin.
+     *
+     * @param idx Indeksi.
+     * @return X-koordinaatti.
+     */
+    public int getX(int idx) {
+        return (idx - 1) % width;
+    }
+
+    /**
+     * Palauttaa indeksia vastaavan solmun y-koordinaatin.
+     *
+     * @param idx Indeksi.
+     * @return Y-koordinaatti.
+     */
+    public int getY(int idx) {
+        int y = 0;
+        while (true) {
+            idx -= width;
+            if (idx > 0) {
+                y++;
+            } else {
+                break;
+            }
+        }
+        return y;
     }
 }

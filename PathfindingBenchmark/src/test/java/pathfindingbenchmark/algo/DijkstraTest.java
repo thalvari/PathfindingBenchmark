@@ -63,9 +63,9 @@ public class DijkstraTest {
     @Test
     public void testRun5() {
         grid = new Grid("dao", "ost100d");
-        dijkstra = new Dijkstra(grid);
         s = new Node(753, 420, grid);
         t = new Node(137, 561, grid);
+        dijkstra = new Dijkstra(grid);
         dijkstra.run(s, t);
         assertEquals("1122.11", dijkstra.getRoundedCost());
     }
@@ -73,9 +73,9 @@ public class DijkstraTest {
     @Test
     public void testRun6() {
         grid = new Grid("local", "empty_64");
-        dijkstra = new Dijkstra(grid);
         s = new Node(0, 0, grid);
         t = new Node(63, 63, grid);
+        dijkstra = new Dijkstra(grid);
         dijkstra.run(s, t);
         assertEquals("89.0955", dijkstra.getRoundedCost());
     }
