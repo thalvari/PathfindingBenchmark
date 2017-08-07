@@ -63,7 +63,7 @@ public class GridTest {
     @Test
     public void testGetAdjList5() {
         List<Node> adjList = grid.getAdjList(new Node(14, 3, grid));
-        List<Integer> adjListIdxs = new ArrayList();
+        List<Integer> adjListIdxs = new ArrayList<>();
         for (Node u : adjList) {
             adjListIdxs.add(u.getIdx());
         }

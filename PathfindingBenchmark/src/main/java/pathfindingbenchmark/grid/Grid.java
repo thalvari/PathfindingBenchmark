@@ -31,18 +31,19 @@ public class Grid {
      */
     public Grid(String game, String map) {
         List<String> lines = readFile(game, map);
-        if (!lines.isEmpty()) {
+        if (lines != null) {
             parseMapData(lines);
             createAdjList();
         }
     }
 
     private List<String> readFile(String game, String map) {
-        List<String> lines = new ArrayList();
+        List<String> lines = new ArrayList<>();
         try {
             Files.lines(Paths.get("maps/" + game + "/" + map + ".map"))
-                    .forEach(line -> lines.add(line));
+                    .forEach(lines::add);
         } catch (Exception e) {
+            return null;
         }
 
         return lines;
@@ -60,9 +61,9 @@ public class Grid {
     }
 
     private void createAdjList() {
-        adjList = new ArrayList[height * width + 1];
+        adjList = new List[height * width + 1];
         for (int i = 1; i <= getN(); i++) {
-            adjList[i] = new ArrayList();
+            adjList[i] = new ArrayList<>();
         }
 
         for (int y = 0; y < height; y++) {

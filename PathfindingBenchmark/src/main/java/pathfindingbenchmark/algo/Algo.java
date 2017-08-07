@@ -141,7 +141,7 @@ public abstract class Algo {
     }
 
     private List<Node> getShortestPath() {
-        List<Node> nodesInPath = new ArrayList();
+        List<Node> nodesInPath = new ArrayList<>();
         nodesInPath.add(t);
         Node u = path[t.getIdx()];
         while (u != null) {

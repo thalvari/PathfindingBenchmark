@@ -28,7 +28,7 @@ public class AStar extends Algo {
     @Override
     public void run(Node s, Node t) {
         init(s, t);
-        PriorityQueue<Node> heap = new PriorityQueue();
+        PriorityQueue<Node> heap = new PriorityQueue<>();
         heap.add(new Node(s.getX(), s.getY(), 0, heuristic(s), grid));
         while (!heap.isEmpty()) {
             Node u = heap.poll();
