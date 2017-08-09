@@ -6,7 +6,6 @@
 package pathfindingbenchmark.grid;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -16,25 +15,19 @@ import org.junit.Test;
 public class NodeTest {
 
     private static final double DELTA = 0.01;
-    private Grid grid;
-
-    @Before
-    public void setUp() {
-        grid = new Grid("dao", "arena");
-    }
+    private Node u;
 
     @Test
     public void testNode() {
-        Node u = new Node(0, 1, 2, 3, grid);
-        assertEquals(0, u.getX());
-        assertEquals(1, u.getY());
-        assertEquals(2, u.getCost(), DELTA);
-        assertEquals(3, u.getH(), DELTA);
+        u = new Node(1, Math.sqrt(2));
+        assertEquals(1, u.getIdx());
+        assertEquals(Math.sqrt(2), u.getPriority(), DELTA);
     }
 
     @Test
-    public void testGetIdx() {
-        Node u = new Node(1, 0, grid);
+    public void testNode2() {
+        u = new Node(2);
         assertEquals(2, u.getIdx());
+        assertEquals(0, u.getPriority(), DELTA);
     }
 }

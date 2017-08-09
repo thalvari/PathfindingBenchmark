@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import pathfindingbenchmark.datastructures.IntList;
 
 /**
  * Kartan esitys verkkona.
@@ -19,28 +20,27 @@ public class Grid {
 
     private int height;
     private int width;
-    private List<Node>[] adjList;
+    private IntList[] adjList;
     private String[][] mapData;
 
     /**
      * Konstruktori lukee karttatiedoston ja ottaa talteen verkon esitykset
      * taulukkona ja vieruslistana.
      *
-     * @param game Pelin nimen lyhenne.
-     * @param map Kartan nimi.
+     * @param mapName Kartan nimi.
      */
-    public Grid(String game, String map) {
-        List<String> lines = readFile(game, map);
+    public Grid(String mapName) {
+        List<String> lines = readFile(mapName);
         if (lines != null) {
             parseMapData(lines);
             createAdjList();
         }
     }
 
-    private List<String> readFile(String game, String map) {
+    private List<String> readFile(String mapName) {
         List<String> lines = new ArrayList<>();
         try {
-            Files.lines(Paths.get("maps/" + game + "/" + map + ".map"))
+            Files.lines(Paths.get("maps/" + mapName + ".map"))
                     .forEach(lines::add);
         } catch (Exception e) {
             return null;
@@ -61,74 +61,23 @@ public class Grid {
     }
 
     private void createAdjList() {
-        adjList = new List[height * width + 1];
+        adjList = new IntList[height * width + 1];
         for (int i = 1; i <= getN(); i++) {
-            adjList[i] = new ArrayList<>();
+            adjList[i] = new IntList();
         }
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (isPassable(x, y)) {
-                    createAdjListNode(x, y);
+                int idx = getIdx(x, y);
+                if (isPassable(idx)) {
+                    createAdjListForIdx(idx);
                 }
             }
         }
     }
 
-    private boolean isPassable(int x, int y) {
-        return mapData[y][x].equals(".");
-    }
-
-    private void createAdjListNode(int x, int y) {
-        for (int y1 = y - 1; y1 <= y + 1; y1++) {
-            for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                if (!isSameNode(x, y, x1, y1) && isGoodNode(x1, y1)) {
-                    int idx = getIdx(x, y);
-                    if (isHorVerAdjNode(x, y, x1, y1)) {
-                        adjList[idx].add(new Node(x1, y1, 1, this));
-                    } else if (isGoodDiagAdjNode(x, y, x1, y1)) {
-                        adjList[idx].add(new Node(x1, y1, Math.sqrt(2), this));
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean isSameNode(int x, int y, int x1, int y1) {
-        return x1 == x && y1 == y;
-    }
-
-    private boolean isGoodNode(int x, int y) {
-        return isInBounds(x, y) && isPassable(x, y);
-    }
-
-    private boolean isHorVerAdjNode(int x, int y, int x1, int y1) {
-        return x1 == x || y1 == y;
-    }
-
-    private boolean isGoodDiagAdjNode(int x, int y, int x1, int y1) {
-        return x1 != x && y1 != y && isPassable(x, y1) && isPassable(x1, y);
-    }
-
-    private boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
     /**
-     * Palauttaa solmun vieruslistan kartalla.
-     *
-     * @param u Solmu.
-     * @return Vieruslista.
-     */
-    public List<Node> getAdjList(Node u) {
-        if (adjList == null) {
-            return null;
-        }
-        return adjList[u.getIdx()];
-    }
-
-    /**
-     * Palauttaa koordinaatteja vastaavan solmun indeksin kartalla.
+     * Palauttaa koordinaatteja vastaavan solmun indeksin.
      *
      * @param x X-koordinaatti.
      * @param y Y-koordinaatti.
@@ -138,22 +87,8 @@ public class Grid {
         return y * width + x + 1;
     }
 
-    /**
-     * Palauttaa solmujen määrän.
-     *
-     * @return Solmujen määrä.
-     */
-    public int getN() {
-        return height * width;
-    }
-
-    /**
-     * Palauttaa verkon taulukkoesityksen.
-     *
-     * @return Verkon taulukkoesitys.
-     */
-    public String[][] getMapData() {
-        return mapData;
+    private boolean isPassable(int idx) {
+        return mapData[getY(idx)][getX(idx)].equals(".");
     }
 
     /**
@@ -183,5 +118,125 @@ public class Grid {
             }
         }
         return y;
+    }
+
+    private void createAdjListForIdx(int idx) {
+        for (int adjY = getY(idx) - 1; adjY <= getY(idx) + 1; adjY++) {
+            for (int adjX = getX(idx) - 1; adjX <= getX(idx) + 1; adjX++) {
+                if (isInBounds(adjX, adjY)) {
+                    addAdjIdxToAdjList(idx, getIdx(adjX, adjY));
+                }
+            }
+        }
+    }
+
+    private boolean isInBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    private void addAdjIdxToAdjList(int idx, int adjIdx) {
+        if (!isSameNode(idx, adjIdx)
+                && isPassable(adjIdx)
+                && (isHorVerAdjNode(idx, adjIdx)
+                || isGoodDiagAdjNode(idx, adjIdx))) {
+
+            adjList[idx].add(adjIdx);
+        }
+    }
+
+    private boolean isSameNode(int idx, int adjIdx) {
+        return idx == adjIdx;
+    }
+
+    private boolean isHorVerAdjNode(int idx, int adjIdx) {
+        return getX(idx) == getX(adjIdx) || getY(idx) == getY(adjIdx);
+    }
+
+    private boolean isGoodDiagAdjNode(int idx, int adjIdx) {
+        int x = getX(idx);
+        int y = getY(idx);
+        int adjX = getX(adjIdx);
+        int adjY = getY(adjIdx);
+        return adjIdx != x && adjY != y && isPassable(getIdx(x, adjY))
+                && isPassable(getIdx(adjX, y));
+    }
+
+    /**
+     * Palauttaa listan solmun naapureiden indekseistä.
+     *
+     * @param idx Solmun indeksi.
+     * @return Vieruslista.
+     */
+    public IntList getAdjList(int idx) {
+        if (adjList == null) {
+            return null;
+        }
+        return adjList[idx];
+    }
+
+    /**
+     * Palauttaa solmun etäisyyden naapuriin.
+     *
+     * @param idx Solmun indeksi.
+     * @param adjIdx Naapurin indeksi.
+     * @return Etäisyys.
+     */
+    public double getAdjNodeDist(int idx, int adjIdx) {
+        if (isHorVerAdjNode(idx, adjIdx)) {
+            return 1;
+        } else {
+            return Math.sqrt(2);
+        }
+    }
+
+    /**
+     * Palauttaa solmujen määrän.
+     *
+     * @return Solmujen määrä.
+     */
+    public int getN() {
+        return height * width;
+    }
+
+    /**
+     * Tulostaa kartan, johon on merkitty lyhin polku kahden solmun välillä sekä
+     * ajetun algoritmin käsittelemät solmut.
+     *
+     * @param pathIdxs Lyhimmällä polulla olevien solmujen indeksit.
+     * @param closedIdxs Käsiteltyjen solmujen indeksit.
+     */
+    public void markPrintPathClosed(IntList pathIdxs, IntList closedIdxs) {
+        String[][] oldMapData = copyMapData();
+        markMapData(closedIdxs, "o");
+        markMapData(pathIdxs, "X");
+        printMapData();
+        mapData = oldMapData;
+    }
+
+    private String[][] copyMapData() {
+        String[][] copy = mapData.clone();
+        for (int i = 0; i < mapData.length; i++) {
+            copy[i] = mapData[i].clone();
+        }
+
+        return copy;
+    }
+
+    private void markMapData(IntList idxs, String mark) {
+        for (int i = 0; i < idxs.size(); i++) {
+            mapData[getY(idxs.get(i))][getX(idxs.get(i))] = mark;
+        }
+    }
+
+    /**
+     * Tulostaa kartan.
+     */
+    public void printMapData() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                System.out.print(mapData[y][x]);
+            }
+            System.out.println();
+        }
     }
 }

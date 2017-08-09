@@ -5,11 +5,9 @@
  */
 package pathfindingbenchmark.gui;
 
-import pathfindingbenchmark.algo.AStar;
-import pathfindingbenchmark.algo.Algo;
-import pathfindingbenchmark.algo.Dijkstra;
+import pathfindingbenchmark.algorithms.AStar;
+import pathfindingbenchmark.algorithms.Dijkstra;
 import pathfindingbenchmark.grid.Grid;
-import pathfindingbenchmark.grid.Node;
 
 /**
  *
@@ -18,19 +16,21 @@ import pathfindingbenchmark.grid.Node;
 public class Main {
 
     public static void main(String[] args) {
-//        Grid grid = new Grid("dao", "arena");
-//        Node s = new Node(2, 2, grid);
-//        Node t = new Node(34, 46, grid);
-        Grid grid = new Grid("dao", "lak110d");
-        Node s = new Node(26, 15, grid);
-        Node t = new Node(3, 11, grid);
-        Algo dijkstra = new Dijkstra(grid);
-        Algo aStar = new AStar(grid);
-        dijkstra.run(s, t);
-        aStar.run(s, t);
+        Grid grid = new Grid("arena");
+        int startIdx = grid.getIdx(2, 2);
+        int goalIdx = grid.getIdx(34, 46);
+//        Grid grid = new Grid("maze512-32-6");
+//        int startIdx = grid.getIdx(114, 464);
+//        int goalIdx = grid.getIdx(289, 153);
+
+        Dijkstra dijkstra = new Dijkstra(grid);
+        dijkstra.run(startIdx, goalIdx);
         dijkstra.printShortestPath();
-        System.out.println(dijkstra.getRoundedCost());
+        System.out.println(dijkstra.getRoundedDist(6));
+
+        AStar aStar = new AStar(grid);
+        aStar.run(startIdx, goalIdx);
         aStar.printShortestPath();
-        System.out.println(aStar.getRoundedCost());
+        System.out.println(aStar.getRoundedDist(6));
     }
 }

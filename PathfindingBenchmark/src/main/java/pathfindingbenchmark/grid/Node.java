@@ -6,105 +6,55 @@
 package pathfindingbenchmark.grid;
 
 /**
- * Solmuolio.
+ * Solmuolion toteutus.
  *
  * @author thalvari
  */
 public class Node implements Comparable<Node> {
 
-    private final int x;
-    private final int y;
-    private final double cost;
-    private final double h;
-    private final Grid grid;
+    private final int idx;
+    private final double priority;
 
     /**
      * Konstruktori.
      *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @param cost Solmuun siirtymisen hinta.
-     * @param h Heuristinen arvo.
-     * @param grid Verkko.
+     * @param idx Solmun indeksi.
+     * @param priority Solmun prioriteettiarvon.
      */
-    public Node(int x, int y, double cost, double h, Grid grid) {
-        this.x = x;
-        this.y = y;
-        this.cost = cost;
-        this.h = h;
-        this.grid = grid;
+    public Node(int idx, double priority) {
+        this.idx = idx;
+        this.priority = priority;
     }
 
     /**
      * Vaihtoehtoinen konstruktori.
      *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @param cost Solmuun siirtymisen hinta.
-     * @param grid Verkko.
+     * @param idx Solmun indeksi.
      */
-    public Node(int x, int y, double cost, Grid grid) {
-        this(x, y, cost, 0, grid);
+    public Node(int idx) {
+        this(idx, 0);
     }
 
     /**
-     * Vaihtoehtoinen konstruktori.
-     *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @param grid Verkko.
-     */
-    public Node(int x, int y, Grid grid) {
-        this(x, y, 0, 0, grid);
-    }
-
-    /**
-     * Palauttaa indeksin.
+     * Palauttaa solmun indeksin.
      *
      * @return Indeksi.
      */
     public int getIdx() {
-        return grid.getIdx(x, y);
+        return idx;
     }
 
     /**
-     * Palauttaa x-koordinaatin.
+     * Palauttaa solmun prioriteettiarvon.
      *
-     * @return X-koordinaatti.
+     * @return Prioriteettiarvo.
      */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * Palauttaa y-koordinaatin.
-     *
-     * @return Y-koordinaatti.
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * Palauttaa solmuun siirtymisen hinnan.
-     *
-     * @return Hinta.
-     */
-    public double getCost() {
-        return cost;
-    }
-
-    /**
-     * Palauttaa solmun heuristisen arvon.
-     *
-     * @return Heuristinen arvo.
-     */
-    public double getH() {
-        return h;
+    public double getPriority() {
+        return priority;
     }
 
     @Override
     public int compareTo(Node o) {
-        return Double.valueOf(cost + h).compareTo(o.cost + o.h);
+        return Double.valueOf(priority).compareTo(o.priority);
     }
 }
