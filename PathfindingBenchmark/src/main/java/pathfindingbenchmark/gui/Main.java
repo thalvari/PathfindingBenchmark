@@ -16,12 +16,18 @@ import pathfindingbenchmark.grid.Grid;
 public class Main {
 
     public static void main(String[] args) {
-        Grid grid = new Grid("arena");
-        int startIdx = grid.getIdx(2, 2);
-        int goalIdx = grid.getIdx(34, 46);
+//        Grid grid = new Grid("arena");
+//        int startIdx = grid.getIdx(2, 2);
+//        int goalIdx = grid.getIdx(34, 46);
 //        Grid grid = new Grid("maze512-32-6");
 //        int startIdx = grid.getIdx(114, 464);
 //        int goalIdx = grid.getIdx(289, 153);
+//        Grid grid = new Grid("AR0011SR-512");
+//        int startIdx = grid.getIdx(155, 193);
+//        int goalIdx = grid.getIdx(481, 163);
+        Grid grid = new Grid("AR0011SR");
+        int startIdx = grid.getIdx(65, 84);
+        int goalIdx = grid.getIdx(203, 71);
 
         Dijkstra dijkstra = new Dijkstra(grid);
         dijkstra.run(startIdx, goalIdx);

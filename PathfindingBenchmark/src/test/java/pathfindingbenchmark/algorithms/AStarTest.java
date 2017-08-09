@@ -23,7 +23,7 @@ public class AStarTest {
 
     @Before
     public void setUp() {
-        grid = new Grid("AR0011SR");
+        grid = new Grid("AR0011SR-512");
         aStar = new AStar(grid);
     }
 
