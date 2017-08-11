@@ -8,6 +8,7 @@ package pathfindingbenchmark.algorithms;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import pathfindingbenchmark.datastructures.IntList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
@@ -44,10 +45,10 @@ public abstract class AStarAbstract {
      * Maalisolmun indeksi.
      */
     protected int goalIdx;
+    private NodeMinHeap heap;
+    private boolean closed[];
     private final long dist[];
-    private final int prev[];
-    private final boolean closed[];
-    private final NodeMinHeap heap;
+    private int prev[];
     private int closedNodeCount;
     private int heapOperCount;
 
@@ -58,10 +59,10 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
+        heap = new NodeMinHeap();
+        closed = new boolean[grid.getN() + 1];
         dist = new long[grid.getN() + 1];
         prev = new int[grid.getN() + 1];
-        closed = new boolean[grid.getN() + 1];
-        heap = new NodeMinHeap();
     }
 
     /**
@@ -99,20 +100,13 @@ public abstract class AStarAbstract {
     }
 
     private void init(int startIdx, int goalIdx) {
-        heap.clear();
-        initCounters();
         this.startIdx = startIdx;
         this.goalIdx = goalIdx;
-        for (int i = 1; i <= grid.getN(); i++) {
-            dist[i] = Long.MAX_VALUE / 2;
-            prev[i] = 0;
-            closed[i] = false;
-        }
-
+        heap = new NodeMinHeap();
+        closed = new boolean[grid.getN() + 1];
+        Arrays.fill(dist, Long.MAX_VALUE / 2);
         dist[startIdx] = 0;
-    }
-
-    private void initCounters() {
+        prev = new int[grid.getN() + 1];
         closedNodeCount = 0;
         heapOperCount = 0;
     }
