@@ -21,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) {
 //        run("arena", 2, 2, 34, 46, DIJKSTRA, 30000, false);
-//        run("maze512-32-6", 114, 464, 289, 153, DIJKSTRA, 50, false);
+//        run("maze512-32-6", 114, 464, 289, 153, ASTAR, 50, false);
         run("AR0011SR", 65, 84, 203, 71, ASTAR, 1500, false);
     }
 
