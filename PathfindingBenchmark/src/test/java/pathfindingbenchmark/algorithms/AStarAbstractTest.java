@@ -114,27 +114,17 @@ public class AStarAbstractTest {
         startIdx = grid.getIdx(376, 673);
         goalIdx = grid.getIdx(736, 404);
         algo.run(startIdx, goalIdx);
-        assertEquals(103439, algo.getClosedCounter());
+        assertEquals(103439, algo.getClosedNodeCount());
     }
 
     @Test
-    public void testGetHeapAddCounter() {
+    public void testGetHeapOperCount() {
         grid = new Grid("ost100d");
         algo = new AStar(grid);
         startIdx = grid.getIdx(376, 673);
         goalIdx = grid.getIdx(736, 404);
         algo.run(startIdx, goalIdx);
-        assertEquals(174566, algo.getHeapAddCounter());
-    }
-
-    @Test
-    public void testGetHeapDelCounter() {
-        grid = new Grid("ost100d");
-        algo = new AStar(grid);
-        startIdx = grid.getIdx(376, 673);
-        goalIdx = grid.getIdx(736, 404);
-        algo.run(startIdx, goalIdx);
-        assertEquals(172823, algo.getHeapDelCounter());
+        assertEquals(347390, algo.getHeapOperCount());
     }
 
     @Test
@@ -146,8 +136,7 @@ public class AStarAbstractTest {
         goalIdx = grid.getIdx(27, 9);
         algo.run(startIdx, goalIdx);
         assertEquals("20.2426", algo.getRoundedDist(6));
-        assertEquals(165, algo.getClosedCounter());
-        assertEquals(167, algo.getHeapAddCounter());
-        assertEquals(165, algo.getHeapDelCounter());
+        assertEquals(165, algo.getClosedNodeCount());
+        assertEquals(333, algo.getHeapOperCount());
     }
 }

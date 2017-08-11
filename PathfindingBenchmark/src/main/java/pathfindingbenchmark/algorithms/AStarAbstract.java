@@ -48,9 +48,8 @@ public abstract class AStarAbstract {
     private final int prev[];
     private final boolean closed[];
     private final NodeMinHeap heap;
-    private int closedCounter;
-    private int heapAddCounter;
-    private int heapDelCounter;
+    private int closedNodeCount;
+    private int heapOperCount;
 
     /**
      * Konstruktori.
@@ -75,15 +74,16 @@ public abstract class AStarAbstract {
     public void run(int startIdx, int goalIdx) {
         init(startIdx, goalIdx);
         heap.insert(new Node(startIdx, 0, heuristic(startIdx)));
+        heapOperCount++;
         while (!heap.empty()) {
             int idx = heap.delMin().getIdx();
-            heapDelCounter++;
+            heapOperCount++;
             if (closed[idx]) {
                 continue;
             }
 
             closed[idx] = true;
-            closedCounter++;
+            closedNodeCount++;
             if (idx == goalIdx) {
                 break;
             }
@@ -113,9 +113,8 @@ public abstract class AStarAbstract {
     }
 
     private void initCounters() {
-        closedCounter = 0;
-        heapAddCounter = 0;
-        heapDelCounter = 0;
+        closedNodeCount = 0;
+        heapOperCount = 0;
     }
 
     /**
@@ -132,7 +131,7 @@ public abstract class AStarAbstract {
             dist[adjIdx] = newDist;
             prev[adjIdx] = idx;
             heap.insert(new Node(adjIdx, newDist, heuristic(adjIdx)));
-            heapAddCounter++;
+            heapOperCount++;
         }
     }
 
@@ -191,25 +190,16 @@ public abstract class AStarAbstract {
      *
      * @return Määrä.
      */
-    public int getClosedCounter() {
-        return closedCounter;
+    public int getClosedNodeCount() {
+        return closedNodeCount;
     }
 
     /**
-     * Palauttaa kekoon lisättyjen solmujen määrän.
+     * Palauttaa keko-operaatioiden määrän.
      *
      * @return Määrä.
      */
-    public int getHeapAddCounter() {
-        return heapAddCounter;
-    }
-
-    /**
-     * Palauttaa keosta poistettujen solmujen määrän.
-     *
-     * @return Määrä.
-     */
-    public int getHeapDelCounter() {
-        return heapDelCounter;
+    public int getHeapOperCount() {
+        return heapOperCount;
     }
 }

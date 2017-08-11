@@ -74,11 +74,9 @@ public class Main {
         System.out.println("Lyhimmän polun pituus: " + algo.getRoundedDist(6)
                 + ".");
         System.out.println("Solmujen määrä: " + grid.getN() + ".");
-        System.out.println("Käsitellyt solmut: " + algo.getClosedCounter()
-                + ".");
-        System.out.println("Keon lisäysoperaatiot: " + algo.getHeapAddCounter()
-                + ".");
-        System.out.println("Keon poisto-operaatiot: " + algo.getHeapDelCounter()
-                + ".");
+        System.out.println("Käsiteltyjen solmujen määrä: "
+                + algo.getClosedNodeCount() + ".");
+        System.out.println("Keko-operaatioiden määrä: "
+                + algo.getHeapOperCount() + ".");
     }
 }
