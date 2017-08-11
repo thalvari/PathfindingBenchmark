@@ -5,9 +5,6 @@
  */
 package pathfindingbenchmark.datastructures;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Kokonaislukulistan toteutus.
  *
@@ -15,13 +12,15 @@ import java.util.List;
  */
 public class IntList {
 
-    private final List<Integer> list;
+    private static final int INIT_ARR_LEN = 8;
+    private int[] arr;
+    private int length;
 
     /**
      * Konstruktori.
      */
     public IntList() {
-        list = new ArrayList<>();
+        arr = new int[INIT_ARR_LEN];
     }
 
     /**
@@ -30,17 +29,31 @@ public class IntList {
      * @param i Kokonaisluku.
      */
     public void add(int i) {
-        list.add(i);
+        if (full()) {
+            int[] tempArray = new int[arr.length * 2];
+            for (int j = 0; j < length; j++) {
+                tempArray[j] = arr[j];
+            }
+
+            arr = tempArray;
+        }
+
+        arr[length] = i;
+        length++;
+    }
+
+    private boolean full() {
+        return length == arr.length;
     }
 
     /**
-     * Palauttaa kokonaisluvun.
+     * Palauttaa indeksiä vastaavan kokonaisluvun kokonaisluvun.
      *
      * @param idx Indeksi.
      * @return Kokonaisluku.
      */
     public int get(int idx) {
-        return list.get(idx);
+        return arr[idx];
     }
 
     /**
@@ -49,7 +62,7 @@ public class IntList {
      * @return Koko.
      */
     public int size() {
-        return list.size();
+        return length;
     }
 
     /**
@@ -59,6 +72,12 @@ public class IntList {
      * @return Totuusarvo.
      */
     public boolean contains(int i) {
-        return list.contains(i);
+        for (int j = 0; j < length; j++) {
+            if (arr[j] == i) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -8,8 +8,8 @@ package pathfindingbenchmark.algorithms;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.PriorityQueue;
 import pathfindingbenchmark.datastructures.IntList;
+import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 
@@ -20,40 +20,27 @@ import pathfindingbenchmark.grid.Node;
  */
 public abstract class AStarAbstract {
 
+    protected static final long HOR_VER_DIST = 1000000000000L;
+    protected static final long DIAG_DIST = 1414213562373L;
+
     /**
      * Verkko.
      */
     protected final Grid grid;
-
-    /**
-     * Pienin löydetty etäisyys lähtösolmuun.
-     */
-    protected final double dist[];
-
-    /**
-     * Edellisen solmun indeksi löydetyllä lyhimmällä polulla.
-     */
-    protected final int prev[];
-
-    /**
-     * Jo käsitellyt solmut.
-     */
-    protected final boolean closed[];
-
-    /**
-     * Minimikeko.
-     */
-    protected PriorityQueue<Node> heap;
-
-    /**
-     * Lähtösolmun indeksi.
-     */
-    protected int startIdx;
+    private final long dist[];
+    private final int prev[];
+    private final boolean closed[];
+//    private final PriorityQueue<Node> heap;
+    private NodeMinHeap heap;
+    private int startIdx;
 
     /**
      * Maalisolmun indeksi.
      */
     protected int goalIdx;
+    private int closedCounter;
+    private int heapAddCounter;
+    private int heapDelCounter;
 
     /**
      * Konstruktori luo aputietorakenteet.
@@ -62,10 +49,11 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
-        dist = new double[grid.getN() + 1];
+        dist = new long[grid.getN() + 1];
         prev = new int[grid.getN() + 1];
         closed = new boolean[grid.getN() + 1];
-        heap = new PriorityQueue<>();
+//        heap = new PriorityQueue<>();
+        heap = new NodeMinHeap(grid.getN());
     }
 
     /**
@@ -77,14 +65,16 @@ public abstract class AStarAbstract {
      */
     public void run(int startIdx, int goalIdx) {
         init(startIdx, goalIdx);
-        heap.add(new Node(startIdx, heuristic(startIdx)));
-        while (!heap.isEmpty()) {
-            int idx = heap.poll().getIdx();
+        heap.insert(new Node(startIdx, 0, heuristic(startIdx)));
+        while (!heap.empty()) {
+            int idx = heap.delMin().getIdx();
+            heapDelCounter++;
             if (closed[idx]) {
                 continue;
             }
 
             closed[idx] = true;
+            closedCounter++;
             if (idx == goalIdx) {
                 break;
             }
@@ -99,18 +89,12 @@ public abstract class AStarAbstract {
         }
     }
 
-    /**
-     * Alustaa reitinhakualgon kentät ja aputietorakenteet.
-     *
-     * @param startIdx Lähtösolmun indeksi.
-     * @param goalIdx Maalisolmun indeksi.
-     */
-    protected void init(int startIdx, int goalIdx) {
-        heap = new PriorityQueue<>();
+    private void init(int startIdx, int goalIdx) {
+        heap.clear();
         this.startIdx = startIdx;
         this.goalIdx = goalIdx;
         for (int i = 1; i <= grid.getN(); i++) {
-            dist[i] = Double.MAX_VALUE;
+            dist[i] = Long.MAX_VALUE;
             prev[i] = 0;
             closed[i] = false;
         }
@@ -124,49 +108,28 @@ public abstract class AStarAbstract {
      * @param idx Indeksi.
      * @return Heuristinen arvo.
      */
-    protected abstract double heuristic(int idx);
+    protected abstract long heuristic(int idx);
 
-    /**
-     * Päivittää aputietorakenteiden arvot, jos on löydetty lyhyempi polku.
-     *
-     * @param idx Solmun indeksi.
-     * @param adjIdx Naapurin indeksi.
-     */
-    protected void relax(int idx, int adjIdx) {
-        double newDist = dist[idx] + grid.getAdjNodeDist(idx, adjIdx);
+    private void relax(int idx, int adjIdx) {
+        long newDist = dist[idx] + grid.getAdjNodeDist(idx, adjIdx);
         if (newDist < dist[adjIdx]) {
             dist[adjIdx] = newDist;
             prev[adjIdx] = idx;
-            heap.add(new Node(adjIdx, newDist + heuristic(adjIdx)));
+            heap.insert(new Node(adjIdx, newDist, heuristic(adjIdx)));
+            heapAddCounter++;
         }
     }
 
     /**
-     * Palauttaa solmun etäisyyden lähtösolmuun pyöristettynä haluttuun määrään
-     * merkitseviä numeroita.
+     * Palauttaa taulukkoesityksen verkosta, johon lyhin polku ja käsitellyt
+     * solmut on merkitty.
      *
-     * @param n Merkitsevien numeroiden määrä.
-     * @return Etäisyys.
+     * @return Taulukkoesitys kartasta.
      */
-    public String getRoundedDist(int n) {
-        return BigDecimal.valueOf(getDist())
-                .round(new MathContext(n, RoundingMode.HALF_EVEN))
-                .stripTrailingZeros()
-                .toString();
-    }
-
-    private double getDist() {
-        return dist[goalIdx];
-    }
-
-    /**
-     * Tulostaa verkon, jossa lyhin polku lähtösolmusta maalisolmuun on
-     * merkitty.
-     */
-    public void printShortestPath() {
+    public String[][] getMarkedGrid() {
         IntList pathIdxs = getPathIdxs();
         IntList closedIdxs = getClosedIdxs();
-        grid.markPrintPathClosed(pathIdxs, closedIdxs);
+        return grid.getMarkedGrid(pathIdxs, closedIdxs);
     }
 
     private IntList getPathIdxs() {
@@ -190,5 +153,25 @@ public abstract class AStarAbstract {
         }
 
         return idxs;
+    }
+
+    public String getRoundedDist(int n) {
+        BigDecimal d = new BigDecimal(dist[goalIdx]);
+        d = d.divide(BigDecimal.valueOf(HOR_VER_DIST));
+        return d.round(new MathContext(n, RoundingMode.HALF_EVEN))
+                .stripTrailingZeros()
+                .toString();
+    }
+
+    public int getClosedCounter() {
+        return closedCounter;
+    }
+
+    public int getHeapAddCounter() {
+        return heapAddCounter;
+    }
+
+    public int getHeapDelCounter() {
+        return heapDelCounter;
     }
 }

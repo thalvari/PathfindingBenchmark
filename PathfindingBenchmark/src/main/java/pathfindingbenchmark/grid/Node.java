@@ -13,26 +13,19 @@ package pathfindingbenchmark.grid;
 public class Node implements Comparable<Node> {
 
     private final int idx;
-    private final double priority;
+    private final long dist;
+    private final long heuristic;
 
     /**
      * Konstruktori.
      *
      * @param idx Solmun indeksi.
-     * @param priority Solmun prioriteettiarvon.
+     * @param dist Solmun prioriteettiarvon.
      */
-    public Node(int idx, double priority) {
+    public Node(int idx, long dist, long heuristic) {
         this.idx = idx;
-        this.priority = priority;
-    }
-
-    /**
-     * Vaihtoehtoinen konstruktori.
-     *
-     * @param idx Solmun indeksi.
-     */
-    public Node(int idx) {
-        this(idx, 0);
+        this.dist = dist;
+        this.heuristic = heuristic;
     }
 
     /**
@@ -44,17 +37,16 @@ public class Node implements Comparable<Node> {
         return idx;
     }
 
-    /**
-     * Palauttaa solmun prioriteettiarvon.
-     *
-     * @return Prioriteettiarvo.
-     */
-    public double getPriority() {
-        return priority;
-    }
-
     @Override
     public int compareTo(Node o) {
-        return Double.valueOf(priority).compareTo(o.priority);
+        if (getPriority() == o.getPriority()) {
+            return Long.valueOf(heuristic).compareTo(o.heuristic);
+        } else {
+            return Long.valueOf(getPriority()).compareTo(o.getPriority());
+        }
+    }
+
+    private long getPriority() {
+        return dist + heuristic;
     }
 }

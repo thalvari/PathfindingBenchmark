@@ -6,8 +6,6 @@
 package pathfindingbenchmark.datastructures;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,14 +35,12 @@ public class IntListTest {
     }
 
     @Test
-    public void testContains() {
-        list.add(2);
-        assertTrue(list.contains(2));
-    }
+    public void testAdd2() {
+        for (int i = 1; i < 10; i++) {
+            list.add(i);
+        }
 
-    @Test
-    public void testContains2() {
-        list.add(2);
-        assertFalse(list.contains(1));
+        assertEquals(9, list.size());
+        assertEquals(9, list.get(8));
     }
 }

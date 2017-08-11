@@ -24,7 +24,7 @@ public class Dijkstra extends AStarAbstract {
     }
 
     @Override
-    protected double heuristic(int idx) {
+    protected long heuristic(int idx) {
         return 0;
     }
 }

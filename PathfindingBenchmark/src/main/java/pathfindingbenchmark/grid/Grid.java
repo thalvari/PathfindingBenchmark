@@ -18,6 +18,8 @@ import pathfindingbenchmark.datastructures.IntList;
  */
 public class Grid {
 
+    private static final long HOR_VER_DIST = 1000000000000L;
+    private static final long DIAG_DIST = 1414213562373L;
     private int height;
     private int width;
     private IntList[] adjList;
@@ -181,11 +183,11 @@ public class Grid {
      * @param adjIdx Naapurin indeksi.
      * @return Etäisyys.
      */
-    public double getAdjNodeDist(int idx, int adjIdx) {
+    public long getAdjNodeDist(int idx, int adjIdx) {
         if (isHorVerAdjNode(idx, adjIdx)) {
-            return 1;
+            return HOR_VER_DIST;
         } else {
-            return Math.sqrt(2);
+            return DIAG_DIST;
         }
     }
 
@@ -199,18 +201,20 @@ public class Grid {
     }
 
     /**
-     * Tulostaa kartan, johon on merkitty lyhin polku kahden solmun välillä sekä
-     * ajetun algoritmin käsittelemät solmut.
+     * Palauttaa taulukkoesityksen verkosta, johon lyhin polku ja käsitellyt
+     * solmut on merkitty.
      *
      * @param pathIdxs Lyhimmällä polulla olevien solmujen indeksit.
      * @param closedIdxs Käsiteltyjen solmujen indeksit.
+     * @return Taulukkoesitys verkosta.
      */
-    public void markPrintPathClosed(IntList pathIdxs, IntList closedIdxs) {
+    public String[][] getMarkedGrid(IntList pathIdxs, IntList closedIdxs) {
         String[][] oldMapData = copyMapData();
         markMapData(closedIdxs, "o");
         markMapData(pathIdxs, "X");
-        printMapData();
+        String[][] markedMapData = mapData;
         mapData = oldMapData;
+        return markedMapData;
     }
 
     private String[][] copyMapData() {
@@ -225,18 +229,6 @@ public class Grid {
     private void markMapData(IntList idxs, String mark) {
         for (int i = 0; i < idxs.size(); i++) {
             mapData[getY(idxs.get(i))][getX(idxs.get(i))] = mark;
-        }
-    }
-
-    /**
-     * Tulostaa kartan.
-     */
-    public void printMapData() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                System.out.print(mapData[y][x]);
-            }
-            System.out.println();
         }
     }
 }

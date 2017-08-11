@@ -14,20 +14,9 @@ import org.junit.Test;
  */
 public class NodeTest {
 
-    private static final double DELTA = 0.01;
-    private Node u;
-
     @Test
     public void testNode() {
-        u = new Node(1, Math.sqrt(2));
+        Node u = new Node(1, 2, 3);
         assertEquals(1, u.getIdx());
-        assertEquals(Math.sqrt(2), u.getPriority(), DELTA);
-    }
-
-    @Test
-    public void testNode2() {
-        u = new Node(2);
-        assertEquals(2, u.getIdx());
-        assertEquals(0, u.getPriority(), DELTA);
     }
 }

@@ -47,7 +47,7 @@ public class AStarAbstractTest {
     }
 
     @Test
-    public void testPrintShortestPath() {
+    public void testGetMarkedGrid() {
         grid = new Grid("empty_4");
         algo = new Dijkstra(grid);
         startIdx = grid.getIdx(0, 0);
@@ -55,7 +55,7 @@ public class AStarAbstractTest {
         algo.run(startIdx, goalIdx);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outStream));
-        algo.printShortestPath();
+        printMarkedGrid(algo);
         String out = outStream.toString();
         assertTrue(out.contains("Xooo"));
         assertTrue(out.contains("oXoo"));
@@ -65,13 +65,13 @@ public class AStarAbstractTest {
     }
 
     @Test
-    public void testPrintShortestPath2() {
+    public void testGetMarkedGrid2() {
         startIdx = grid.getIdx(26, 15);
         goalIdx = grid.getIdx(3, 11);
         algo.run(startIdx, goalIdx);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outStream));
-        algo.printShortestPath();
+        printMarkedGrid(algo);
         String out = outStream.toString();
         assertTrue(out.contains("@@@@@@@@@@@@@TTTTTT@@@@@@@@@@@"));
         assertTrue(out.contains("@@@@@@@@@@@@@TTTTTT@@@@@@@@@@@"));
@@ -85,8 +85,8 @@ public class AStarAbstractTest {
         assertTrue(out.contains("@TTTTTTTToooooooTTToooooTTooTT"));
         assertTrue(out.contains("@TTTTTTTToooooooTTToooooooooTT"));
         assertTrue(out.contains("@TTXooooooooooooooooooooooooTT"));
-        assertTrue(out.contains("@TToXXXXXXXoooooooooooooooooTT"));
-        assertTrue(out.contains("@TTooooooooXXXXXXXXXooooooooTT"));
+        assertTrue(out.contains("@TToXoooooooooooooooooooooooTT"));
+        assertTrue(out.contains("@TTooXXXXXXXXXXXXXXXooooooooTT"));
         assertTrue(out.contains("@TToooooooooooooTTToXXXXXoooTT"));
         assertTrue(out.contains("TTTToooooTTTTTTTTTTTTTTToXXTTT"));
         assertTrue(out.contains("TTTTTTTTTTTTTTTTTTTTTTTToooTTT"));
@@ -95,5 +95,15 @@ public class AStarAbstractTest {
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("\n"));
+    }
+
+    private void printMarkedGrid(AStarAbstract algo) {
+        String[][] mapData = algo.getMarkedGrid();
+        for (int y = 0; y < mapData.length; y++) {
+            for (int x = 0; x < mapData[0].length; x++) {
+                System.out.print(mapData[y][x]);
+            }
+            System.out.println();
+        }
     }
 }
