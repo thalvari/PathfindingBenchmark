@@ -100,6 +100,7 @@ public abstract class AStarAbstract {
 
     private void init(int startIdx, int goalIdx) {
         heap.clear();
+        initCounters();
         this.startIdx = startIdx;
         this.goalIdx = goalIdx;
         for (int i = 1; i <= grid.getN(); i++) {
@@ -109,6 +110,12 @@ public abstract class AStarAbstract {
         }
 
         dist[startIdx] = 0;
+    }
+
+    private void initCounters() {
+        closedCounter = 0;
+        heapAddCounter = 0;
+        heapDelCounter = 0;
     }
 
     /**

@@ -63,20 +63,4 @@ public class IntList {
     public int size() {
         return length;
     }
-
-    /**
-     * Kertoo sisältääkö lista annetun kokonaisluvun.
-     *
-     * @param i Kokonaisluku.
-     * @return Totuusarvo.
-     */
-    public boolean contains(int i) {
-        for (int j = 0; j < length; j++) {
-            if (arr[j] == i) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

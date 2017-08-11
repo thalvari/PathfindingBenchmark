@@ -10,3 +10,4 @@ Ohjelma tuettujen reitinhakualgoritmien suorituskyvyn vertailuun.
 - [PIT](https://htmlpreview.github.io/?https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/pit/index.html)
 - [Viikkoraportti 1](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_1.md)
 - [Viikkoraportti 2](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_2.md)
+- [Viikkoraportti 3](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_3.md)

@@ -38,6 +38,7 @@ public class NodeMinHeap {
             setNode(getNode(parent(idx)), idx);
             idx = parent(idx);
         }
+
         setNode(u, idx);
     }
 
@@ -67,7 +68,7 @@ public class NodeMinHeap {
     /**
      * Poistaa pienimmän prioriteetin solmun keosta.
      *
-     * @return
+     * @return Solmu.
      */
     public Node delMin() {
         Node max = getNode(1);

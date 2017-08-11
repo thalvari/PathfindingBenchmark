@@ -17,28 +17,38 @@ import pathfindingbenchmark.grid.Grid;
 public class Main {
 
     public static void main(String[] args) {
-//        Grid grid = new Grid("arena");
-//        int startIdx = grid.getIdx(2, 2);
-//        int goalIdx = grid.getIdx(34, 46);
-//        Grid grid = new Grid("maze512-32-6");
-//        int startIdx = grid.getIdx(114, 464);
-//        int goalIdx = grid.getIdx(289, 153);
-        Grid grid = new Grid("AR0011SR");
-        int startIdx = grid.getIdx(65, 84);
-        int goalIdx = grid.getIdx(203, 71);
+//        run("arena", 2, 2, 34, 46, 1, 30000, false);
+//        run("maze512-32-6", 114, 464, 289, 153, 1, 50, false);
+        run("AR0011SR", 65, 84, 203, 71, 2, 1500, true);
+    }
 
-//        Dijkstra dijkstra = new Dijkstra(grid);
-//        for (int i = 0; i < 1000; i++) {
-//        dijkstra.run(startIdx, goalIdx);
-//        }
-//        printMarkedGrid(dijkstra);
-//        printStatistics(dijkstra);
-        AStar aStar = new AStar(grid);
-        for (int i = 0; i < 2000; i++) {
-            aStar.run(startIdx, goalIdx);
+    private static void run(String mapName, int startX, int startY, int goalX,
+            int goalY, int algoIdx, int n, boolean print) {
+
+        Grid grid = new Grid(mapName);
+        int startIdx = grid.getIdx(startX, startY);
+        int goalIdx = grid.getIdx(goalX, goalY);
+        AStarAbstract algo;
+        switch (algoIdx) {
+            case 1:
+                algo = new Dijkstra(grid);
+                break;
+            case 2:
+                algo = new AStar(grid);
+                break;
+            default:
+                return;
         }
-//        printMarkedGrid(aStar);
-//        printStatistics(aStar);
+
+        for (int i = 0; i < n; i++) {
+            algo.run(startIdx, goalIdx);
+        }
+
+        if (print) {
+            printMarkedGrid(algo);
+        }
+
+        printStatistics(algo);
     }
 
     private static void printMarkedGrid(AStarAbstract algo) {

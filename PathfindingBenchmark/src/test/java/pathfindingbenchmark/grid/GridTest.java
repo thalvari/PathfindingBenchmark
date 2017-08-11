@@ -62,13 +62,13 @@ public class GridTest {
     @Test
     public void testGetAdjList5() {
         IntList adjList = grid.getAdjList(grid.getIdx(14, 3));
-        assertTrue(adjList.contains(grid.getIdx(13, 3)));
-        assertTrue(adjList.contains(grid.getIdx(15, 3)));
-        assertTrue(adjList.contains(grid.getIdx(14, 2)));
-        assertTrue(adjList.contains(grid.getIdx(14, 4)));
-        assertTrue(adjList.contains(grid.getIdx(13, 2)));
-        assertTrue(adjList.contains(grid.getIdx(13, 4)));
-        assertTrue(adjList.contains(grid.getIdx(15, 4)));
+        assertTrue(adjList.get(0) == grid.getIdx(13, 2));
+        assertTrue(adjList.get(1) == grid.getIdx(14, 2));
+        assertTrue(adjList.get(2) == grid.getIdx(13, 3));
+        assertTrue(adjList.get(3) == grid.getIdx(15, 3));
+        assertTrue(adjList.get(4) == grid.getIdx(13, 4));
+        assertTrue(adjList.get(5) == grid.getIdx(14, 4));
+        assertTrue(adjList.get(6) == grid.getIdx(15, 4));
     }
 
     @Test
