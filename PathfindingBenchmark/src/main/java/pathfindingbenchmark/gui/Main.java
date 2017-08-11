@@ -16,10 +16,13 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class Main {
 
+    private static final int DIJKSTRA = 1;
+    private static final int ASTAR = 2;
+
     public static void main(String[] args) {
-//        run("arena", 2, 2, 34, 46, 1, 30000, false);
-//        run("maze512-32-6", 114, 464, 289, 153, 1, 50, false);
-        run("AR0011SR", 65, 84, 203, 71, 2, 1500, true);
+//        run("arena", 2, 2, 34, 46, DIJKSTRA, 30000, false);
+//        run("maze512-32-6", 114, 464, 289, 153, DIJKSTRA, 50, false);
+        run("AR0011SR", 65, 84, 203, 71, ASTAR, 1500, false);
     }
 
     private static void run(String mapName, int startX, int startY, int goalX,
@@ -30,10 +33,10 @@ public class Main {
         int goalIdx = grid.getIdx(goalX, goalY);
         AStarAbstract algo;
         switch (algoIdx) {
-            case 1:
+            case DIJKSTRA:
                 algo = new Dijkstra(grid);
                 break;
-            case 2:
+            case ASTAR:
                 algo = new AStar(grid);
                 break;
             default:
@@ -48,7 +51,7 @@ public class Main {
             printMarkedGrid(algo);
         }
 
-        printStatistics(algo);
+        printStatistics(algo, grid);
     }
 
     private static void printMarkedGrid(AStarAbstract algo) {
@@ -61,7 +64,7 @@ public class Main {
         }
     }
 
-    private static void printStatistics(AStarAbstract algo) {
+    private static void printStatistics(AStarAbstract algo, Grid grid) {
         if (algo instanceof Dijkstra) {
             System.out.println("Dijkstra:");
         } else if (algo instanceof AStar) {
@@ -70,6 +73,7 @@ public class Main {
 
         System.out.println("Lyhimmän polun pituus: " + algo.getRoundedDist(6)
                 + ".");
+        System.out.println("Solmujen määrä: " + grid.getN() + ".");
         System.out.println("Käsitellyt solmut: " + algo.getClosedCounter()
                 + ".");
         System.out.println("Keon lisäysoperaatiot: " + algo.getHeapAddCounter()
