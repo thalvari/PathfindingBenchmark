@@ -81,22 +81,18 @@ public class NodeMinHeap {
     private void heapify(int idx) {
         int left = left(idx);
         int right = right(idx);
-        if (right <= length) {
-            int min;
-            if (getNode(left).compareTo(getNode(right)) < 0) {
-                min = left;
-            } else {
-                min = right;
-            }
+        int minIdx = idx;
+        if (left <= length && getNode(left).compareTo(getNode(idx)) < 0) {
+            minIdx = left;
+        }
 
-            if (getNode(idx).compareTo(getNode(min)) > 0) {
-                swap(idx, min);
-                heapify(min);
-            }
-        } else if (left == length
-                && getNode(idx).compareTo(getNode(left)) > 0) {
+        if (right <= length && getNode(right).compareTo(getNode(minIdx)) < 0) {
+            minIdx = right;
+        }
 
-            swap(idx, left);
+        if (minIdx != idx) {
+            swap(idx, minIdx);
+            heapify(minIdx);
         }
     }
 
