@@ -29,21 +29,20 @@ public class IntList {
      * @param i Kokonaisluku.
      */
     public void add(int i) {
-        if (full()) {
-            int[] tempArray = new int[arr.length * 2];
-            for (int j = 0; j < length; j++) {
-                tempArray[j] = arr[j];
-            }
-
-            arr = tempArray;
-        }
-
+        checkIfFull();
         arr[length] = i;
         length++;
     }
 
-    private boolean full() {
-        return length == arr.length;
+    private void checkIfFull() {
+        if (length == arr.length) {
+            int[] newArr = new int[arr.length * 2];
+            for (int j = 0; j < length; j++) {
+                newArr[j] = arr[j];
+            }
+
+            arr = newArr;
+        }
     }
 
     /**

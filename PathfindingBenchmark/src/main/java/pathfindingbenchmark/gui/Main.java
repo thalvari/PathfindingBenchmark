@@ -27,7 +27,7 @@ public class Main {
         int startIdx = grid.getIdx(65, 84);
         int goalIdx = grid.getIdx(203, 71);
 
-        Dijkstra dijkstra = new Dijkstra(grid);
+//        Dijkstra dijkstra = new Dijkstra(grid);
 //        for (int i = 0; i < 1000; i++) {
 //        dijkstra.run(startIdx, goalIdx);
 //        }

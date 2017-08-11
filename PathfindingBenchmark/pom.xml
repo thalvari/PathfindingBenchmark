@@ -109,7 +109,9 @@
                 <artifactId>pitest-maven</artifactId>
                 <version>1.2.2</version>
                 <configuration>
-                    <excludedClasses>pathfindingbenchmark.gui.*</excludedClasses>
+                    <excludedClasses>
+                        <param>pathfindingbenchmark.gui.*</param>
+                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>

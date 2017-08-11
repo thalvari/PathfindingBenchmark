@@ -6,7 +6,8 @@
 package pathfindingbenchmark.grid;
 
 /**
- * Solmuolion toteutus.
+ * Kekoon laitettavien solmuolioiden toteutus. Solmujen keskinäinen järjestys
+ * määräytyy ensin prioriteetin, sitten heuristisen arvon mukaan.
  *
  * @author thalvari
  */
@@ -21,6 +22,7 @@ public class Node implements Comparable<Node> {
      *
      * @param idx Solmun indeksi.
      * @param dist Solmun prioriteettiarvon.
+     * @param heuristic Solmun heuristinen arvo.
      */
     public Node(int idx, long dist, long heuristic) {
         this.idx = idx;

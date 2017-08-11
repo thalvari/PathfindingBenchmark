@@ -8,6 +8,7 @@ package pathfindingbenchmark.datastructures;
 import pathfindingbenchmark.grid.Node;
 
 /**
+ * Minimikeko solmu-olioille.
  *
  * @author thalvari
  */
@@ -17,20 +18,63 @@ public class NodeMinHeap {
     private Node[] arr;
     private int length;
 
-    public NodeMinHeap(int n) {
+    /**
+     * Konstruktori.
+     */
+    public NodeMinHeap() {
         arr = new Node[INIT_ARR_LEN];
+    }
+
+    /**
+     * Lisää solmun kekoon.
+     *
+     * @param u Solmu.
+     */
+    public void insert(Node u) {
+        checkIfFull();
+        length++;
+        int idx = length;
+        while (idx > 1 && getNode(parent(idx)).compareTo(u) > 0) {
+            setNode(getNode(parent(idx)), idx);
+            idx = parent(idx);
+        }
+        setNode(u, idx);
+    }
+
+    private void checkIfFull() {
+        if (length == arr.length) {
+            Node[] newArr = new Node[arr.length * 2];
+            for (int j = 0; j < length; j++) {
+                newArr[j] = arr[j];
+            }
+
+            arr = newArr;
+        }
+    }
+
+    private Node getNode(int idx) {
+        return arr[idx - 1];
     }
 
     private int parent(int idx) {
         return idx / 2;
     }
 
-    private int left(int idx) {
-        return 2 * idx;
+    private void setNode(Node u, int idx) {
+        arr[idx - 1] = u;
     }
 
-    private int right(int idx) {
-        return 2 * idx + 1;
+    /**
+     * Poistaa pienimmän prioriteetin solmun keosta.
+     *
+     * @return
+     */
+    public Node delMin() {
+        Node max = getNode(1);
+        setNode(getNode(length), 1);
+        length--;
+        heapify(1);
+        return max;
     }
 
     private void heapify(int idx) {
@@ -55,55 +99,32 @@ public class NodeMinHeap {
         }
     }
 
-    private Node getNode(int idx) {
-        return arr[idx - 1];
+    private int left(int idx) {
+        return 2 * idx;
+    }
+
+    private int right(int idx) {
+        return 2 * idx + 1;
     }
 
     private void swap(int idx1, int idx2) {
-        Node tmpNode = getNode(idx1);
-        setNode(idx1, getNode(idx2));
-        setNode(idx2, tmpNode);
+        Node u = getNode(idx1);
+        setNode(getNode(idx2), idx1);
+        setNode(u, idx2);
     }
 
-    private void setNode(int idx, Node u) {
-        arr[idx - 1] = u;
-    }
-
-    public Node delMin() {
-        Node max = getNode(1);
-        setNode(1, getNode(length));
-        length--;
-        heapify(1);
-        return max;
-    }
-
-    public void insert(Node u) {
-        if (full()) {
-            Node[] tempArray = new Node[arr.length * 2];
-            for (int j = 0; j < length; j++) {
-                tempArray[j] = arr[j];
-            }
-
-            arr = tempArray;
-        }
-
-        length++;
-        int idx = length;
-        while (idx > 1 && getNode(parent(idx)).compareTo(u) > 0) {
-            setNode(idx, getNode(parent(idx)));
-            idx = parent(idx);
-        }
-        setNode(idx, u);
-    }
-
-    private boolean full() {
-        return length == arr.length;
-    }
-
+    /**
+     * Kertoo onko keko tyhjä.
+     *
+     * @return Totuusarvo.
+     */
     public boolean empty() {
         return length == 0;
     }
 
+    /**
+     * Tyhjentää keon.
+     */
     public void clear() {
         arr = new Node[INIT_ARR_LEN];
         length = 0;

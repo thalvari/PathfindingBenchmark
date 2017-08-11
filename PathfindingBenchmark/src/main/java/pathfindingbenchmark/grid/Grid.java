@@ -18,8 +18,16 @@ import pathfindingbenchmark.datastructures.IntList;
  */
 public class Grid {
 
-    private static final long HOR_VER_DIST = 1000000000000L;
-    private static final long DIAG_DIST = 1414213562373L;
+    /**
+     * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
+     */
+    protected static final long HOR_VER_DIST = 665857;
+
+    /**
+     * Kahden solmun etäisyys liikuttaessa viistoon.
+     */
+    protected static final long DIAG_DIST = 941664;
+
     private int height;
     private int width;
     private IntList[] adjList;

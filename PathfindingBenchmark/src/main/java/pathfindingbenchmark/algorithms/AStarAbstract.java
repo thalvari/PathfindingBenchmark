@@ -14,36 +14,46 @@ import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 
 /**
- * Reitinhakualgoritmia kuvaava abstrakti luokka.
+ * A*-pohjaista reitinhakualgoritmia kuvaava abstrakti luokka.
  *
  * @author thalvari
  */
 public abstract class AStarAbstract {
 
-    protected static final long HOR_VER_DIST = 1000000000000L;
-    protected static final long DIAG_DIST = 1414213562373L;
+    /**
+     * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
+     */
+    protected static final long HOR_VER_DIST = 665857;
+
+    /**
+     * Kahden solmun etäisyys liikuttaessa viistoon.
+     */
+    protected static final long DIAG_DIST = 941664;
 
     /**
      * Verkko.
      */
     protected final Grid grid;
-    private final long dist[];
-    private final int prev[];
-    private final boolean closed[];
-//    private final PriorityQueue<Node> heap;
-    private NodeMinHeap heap;
-    private int startIdx;
+
+    /**
+     * Lähtösolmun indeksi.
+     */
+    protected int startIdx;
 
     /**
      * Maalisolmun indeksi.
      */
     protected int goalIdx;
+    private final long dist[];
+    private final int prev[];
+    private final boolean closed[];
+    private final NodeMinHeap heap;
     private int closedCounter;
     private int heapAddCounter;
     private int heapDelCounter;
 
     /**
-     * Konstruktori luo aputietorakenteet.
+     * Konstruktori.
      *
      * @param grid Verkko.
      */
@@ -52,8 +62,7 @@ public abstract class AStarAbstract {
         dist = new long[grid.getN() + 1];
         prev = new int[grid.getN() + 1];
         closed = new boolean[grid.getN() + 1];
-//        heap = new PriorityQueue<>();
-        heap = new NodeMinHeap(grid.getN());
+        heap = new NodeMinHeap();
     }
 
     /**
@@ -94,7 +103,7 @@ public abstract class AStarAbstract {
         this.startIdx = startIdx;
         this.goalIdx = goalIdx;
         for (int i = 1; i <= grid.getN(); i++) {
-            dist[i] = Long.MAX_VALUE;
+            dist[i] = Long.MAX_VALUE / 2;
             prev[i] = 0;
             closed[i] = false;
         }
@@ -155,22 +164,44 @@ public abstract class AStarAbstract {
         return idxs;
     }
 
+    /**
+     * Palauttaa solmun etäisyyden lähtösolmuun pyöristettynä haluttuun määrään
+     * merkitseviä numeroita.
+     *
+     * @param n Merkitsevien numeroiden määrä.
+     * @return Etäisyys.
+     */
     public String getRoundedDist(int n) {
-        BigDecimal d = new BigDecimal(dist[goalIdx]);
-        d = d.divide(BigDecimal.valueOf(HOR_VER_DIST));
-        return d.round(new MathContext(n, RoundingMode.HALF_EVEN))
+        return new BigDecimal(dist[goalIdx])
+                .divide(BigDecimal.valueOf(HOR_VER_DIST),
+                        new MathContext(n, RoundingMode.HALF_EVEN))
                 .stripTrailingZeros()
                 .toString();
     }
 
+    /**
+     * Palauttaa käsiteltyjen solmujen määrän.
+     *
+     * @return Määrä.
+     */
     public int getClosedCounter() {
         return closedCounter;
     }
 
+    /**
+     * Palauttaa kekoon lisättyjen solmujen määrän.
+     *
+     * @return Määrä.
+     */
     public int getHeapAddCounter() {
         return heapAddCounter;
     }
 
+    /**
+     * Palauttaa keosta poistettujen solmujen määrän.
+     *
+     * @return Määrä.
+     */
     public int getHeapDelCounter() {
         return heapDelCounter;
     }
