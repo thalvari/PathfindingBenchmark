@@ -14,14 +14,14 @@ package pathfindingbenchmark.grid;
 public class Node implements Comparable<Node> {
 
     private final int idx;
-    private final long dist;
+    private long dist;
     private final long heuristic;
 
     /**
      * Konstruktori.
      *
      * @param idx Solmun indeksi.
-     * @param dist Solmun prioriteettiarvon.
+     * @param dist Solmun etäisyys lähtösolmuun.
      * @param heuristic Solmun heuristinen arvo.
      */
     public Node(int idx, long dist, long heuristic) {
@@ -50,5 +50,14 @@ public class Node implements Comparable<Node> {
 
     private long getPriority() {
         return dist + heuristic;
+    }
+
+    /**
+     * Päivittää solmun etäisyyden lähtösolmusta.
+     *
+     * @param dist Uusi etäisyys.
+     */
+    public void setDist(long dist) {
+        this.dist = dist;
     }
 }

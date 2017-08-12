@@ -33,6 +33,7 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(47, 46);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("62.1543", dijkstra.getRoundedDist(6));
+        assertEquals(2054, dijkstra.getClosedNodeCount());
     }
 
     @Test
@@ -41,6 +42,7 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(44, 5);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("58.3259", dijkstra.getRoundedDist(6));
+        assertEquals(2022, dijkstra.getClosedNodeCount());
     }
 
     @Test
@@ -49,6 +51,7 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(14, 12);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("13", dijkstra.getRoundedDist(6));
+        assertEquals(232, dijkstra.getClosedNodeCount());
     }
 
     @Test
@@ -57,6 +60,7 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(4, 43);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("3.41421", dijkstra.getRoundedDist(6));
+        assertEquals(22, dijkstra.getClosedNodeCount());
     }
 
     @Test
@@ -67,6 +71,7 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(137, 561);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("1122.11", dijkstra.getRoundedDist(6));
+        assertEquals(133251, dijkstra.getClosedNodeCount());
     }
 
     @Test
@@ -77,5 +82,11 @@ public class DijkstraTest {
         goalIdx = grid.getIdx(63, 63);
         dijkstra.run(startIdx, goalIdx);
         assertEquals("89.0955", dijkstra.getRoundedDist(6));
+        assertEquals(4096, dijkstra.getClosedNodeCount());
+    }
+
+    @Test
+    public void testHeuristic() {
+        assertEquals(0, dijkstra.heuristic(1));
     }
 }

@@ -22,7 +22,8 @@ public class Main {
     public static void main(String[] args) {
 //        run("arena", 2, 2, 34, 46, ASTAR, 30000, false);
 //        run("maze512-32-6", 114, 464, 289, 153, ASTAR, 50, false);
-        run("AR0011SR", 65, 84, 203, 71, ASTAR, 1500, false);
+//        run("AR0011SR", 65, 84, 203, 71, ASTAR, 1500, false);
+        run("ost100d", 753, 420, 137, 561, ASTAR, 100, false);
     }
 
     private static void run(String mapName, int startX, int startY, int goalX,

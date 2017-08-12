@@ -21,12 +21,12 @@ public class Grid {
     /**
      * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
      */
-    protected static final long HOR_VER_DIST = 665857;
+    public static final long HOR_VER_DIST = 665857;
 
     /**
      * Kahden solmun etäisyys liikuttaessa viistoon.
      */
-    protected static final long DIAG_DIST = 941664;
+    public static final long DIAG_DIST = 941664;
 
     private int height;
     private int width;

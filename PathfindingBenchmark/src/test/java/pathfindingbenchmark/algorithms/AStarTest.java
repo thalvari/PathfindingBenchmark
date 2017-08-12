@@ -33,6 +33,7 @@ public class AStarTest {
         goalIdx = grid.getIdx(87, 201);
         aStar.run(startIdx, goalIdx);
         assertEquals("244.95", aStar.getRoundedDist(5));
+        assertEquals(195, aStar.getClosedNodeCount());
     }
 
     @Test
@@ -41,6 +42,7 @@ public class AStarTest {
         goalIdx = grid.getIdx(375, 360);
         aStar.run(startIdx, goalIdx);
         assertEquals("454.62", aStar.getRoundedDist(5));
+        assertEquals(24924, aStar.getClosedNodeCount());
     }
 
     @Test
@@ -49,6 +51,7 @@ public class AStarTest {
         goalIdx = grid.getIdx(382, 255);
         aStar.run(startIdx, goalIdx);
         assertEquals("455.66", aStar.getRoundedDist(5));
+        assertEquals(25473, aStar.getClosedNodeCount());
     }
 
     @Test
@@ -59,5 +62,23 @@ public class AStarTest {
         goalIdx = grid.getIdx(289, 153);
         aStar.run(startIdx, goalIdx);
         assertEquals("2275.04", aStar.getRoundedDist(6));
+        assertEquals(220792, aStar.getClosedNodeCount());
+    }
+
+    @Test
+    public void testHeuristic() {
+        startIdx = grid.getIdx(210, 395);
+        goalIdx = grid.getIdx(87, 201);
+        aStar.run(startIdx, goalIdx);
+        assertEquals(0, aStar.heuristic(goalIdx));
+    }
+
+    @Test
+    public void testHeuristic2() {
+        startIdx = grid.getIdx(210, 395);
+        goalIdx = grid.getIdx(87, 201);
+        aStar.run(startIdx, goalIdx);
+        assertEquals((194 - 123) * Grid.HOR_VER_DIST + 123 * Grid.DIAG_DIST,
+                aStar.heuristic(startIdx));
     }
 }

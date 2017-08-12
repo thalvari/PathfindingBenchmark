@@ -22,16 +22,6 @@ import pathfindingbenchmark.grid.Node;
 public abstract class AStarAbstract {
 
     /**
-     * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
-     */
-    protected static final long HOR_VER_DIST = 665857;
-
-    /**
-     * Kahden solmun etäisyys liikuttaessa viistoon.
-     */
-    protected static final long DIAG_DIST = 941664;
-
-    /**
      * Verkko.
      */
     protected final Grid grid;
@@ -59,7 +49,7 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
-        heap = new NodeMinHeap();
+        heap = new NodeMinHeap(grid.getN());
         closed = new boolean[grid.getN() + 1];
         dist = new long[grid.getN() + 1];
         prev = new int[grid.getN() + 1];
@@ -79,10 +69,6 @@ public abstract class AStarAbstract {
         while (!heap.empty()) {
             int idx = heap.delMin().getIdx();
             heapOperCount++;
-            if (closed[idx]) {
-                continue;
-            }
-
             closed[idx] = true;
             closedNodeCount++;
             if (idx == goalIdx) {
@@ -102,9 +88,9 @@ public abstract class AStarAbstract {
     private void init(int startIdx, int goalIdx) {
         this.startIdx = startIdx;
         this.goalIdx = goalIdx;
-        heap = new NodeMinHeap();
+        heap = new NodeMinHeap(grid.getN());
         closed = new boolean[grid.getN() + 1];
-        Arrays.fill(dist, Long.MAX_VALUE / 2);
+        Arrays.fill(dist, Long.MAX_VALUE);
         dist[startIdx] = 0;
         prev = new int[grid.getN() + 1];
         closedNodeCount = 0;
@@ -124,7 +110,12 @@ public abstract class AStarAbstract {
         if (newDist < dist[adjIdx]) {
             dist[adjIdx] = newDist;
             prev[adjIdx] = idx;
-            heap.insert(new Node(adjIdx, newDist, heuristic(adjIdx)));
+            if (heap.hasNode(adjIdx)) {
+                heap.decKey(adjIdx, newDist);
+            } else {
+                heap.insert(new Node(adjIdx, newDist, heuristic(adjIdx)));
+            }
+
             heapOperCount++;
         }
     }
@@ -173,7 +164,7 @@ public abstract class AStarAbstract {
      */
     public String getRoundedDist(int n) {
         return new BigDecimal(dist[goalIdx])
-                .divide(BigDecimal.valueOf(HOR_VER_DIST),
+                .divide(BigDecimal.valueOf(Grid.HOR_VER_DIST),
                         new MathContext(n, RoundingMode.HALF_EVEN))
                 .stripTrailingZeros()
                 .toString();

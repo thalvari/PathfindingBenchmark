@@ -16,13 +16,17 @@ public class NodeMinHeap {
 
     private static final int INIT_ARR_LEN = 8;
     private Node[] arr;
+    private int[] heapIdx;
     private int length;
 
     /**
      * Konstruktori.
+     *
+     * @param n Solmujen määrä.
      */
-    public NodeMinHeap() {
+    public NodeMinHeap(int n) {
         arr = new Node[INIT_ARR_LEN];
+        heapIdx = new int[n + 1];
     }
 
     /**
@@ -34,7 +38,7 @@ public class NodeMinHeap {
         checkIfFull();
         length++;
         int idx = length;
-        while (idx > 1 && getNode(parent(idx)).compareTo(u) > 0) {
+        while (idx > 1 && u.compareTo(getNode(parent(idx))) < 0) {
             setNode(getNode(parent(idx)), idx);
             idx = parent(idx);
         }
@@ -45,10 +49,7 @@ public class NodeMinHeap {
     private void checkIfFull() {
         if (length == arr.length) {
             Node[] newArr = new Node[arr.length * 2];
-            for (int j = 0; j < length; j++) {
-                newArr[j] = arr[j];
-            }
-
+            System.arraycopy(arr, 0, newArr, 0, length);
             arr = newArr;
         }
     }
@@ -63,6 +64,7 @@ public class NodeMinHeap {
 
     private void setNode(Node u, int idx) {
         arr[idx - 1] = u;
+        heapIdx[u.getIdx()] = idx;
     }
 
     /**
@@ -71,11 +73,11 @@ public class NodeMinHeap {
      * @return Solmu.
      */
     public Node delMin() {
-        Node max = getNode(1);
+        Node min = getNode(1);
         setNode(getNode(length), 1);
         length--;
         heapify(1);
-        return max;
+        return min;
     }
 
     private void heapify(int idx) {
@@ -120,10 +122,28 @@ public class NodeMinHeap {
     }
 
     /**
-     * Tyhjentää keon.
+     * Pienentää keossa olevan solmun prioriteettia.
+     *
+     * @param nodeIdx Solmun indeksi verkossa.
+     * @param newDist Uusi etäisyys lähtösolmuun.
      */
-    public void clear() {
-        arr = new Node[INIT_ARR_LEN];
-        length = 0;
+    public void decKey(int nodeIdx, long newDist) {
+        int idx = heapIdx[nodeIdx];
+        Node u = getNode(idx);
+        u.setDist(newDist);
+        while (idx > 1 && u.compareTo(getNode(parent(idx))) < 0) {
+            swap(idx, parent(idx));
+            idx = parent(idx);
+        }
+    }
+
+    /**
+     * Kertoo onko solmu keossa.
+     *
+     * @param nodeIdx Solmun indeksi verkossa.
+     * @return Totuusarvo.
+     */
+    public boolean hasNode(int nodeIdx) {
+        return heapIdx[nodeIdx] != 0;
     }
 }

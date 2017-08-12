@@ -21,18 +21,11 @@ public class NodeMinHeapTest {
 
     @Before
     public void setUp() {
-        heap = new NodeMinHeap();
+        heap = new NodeMinHeap(10);
     }
 
     @Test
     public void testNodeMinHeap() {
-        assertTrue(heap.empty());
-    }
-
-    @Test
-    public void testClear() {
-        heap.insert(new Node(0, 0, 0));
-        heap.clear();
         assertTrue(heap.empty());
     }
 

@@ -35,8 +35,8 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> heuristic(<strong class="jxr_keyword">int</strong> idx) {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          <strong class="jxr_keyword">int</strong> xDif = Math.abs(grid.getX(idx) - grid.getX(goalIdx));
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          <strong class="jxr_keyword">int</strong> yDif = Math.abs(grid.getY(idx) - grid.getY(goalIdx));
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          <strong class="jxr_keyword">return</strong> HOR_VER_DIST * Math.max(xDif, yDif)
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>                  + (DIAG_DIST - HOR_VER_DIST) * Math.min(xDif, yDif);
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>          <strong class="jxr_keyword">return</strong> Grid.HOR_VER_DIST * Math.max(xDif, yDif)
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>                  + (Grid.DIAG_DIST - Grid.HOR_VER_DIST) * Math.min(xDif, yDif);
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      }
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  }
 </pre>

@@ -124,7 +124,7 @@ public class AStarAbstractTest {
         startIdx = grid.getIdx(376, 673);
         goalIdx = grid.getIdx(736, 404);
         algo.run(startIdx, goalIdx);
-        assertEquals(347390, algo.getHeapOperCount());
+        assertEquals(278006, algo.getHeapOperCount());
     }
 
     @Test
