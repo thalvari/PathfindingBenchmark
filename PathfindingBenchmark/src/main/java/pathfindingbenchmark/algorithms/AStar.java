@@ -22,12 +22,4 @@ public class AStar extends AStarAbstract {
     public AStar(Grid grid) {
         super(grid);
     }
-
-    @Override
-    protected long heuristic(int idx) {
-        int xDif = Math.abs(grid.getX(idx) - grid.getX(goalIdx));
-        int yDif = Math.abs(grid.getY(idx) - grid.getY(goalIdx));
-        return Grid.HOR_VER_DIST * Math.max(xDif, yDif)
-                + (Grid.DIAG_DIST - Grid.HOR_VER_DIST) * Math.min(xDif, yDif);
-    }
 }

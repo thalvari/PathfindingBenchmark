@@ -21,12 +21,12 @@ public class Grid {
     /**
      * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
      */
-    public static final long HOR_VER_DIST = 665857;
+    public static final long HOR_VER_NODE_DIST = 665857;
 
     /**
      * Kahden solmun etäisyys liikuttaessa viistoon.
      */
-    public static final long DIAG_DIST = 941664;
+    public static final long DIAG_NODE_DIST = 941664;
 
     private int height;
     private int width;
@@ -78,12 +78,16 @@ public class Grid {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int idx = getIdx(x, y);
-                if (isPassable(idx)) {
-                    createAdjListForIdx(idx);
+                if (isPassable(x, y)) {
+                    createAdjListForIdx(getIdx(x, y));
                 }
             }
         }
+    }
+
+    public boolean isPassable(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height
+                && mapData[y][x].equals(".");
     }
 
     /**
@@ -95,10 +99,6 @@ public class Grid {
      */
     public Integer getIdx(int x, int y) {
         return y * width + x + 1;
-    }
-
-    private boolean isPassable(int idx) {
-        return mapData[getY(idx)][getX(idx)].equals(".");
     }
 
     /**
@@ -118,35 +118,21 @@ public class Grid {
      * @return Y-koordinaatti.
      */
     public int getY(int idx) {
-        int y = 0;
-        while (true) {
-            idx -= width;
-            if (idx > 0) {
-                y++;
-            } else {
-                break;
-            }
-        }
-        return y;
+        return (idx - 1) / width;
     }
 
     private void createAdjListForIdx(int idx) {
         for (int adjY = getY(idx) - 1; adjY <= getY(idx) + 1; adjY++) {
             for (int adjX = getX(idx) - 1; adjX <= getX(idx) + 1; adjX++) {
-                if (isInBounds(adjX, adjY)) {
+                if (isPassable(adjX, adjY)) {
                     addAdjIdxToAdjList(idx, getIdx(adjX, adjY));
                 }
             }
         }
     }
 
-    private boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
     private void addAdjIdxToAdjList(int idx, int adjIdx) {
         if (!isSameNode(idx, adjIdx)
-                && isPassable(adjIdx)
                 && (isHorVerAdjNode(idx, adjIdx)
                 || isGoodDiagAdjNode(idx, adjIdx))) {
 
@@ -167,8 +153,8 @@ public class Grid {
         int y = getY(idx);
         int adjX = getX(adjIdx);
         int adjY = getY(adjIdx);
-        return adjIdx != x && adjY != y && isPassable(getIdx(x, adjY))
-                && isPassable(getIdx(adjX, y));
+        return adjIdx != x && adjY != y && isPassable(x, adjY)
+                && isPassable(adjX, y);
     }
 
     /**
@@ -185,18 +171,17 @@ public class Grid {
     }
 
     /**
-     * Palauttaa solmun etäisyyden naapuriin.
+     * Palauttaa solmujen oktiilisen etäisyyden.
      *
-     * @param idx Solmun indeksi.
-     * @param adjIdx Naapurin indeksi.
+     * @param idx1 Ensimmäisen solmun indeksi.
+     * @param idx2 Toisen solmun indeksi.
      * @return Etäisyys.
      */
-    public long getAdjNodeDist(int idx, int adjIdx) {
-        if (isHorVerAdjNode(idx, adjIdx)) {
-            return HOR_VER_DIST;
-        } else {
-            return DIAG_DIST;
-        }
+    public long getNodeDist(int idx1, int idx2) {
+        int xDif = Math.abs(getX(idx1) - getX(idx2));
+        int yDif = Math.abs(getY(idx1) - getY(idx2));
+        return HOR_VER_NODE_DIST * Math.max(xDif, yDif)
+                + (DIAG_NODE_DIST - HOR_VER_NODE_DIST) * Math.min(xDif, yDif);
     }
 
     /**

@@ -78,7 +78,9 @@ public class AStarTest {
         startIdx = grid.getIdx(210, 395);
         goalIdx = grid.getIdx(87, 201);
         aStar.run(startIdx, goalIdx);
-        assertEquals((194 - 123) * Grid.HOR_VER_DIST + 123 * Grid.DIAG_DIST,
-                aStar.heuristic(startIdx));
+        long octileDist = (194 - 123) * Grid.HOR_VER_NODE_DIST + 123
+                * Grid.DIAG_NODE_DIST;
+
+        assertEquals(octileDist, aStar.heuristic(startIdx));
     }
 }

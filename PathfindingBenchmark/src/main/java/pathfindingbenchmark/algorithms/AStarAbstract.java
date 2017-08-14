@@ -37,8 +37,8 @@ public abstract class AStarAbstract {
     protected int goalIdx;
     private NodeMinHeap heap;
     private boolean closed[];
-    private final long dist[];
-    private int prev[];
+    private long dist[];
+    protected int prev[];
     private int closedNodeCount;
     private int heapOperCount;
 
@@ -49,10 +49,6 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
-        heap = new NodeMinHeap(grid.getN());
-        closed = new boolean[grid.getN() + 1];
-        dist = new long[grid.getN() + 1];
-        prev = new int[grid.getN() + 1];
     }
 
     /**
@@ -75,11 +71,11 @@ public abstract class AStarAbstract {
                 break;
             }
 
-            IntList adjList = grid.getAdjList(idx);
-            for (int i = 0; i < adjList.size(); i++) {
-                int adjIdx = adjList.get(i);
-                if (!closed[adjIdx]) {
-                    relax(idx, adjIdx);
+            IntList succList = getSuccList(idx);
+            for (int i = 0; i < succList.size(); i++) {
+                int succIdx = succList.get(i);
+                if (!closed[succIdx]) {
+                    relax(idx, succIdx);
                 }
             }
         }
@@ -90,9 +86,10 @@ public abstract class AStarAbstract {
         this.goalIdx = goalIdx;
         heap = new NodeMinHeap(grid.getN());
         closed = new boolean[grid.getN() + 1];
+        dist = new long[grid.getN() + 1];
+        prev = new int[grid.getN() + 1];
         Arrays.fill(dist, Long.MAX_VALUE);
         dist[startIdx] = 0;
-        prev = new int[grid.getN() + 1];
         closedNodeCount = 0;
         heapOperCount = 0;
     }
@@ -103,17 +100,27 @@ public abstract class AStarAbstract {
      * @param idx Indeksi.
      * @return Heuristinen arvo.
      */
-    protected abstract long heuristic(int idx);
+    protected long heuristic(int idx) {
+        int xDif = Math.abs(grid.getX(idx) - grid.getX(goalIdx));
+        int yDif = Math.abs(grid.getY(idx) - grid.getY(goalIdx));
+        return Grid.HOR_VER_NODE_DIST * Math.max(xDif, yDif)
+                + (Grid.DIAG_NODE_DIST - Grid.HOR_VER_NODE_DIST)
+                * Math.min(xDif, yDif);
+    }
 
-    private void relax(int idx, int adjIdx) {
-        long newDist = dist[idx] + grid.getAdjNodeDist(idx, adjIdx);
-        if (newDist < dist[adjIdx]) {
-            dist[adjIdx] = newDist;
-            prev[adjIdx] = idx;
-            if (heap.hasNode(adjIdx)) {
-                heap.decKey(adjIdx, newDist);
+    protected IntList getSuccList(int idx) {
+        return grid.getAdjList(idx);
+    }
+
+    private void relax(int idx, int succIdx) {
+        long newDist = dist[idx] + grid.getNodeDist(idx, succIdx);
+        if (newDist < dist[succIdx]) {
+            dist[succIdx] = newDist;
+            prev[succIdx] = idx;
+            if (heap.hasNode(succIdx)) {
+                heap.decKey(succIdx, newDist);
             } else {
-                heap.insert(new Node(adjIdx, newDist, heuristic(adjIdx)));
+                heap.insert(new Node(succIdx, newDist, heuristic(succIdx)));
             }
 
             heapOperCount++;
@@ -164,7 +171,7 @@ public abstract class AStarAbstract {
      */
     public String getRoundedDist(int n) {
         return new BigDecimal(dist[goalIdx])
-                .divide(BigDecimal.valueOf(Grid.HOR_VER_DIST),
+                .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
                         new MathContext(n, RoundingMode.HALF_EVEN))
                 .stripTrailingZeros()
                 .toString();
