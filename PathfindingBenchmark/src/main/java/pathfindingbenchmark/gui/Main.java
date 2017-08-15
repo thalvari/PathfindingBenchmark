@@ -22,18 +22,21 @@ public class Main {
     private static final int JPS = 3;
 
     public static void main(String[] args) {
-//        run("arena", 2, 2, 34, 46, DIJKSTRA, 35000, false);
-//        run("arena", 2, 2, 34, 46, ASTAR, 35000, false);
-//        run("arena", 2, 2, 34, 46, JPS, 35000, false);
-//        run("maze512-32-6", 114, 464, 289, 153, DIJKSTRA, 125, false);
-//        run("maze512-32-6", 114, 464, 289, 153, ASTAR, 125, false);
-//        run("maze512-32-6", 114, 464, 289, 153, JPS, 125, false);
+//        run("arena", 2, 2, 34, 46, DIJKSTRA, 75000, false);
+//        run("arena", 2, 2, 34, 46, ASTAR, 75000, false);
+//        run("arena", 2, 2, 34, 46, JPS, 75000, false);
+//        run("maze512-32-6", 114, 464, 289, 153, DIJKSTRA, 500, false);
+//        run("maze512-32-6", 114, 464, 289, 153, ASTAR, 500, false);
+//        run("maze512-32-6", 114, 464, 289, 153, JPS, 500, false);
 //        run("AR0011SR", 65, 84, 203, 71, DIJKSTRA, 3500, false);
 //        run("AR0011SR", 65, 84, 203, 71, ASTAR, 3500, false);
-        run("AR0011SR", 65, 84, 203, 71, JPS, 3500, false);
-//        run("ost100d", 753, 420, 137, 561, DIJKSTRA, 175, false);
-//        run("ost100d", 753, 420, 137, 561, ASTAR, 175, false);
-//        run("ost100d", 753, 420, 137, 561, JPS, 175, false);
+//        run("AR0011SR", 65, 84, 203, 71, JPS, 3500, false);
+//        run("ost100d", 753, 420, 137, 561, DIJKSTRA, 250, false);
+//        run("ost100d", 753, 420, 137, 561, ASTAR, 250, false);
+//        run("ost100d", 753, 420, 137, 561, JPS, 250, false);
+//        run("TheFrozenSea", 1008, 73, 263, 771, DIJKSTRA, 100, false);
+//        run("TheFrozenSea", 1008, 73, 263, 771, ASTAR, 100, false);
+        run("TheFrozenSea", 1008, 73, 263, 771, JPS, 100, false);
     }
 
     private static void run(String mapName, int startX, int startY, int goalX,

@@ -30,7 +30,7 @@ public class Grid {
 
     private int height;
     private int width;
-    private IntList[] adjList;
+    private IntList[] adjLists;
     private String[][] mapData;
 
     /**
@@ -43,7 +43,6 @@ public class Grid {
         List<String> lines = readFile(mapName);
         if (lines != null) {
             parseMapData(lines);
-            createAdjList();
         }
     }
 
@@ -70,16 +69,17 @@ public class Grid {
         }
     }
 
-    private void createAdjList() {
-        adjList = new IntList[height * width + 1];
-        for (int i = 1; i <= getN(); i++) {
-            adjList[i] = new IntList();
+    public void createAdjList() {
+        if (mapData == null) {
+            return;
         }
 
+        adjLists = new IntList[height * width + 1];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (isPassable(x, y)) {
-                    createAdjListForIdx(getIdx(x, y));
+                    int idx = getIdx(x, y);
+                    adjLists[idx] = createAdjListForIdx(idx);
                 }
             }
         }
@@ -87,7 +87,9 @@ public class Grid {
 
     public boolean isPassable(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height
-                && mapData[y][x].equals(".");
+                && (mapData[y][x].equals(".")
+                || mapData[y][x].equals("G")
+                || mapData[y][x].equals("S"));
     }
 
     /**
@@ -121,23 +123,22 @@ public class Grid {
         return (idx - 1) / width;
     }
 
-    private void createAdjListForIdx(int idx) {
+    public IntList createAdjListForIdx(int idx) {
+        IntList adjList = new IntList();
         for (int adjY = getY(idx) - 1; adjY <= getY(idx) + 1; adjY++) {
             for (int adjX = getX(idx) - 1; adjX <= getX(idx) + 1; adjX++) {
-                if (isPassable(adjX, adjY)) {
-                    addAdjIdxToAdjList(idx, getIdx(adjX, adjY));
+                int adjIdx = getIdx(adjX, adjY);
+                if (!isSameNode(idx, adjIdx)
+                        && isPassable(adjX, adjY)
+                        && (isHorVerAdjNode(idx, adjIdx)
+                        || isGoodDiagAdjNode(idx, adjIdx))) {
+
+                    adjList.add(adjIdx);
                 }
             }
         }
-    }
 
-    private void addAdjIdxToAdjList(int idx, int adjIdx) {
-        if (!isSameNode(idx, adjIdx)
-                && (isHorVerAdjNode(idx, adjIdx)
-                || isGoodDiagAdjNode(idx, adjIdx))) {
-
-            adjList[idx].add(adjIdx);
-        }
+        return adjList;
     }
 
     private boolean isSameNode(int idx, int adjIdx) {
@@ -164,10 +165,10 @@ public class Grid {
      * @return Vieruslista.
      */
     public IntList getAdjList(int idx) {
-        if (adjList == null) {
+        if (adjLists == null) {
             return null;
         }
-        return adjList[idx];
+        return adjLists[idx];
     }
 
     /**

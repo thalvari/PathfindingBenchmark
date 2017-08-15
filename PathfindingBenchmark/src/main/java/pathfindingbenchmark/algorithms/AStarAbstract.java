@@ -49,6 +49,9 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
+        if (!(this instanceof JPS)) {
+            grid.createAdjList();
+        }
     }
 
     /**
@@ -95,7 +98,7 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Heuristinen funktio.
+     * Palauttaa solmun oktiilisen etäisyyden maalisolmuun.
      *
      * @param idx Indeksi.
      * @return Heuristinen arvo.

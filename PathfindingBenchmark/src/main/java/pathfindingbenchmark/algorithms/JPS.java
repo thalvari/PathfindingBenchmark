@@ -20,11 +20,12 @@ public class JPS extends AStarAbstract {
 
     @Override
     protected IntList getSuccList(int idx) {
-        IntList prunedAdjList = prune(idx);
+        IntList prunedAdjList = getPrunedAdjList(idx);
         IntList succList = new IntList();
         for (int i = 0; i < prunedAdjList.size(); i++) {
-            int succIdx = prunedAdjList.get(i);
-            succIdx = jump(idx, new Direction(idx, succIdx, grid));
+            int succIdx = jump(idx,
+                    new Direction(idx, prunedAdjList.get(i), grid));
+
             if (succIdx != 0) {
                 succList.add(succIdx);
             }
@@ -33,14 +34,14 @@ public class JPS extends AStarAbstract {
         return succList;
     }
 
-    private IntList prune(int idx) {
+    private IntList getPrunedAdjList(int idx) {
         int parIdx = prev[idx];
+        IntList prunedAdjList = new IntList();
         if (parIdx == 0) {
-            return grid.getAdjList(idx);
+            return grid.createAdjListForIdx(idx);
         }
 
         Direction dir = new Direction(parIdx, idx, grid);
-        IntList prunedAdjList = new IntList();
         if (dir.isDiag()) {
             checkDiagPruningRules(idx, dir, prunedAdjList);
         } else if (dir.isHor()) {
@@ -57,32 +58,37 @@ public class JPS extends AStarAbstract {
 
         int x = grid.getX(idx);
         int y = grid.getY(idx);
-        if (checkDiagPruningRule1(idx, dir)) {
+        boolean hasNaturalAdj1 = false;
+        boolean hasNaturalAdj2 = false;
+        if (checkDiagNaturalAdj1(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y));
+            hasNaturalAdj1 = true;
         }
 
-        if (checkDiagPruningRule2(idx, dir)) {
+        if (checkDiagNaturalAdj2(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x, y + dir.getY()));
+            hasNaturalAdj2 = true;
         }
 
-        if (checkDiagPruningRule3(idx, dir)) {
+        if (hasNaturalAdj1
+                && hasNaturalAdj2
+                && checkDiagNaturalAdj3(idx, dir)) {
+
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y + dir.getY()));
         }
     }
 
-    private boolean checkDiagPruningRule1(int idx, Direction dir) {
+    private boolean checkDiagNaturalAdj1(int idx, Direction dir) {
         return grid.isPassable(grid.getX(idx) + dir.getX(), grid.getY(idx));
     }
 
-    private boolean checkDiagPruningRule2(int idx, Direction dir) {
+    private boolean checkDiagNaturalAdj2(int idx, Direction dir) {
         return grid.isPassable(grid.getX(idx), grid.getY(idx) + dir.getY());
     }
 
-    private boolean checkDiagPruningRule3(int idx, Direction dir) {
-        return checkDiagPruningRule1(idx, dir)
-                && checkDiagPruningRule2(idx, dir)
-                && grid.isPassable(grid.getX(idx) + dir.getX(),
-                        grid.getY(idx) + dir.getY());
+    private boolean checkDiagNaturalAdj3(int idx, Direction dir) {
+        return grid.isPassable(grid.getX(idx) + dir.getX(),
+                grid.getY(idx) + dir.getY());
     }
 
     private void checkHorPruningRules(int idx, Direction dir,
@@ -90,55 +96,55 @@ public class JPS extends AStarAbstract {
 
         int x = grid.getX(idx);
         int y = grid.getY(idx);
-        if (checkHorPruningRule1(idx, dir)) {
+        boolean hasForcedAdj1 = false;
+        boolean hasForcedAdj3 = false;
+        if (checkHorNaturalAdj(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y));
         }
 
-        if (checkHorPruningRule2(idx, dir)) {
+        if (checkHorForcedAdj1(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x, y - 1));
+            hasForcedAdj1 = true;
         }
 
-        if (checkHorPruningRule3(idx, dir)) {
+        if (hasForcedAdj1 && checkHorForcedAdj2(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y - 1));
         }
 
-        if (checkHorPruningRule4(idx, dir)) {
+        if (checkHorForcedAdj3(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x, y + 1));
+            hasForcedAdj3 = true;
         }
 
-        if (checkHorPruningRule5(idx, dir)) {
+        if (hasForcedAdj3 && checkHorForcedAdj4(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y + 1));
         }
     }
 
-    private boolean checkHorPruningRule1(int idx, Direction dir) {
+    private boolean checkHorNaturalAdj(int idx, Direction dir) {
         return grid.isPassable(grid.getX(idx) + dir.getX(), grid.getY(idx));
     }
 
-    private boolean checkHorPruningRule2(int idx, Direction dir) {
+    private boolean checkHorForcedAdj1(int idx, Direction dir) {
         int x = grid.getX(idx);
         int y = grid.getY(idx);
         return grid.isPassable(x, y - 1)
                 && !grid.isPassable(x - dir.getX(), y - 1);
     }
 
-    private boolean checkHorPruningRule3(int idx, Direction dir) {
-        return checkHorPruningRule2(idx, dir)
-                && grid.isPassable(grid.getX(idx) + dir.getX(),
-                        grid.getY(idx) - 1);
+    private boolean checkHorForcedAdj2(int idx, Direction dir) {
+        return grid.isPassable(grid.getX(idx) + dir.getX(), grid.getY(idx) - 1);
     }
 
-    private boolean checkHorPruningRule4(int idx, Direction dir) {
+    private boolean checkHorForcedAdj3(int idx, Direction dir) {
         int x = grid.getX(idx);
         int y = grid.getY(idx);
         return grid.isPassable(x, y + 1)
                 && !grid.isPassable(x - dir.getX(), y + 1);
     }
 
-    private boolean checkHorPruningRule5(int idx, Direction dir) {
-        return checkHorPruningRule4(idx, dir)
-                && grid.isPassable(grid.getX(idx) + dir.getX(),
-                        grid.getY(idx) + 1);
+    private boolean checkHorForcedAdj4(int idx, Direction dir) {
+        return grid.isPassable(grid.getX(idx) + dir.getX(), grid.getY(idx) + 1);
     }
 
     private void checkVerPruningRules(int idx, Direction dir,
@@ -146,58 +152,58 @@ public class JPS extends AStarAbstract {
 
         int x = grid.getX(idx);
         int y = grid.getY(idx);
-        if (checkVerPruningRule1(idx, dir)) {
+        boolean hasForcedAdj1 = false;
+        boolean hasForcedAdj3 = false;
+        if (checkVerNaturalAdj(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x, y + dir.getY()));
         }
 
-        if (checkVerPruningRule2(idx, dir)) {
+        if (checkVerForcedAdj1(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x - 1, y));
+            hasForcedAdj1 = true;
         }
 
-        if (checkVerPruningRule3(idx, dir)) {
+        if (hasForcedAdj1 && checkVerForcedAdj2(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x - 1, y + dir.getY()));
         }
 
-        if (checkVerPruningRule4(idx, dir)) {
+        if (checkVerForcedAdj3(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + 1, y));
+            hasForcedAdj3 = true;
         }
 
-        if (checkVerPruningRule5(idx, dir)) {
+        if (hasForcedAdj3 && checkVerForcedAdj4(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + 1, y + dir.getY()));
         }
     }
 
-    private boolean checkVerPruningRule1(int idx, Direction dir) {
+    private boolean checkVerNaturalAdj(int idx, Direction dir) {
         return grid.isPassable(grid.getX(idx), grid.getY(idx) + dir.getY());
     }
 
-    private boolean checkVerPruningRule2(int idx, Direction dir) {
+    private boolean checkVerForcedAdj1(int idx, Direction dir) {
         int x = grid.getX(idx);
         int y = grid.getY(idx);
         return grid.isPassable(x - 1, y)
                 && !grid.isPassable(x - 1, y - dir.getY());
     }
 
-    private boolean checkVerPruningRule3(int idx, Direction dir) {
-        return checkVerPruningRule2(idx, dir)
-                && grid.isPassable(grid.getX(idx) - 1,
-                        grid.getY(idx) + dir.getY());
+    private boolean checkVerForcedAdj2(int idx, Direction dir) {
+        return grid.isPassable(grid.getX(idx) - 1, grid.getY(idx) + dir.getY());
     }
 
-    private boolean checkVerPruningRule4(int idx, Direction dir) {
+    private boolean checkVerForcedAdj3(int idx, Direction dir) {
         int x = grid.getX(idx);
         int y = grid.getY(idx);
         return grid.isPassable(x + 1, y)
                 && !grid.isPassable(x + 1, y - dir.getY());
     }
 
-    private boolean checkVerPruningRule5(int idx, Direction dir) {
-        return checkVerPruningRule4(idx, dir)
-                && grid.isPassable(grid.getX(idx) + 1,
-                        grid.getY(idx) + dir.getY());
+    private boolean checkVerForcedAdj4(int idx, Direction dir) {
+        return grid.isPassable(grid.getX(idx) + 1, grid.getY(idx) + dir.getY());
     }
 
-    private int jump(int parIdx, Direction dir) {
+    protected int jump(int parIdx, Direction dir) {
         if (!nextPassable(parIdx, dir)) {
             return 0;
         }
@@ -209,15 +215,11 @@ public class JPS extends AStarAbstract {
 
         if (!dir.isDiag()) {
             if ((dir.isHor()
-                    && (checkHorPruningRule2(idx, dir)
-                    || checkHorPruningRule3(idx, dir)
-                    || checkHorPruningRule4(idx, dir)
-                    || checkHorPruningRule5(idx, dir)))
+                    && (checkHorForcedAdj1(idx, dir)
+                    || checkHorForcedAdj3(idx, dir)))
                     || (dir.isVer()
-                    && (checkVerPruningRule2(idx, dir)
-                    || checkVerPruningRule3(idx, dir)
-                    || checkVerPruningRule4(idx, dir)
-                    || checkVerPruningRule5(idx, dir)))) {
+                    && (checkVerForcedAdj1(idx, dir)
+                    || checkVerForcedAdj3(idx, dir)))) {
 
                 return idx;
             }
