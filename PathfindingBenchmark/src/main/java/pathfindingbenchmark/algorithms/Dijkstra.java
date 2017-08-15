@@ -21,6 +21,7 @@ public class Dijkstra extends AStarAbstract {
      */
     public Dijkstra(Grid grid) {
         super(grid);
+        grid.createAdjList();
     }
 
     @Override
