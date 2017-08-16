@@ -16,77 +16,93 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class DijkstraTest {
 
-    private Grid grid;
-    private Dijkstra dijkstra;
-    private int startIdx;
-    private int goalIdx;
+    private AStarAbstract algo1;
+    private AStarAbstract algo2;
+    private AStarAbstract algo3;
+    private AStarAbstract algo4;
 
     @Before
     public void setUp() {
-        grid = new Grid("arena");
-        dijkstra = new Dijkstra(grid);
+        algo1 = new Dijkstra(new Grid("maze512-2-2"));
+        algo2 = new Dijkstra(new Grid("32room_002"));
+        algo3 = new Dijkstra(new Grid("orz100d"));
+        algo4 = new Dijkstra(new Grid("random512-40-5"));
     }
 
     @Test
-    public void testRun() {
-        startIdx = grid.getIdx(1, 7);
-        goalIdx = grid.getIdx(47, 46);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("62.1543", dijkstra.getRoundedDist(6));
-        assertEquals(2054, dijkstra.getClosedNodeCount());
+    public void testRun1() {
+        algo1.run(145, 419, 483, 58);
+        assertEquals("4754.04", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun2() {
-        startIdx = grid.getIdx(1, 42);
-        goalIdx = grid.getIdx(44, 5);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("58.3259", dijkstra.getRoundedDist(6));
-        assertEquals(2022, dijkstra.getClosedNodeCount());
+        algo1.run(449, 236, 440, 46);
+        assertEquals("4754.32", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun3() {
-        startIdx = grid.getIdx(1, 12);
-        goalIdx = grid.getIdx(14, 12);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("13", dijkstra.getRoundedDist(6));
-        assertEquals(232, dijkstra.getClosedNodeCount());
+        algo1.run(479, 4, 2, 376);
+        assertEquals("4753.94", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun4() {
-        startIdx = grid.getIdx(1, 42);
-        goalIdx = grid.getIdx(4, 43);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("3.41421", dijkstra.getRoundedDist(6));
-        assertEquals(22, dijkstra.getClosedNodeCount());
+        algo2.run(481, 47, 9, 506);
+        assertEquals("811.649", algo2.getRoundedDist(6));
     }
 
     @Test
     public void testRun5() {
-        grid = new Grid("ost100d");
-        dijkstra = new Dijkstra(grid);
-        startIdx = grid.getIdx(753, 420);
-        goalIdx = grid.getIdx(137, 561);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("1122.11", dijkstra.getRoundedDist(6));
-        assertEquals(133251, dijkstra.getClosedNodeCount());
+        algo2.run(486, 414, 82, 41);
+        assertEquals("809.566", algo2.getRoundedDist(6));
     }
 
     @Test
     public void testRun6() {
-        grid = new Grid("empty_64");
-        dijkstra = new Dijkstra(grid);
-        startIdx = grid.getIdx(0, 0);
-        goalIdx = grid.getIdx(63, 63);
-        dijkstra.run(startIdx, goalIdx);
-        assertEquals("89.0955", dijkstra.getRoundedDist(6));
-        assertEquals(4096, dijkstra.getClosedNodeCount());
+        algo2.run(23, 20, 459, 364);
+        assertEquals("810.85", algo2.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun7() {
+        algo3.run(397, 233, 149, 17);
+        assertEquals("971.82", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun8() {
+        algo3.run(392, 32, 386, 229);
+        assertEquals("971.59", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun9() {
+        algo3.run(407, 329, 138, 15);
+        assertEquals("937.365", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun10() {
+        algo4.run(114, 240, 82, 322);
+        assertEquals("2004.81", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun11() {
+        algo4.run(32, 308, 183, 232);
+        assertEquals("2005.36", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun12() {
+        algo4.run(8, 99, 179, 423);
+        assertEquals("1785.83", algo4.getRoundedDist(6));
     }
 
     @Test
     public void testHeuristic() {
-        assertEquals(0, dijkstra.heuristic(1));
+        assertEquals(0, algo1.heuristic(1));
     }
 }

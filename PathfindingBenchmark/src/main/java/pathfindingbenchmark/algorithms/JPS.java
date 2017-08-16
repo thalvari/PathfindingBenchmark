@@ -7,13 +7,22 @@ package pathfindingbenchmark.algorithms;
 
 import pathfindingbenchmark.datastructures.IntList;
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.util.Direction;
 
 /**
+ * JPS-algoritmin toteutus. Algoritmii karsii ensin huonot naapurisolmut ja
+ * etsii loppujen tilalle mahdollisen hyppysolmun joka on samassa linjassa
+ * solmun ja naapurin kanssa.
  *
  * @author thalvari
  */
 public class JPS extends AStarAbstract {
 
+    /**
+     * Konstruktori.
+     *
+     * @param grid Verkko.
+     */
     public JPS(Grid grid) {
         super(grid);
     }
@@ -38,7 +47,7 @@ public class JPS extends AStarAbstract {
         int parIdx = prev[idx];
         IntList prunedAdjList = new IntList();
         if (parIdx == 0) {
-            return grid.createAdjListForIdx(idx);
+            return grid.getAdjList(idx);
         }
 
         Direction dir = new Direction(parIdx, idx, grid);
@@ -96,10 +105,12 @@ public class JPS extends AStarAbstract {
 
         int x = grid.getX(idx);
         int y = grid.getY(idx);
+        boolean hasNaturalAdj = false;
         boolean hasForcedAdj1 = false;
         boolean hasForcedAdj3 = false;
         if (checkHorNaturalAdj(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y));
+            hasNaturalAdj = true;
         }
 
         if (checkHorForcedAdj1(idx, dir)) {
@@ -107,7 +118,7 @@ public class JPS extends AStarAbstract {
             hasForcedAdj1 = true;
         }
 
-        if (hasForcedAdj1 && checkHorForcedAdj2(idx, dir)) {
+        if (hasNaturalAdj && hasForcedAdj1 && checkHorForcedAdj2(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y - 1));
         }
 
@@ -116,7 +127,7 @@ public class JPS extends AStarAbstract {
             hasForcedAdj3 = true;
         }
 
-        if (hasForcedAdj3 && checkHorForcedAdj4(idx, dir)) {
+        if (hasNaturalAdj && hasForcedAdj3 && checkHorForcedAdj4(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + dir.getX(), y + 1));
         }
     }
@@ -152,10 +163,12 @@ public class JPS extends AStarAbstract {
 
         int x = grid.getX(idx);
         int y = grid.getY(idx);
+        boolean hasNaturalAdj = false;
         boolean hasForcedAdj1 = false;
         boolean hasForcedAdj3 = false;
         if (checkVerNaturalAdj(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x, y + dir.getY()));
+            hasNaturalAdj = true;
         }
 
         if (checkVerForcedAdj1(idx, dir)) {
@@ -163,7 +176,7 @@ public class JPS extends AStarAbstract {
             hasForcedAdj1 = true;
         }
 
-        if (hasForcedAdj1 && checkVerForcedAdj2(idx, dir)) {
+        if (hasNaturalAdj && hasForcedAdj1 && checkVerForcedAdj2(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x - 1, y + dir.getY()));
         }
 
@@ -172,7 +185,7 @@ public class JPS extends AStarAbstract {
             hasForcedAdj3 = true;
         }
 
-        if (hasForcedAdj3 && checkVerForcedAdj4(idx, dir)) {
+        if (hasNaturalAdj && hasForcedAdj3 && checkVerForcedAdj4(idx, dir)) {
             prunedAdjList.add(grid.getIdx(x + 1, y + dir.getY()));
         }
     }
@@ -203,7 +216,7 @@ public class JPS extends AStarAbstract {
         return grid.isPassable(grid.getX(idx) + 1, grid.getY(idx) + dir.getY());
     }
 
-    protected int jump(int parIdx, Direction dir) {
+    private int jump(int parIdx, Direction dir) {
         if (!nextPassable(parIdx, dir)) {
             return 0;
         }
@@ -224,10 +237,14 @@ public class JPS extends AStarAbstract {
                 return idx;
             }
         } else {
-            int idx1 = grid.getIdx(grid.getX(idx), grid.getY(parIdx));
-            int idx2 = grid.getIdx(grid.getX(parIdx), grid.getY(idx));
-            Direction dir1 = new Direction(parIdx, idx1, grid);
-            Direction dir2 = new Direction(parIdx, idx2, grid);
+            Direction dir1 = new Direction(parIdx,
+                    grid.getIdx(grid.getX(idx), grid.getY(parIdx)),
+                    grid);
+
+            Direction dir2 = new Direction(parIdx,
+                    grid.getIdx(grid.getX(parIdx), grid.getY(idx)),
+                    grid);
+
             if (jump(idx, dir1) != 0 || jump(idx, dir2) != 0) {
                 return idx;
             }
@@ -237,9 +254,13 @@ public class JPS extends AStarAbstract {
     }
 
     private boolean nextPassable(int idx, Direction dir) {
-        int nextX = grid.getX(idx) + dir.getX();
-        int nextY = grid.getY(idx) + dir.getY();
-        return grid.isPassable(nextX, nextY);
+        int x = grid.getX(idx);
+        int y = grid.getY(idx);
+        return grid.isPassable(x + dir.getX(), y + dir.getY())
+                && (!dir.isDiag()
+                || (grid.isPassable(x + dir.getX(), y)
+                && grid.isPassable(x, y + dir.getY())));
+
     }
 
     private int step(int idx, Direction dir) {

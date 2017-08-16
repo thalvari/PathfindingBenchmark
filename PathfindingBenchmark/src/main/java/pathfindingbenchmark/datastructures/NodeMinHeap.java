@@ -5,7 +5,7 @@
  */
 package pathfindingbenchmark.datastructures;
 
-import pathfindingbenchmark.grid.Node;
+import pathfindingbenchmark.util.Node;
 
 /**
  * Minimikeko solmu-olioille.
@@ -122,7 +122,7 @@ public class NodeMinHeap {
     }
 
     /**
-     * Pienentää keossa olevan solmun prioriteettia.
+     * Pienentää keossa olevan solmun etäisyyttä lähtösolmusta.
      *
      * @param nodeIdx Solmun indeksi verkossa.
      * @param newDist Uusi etäisyys lähtösolmuun.

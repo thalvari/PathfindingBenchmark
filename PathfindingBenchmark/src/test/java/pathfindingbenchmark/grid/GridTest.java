@@ -24,26 +24,23 @@ public class GridTest {
     @Before
     public void setUp() {
         grid1 = new Grid("arena");
-        grid2 = new Grid("empty_64");
-        grid1.createAdjList();
-        grid2.createAdjList();
+        grid2 = new Grid("empty_4");
     }
 
     @Test
-    public void testGrid() {
-        assertEquals(2401, grid1.getN());
+    public void testGrid1() {
+        assertEquals(2401, grid1.getSize());
     }
 
     @Test
     public void testGrid2() {
         Grid grid = new Grid("?");
-        grid.createAdjList();
         assertNull(grid.getAdjList(grid.getIdx(0, 0)));
-        assertEquals(0, grid.getN());
+        assertEquals(0, grid.getSize());
     }
 
     @Test
-    public void testGetAdjList() {
+    public void testGetAdjList1() {
         assertNull(grid1.getAdjList(grid1.getIdx(5, 0)));
     }
 
@@ -81,6 +78,11 @@ public class GridTest {
 
     @Test
     public void testGetAdjList7() {
-        assertEquals(3, grid2.getAdjList(grid2.getIdx(63, 63)).size());
+        assertEquals(3, grid2.getAdjList(grid2.getIdx(3, 3)).size());
+    }
+
+    @Test
+    public void testPassableNodeCount() {
+        assertEquals(2054, grid1.getPassableNodeCount());
     }
 }

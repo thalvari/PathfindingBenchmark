@@ -5,6 +5,10 @@
  */
 package pathfindingbenchmark.gui;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import pathfindingbenchmark.algorithms.AStar;
 import pathfindingbenchmark.algorithms.AStarAbstract;
 import pathfindingbenchmark.algorithms.Dijkstra;
@@ -17,58 +21,68 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class Main {
 
-    private static final int DIJKSTRA = 1;
-    private static final int ASTAR = 2;
-    private static final int JPS = 3;
+    private static final String[] ALGOS = {"Dijkstra", "AStar", "JPS"};
+    private static final int SAMPLE_SIZE = 100;
+    private static final ThreadMXBean BEAN =
+            ManagementFactory.getThreadMXBean();
 
     public static void main(String[] args) {
-//        run("arena", 2, 2, 34, 46, DIJKSTRA, 75000, false);
-//        run("arena", 2, 2, 34, 46, ASTAR, 75000, false);
-//        run("arena", 2, 2, 34, 46, JPS, 75000, false);
-//        run("maze512-32-6", 114, 464, 289, 153, DIJKSTRA, 500, false);
-//        run("maze512-32-6", 114, 464, 289, 153, ASTAR, 500, false);
-//        run("maze512-32-6", 114, 464, 289, 153, JPS, 500, false);
-//        run("AR0011SR", 65, 84, 203, 71, DIJKSTRA, 3500, false);
-//        run("AR0011SR", 65, 84, 203, 71, ASTAR, 3500, false);
-//        run("AR0011SR", 65, 84, 203, 71, JPS, 3500, false);
-//        run("ost100d", 753, 420, 137, 561, DIJKSTRA, 250, false);
-//        run("ost100d", 753, 420, 137, 561, ASTAR, 250, false);
-//        run("ost100d", 753, 420, 137, 561, JPS, 250, false);
-//        run("TheFrozenSea", 1008, 73, 263, 771, DIJKSTRA, 100, false);
-//        run("TheFrozenSea", 1008, 73, 263, 771, ASTAR, 100, false);
-        run("TheFrozenSea", 1008, 73, 263, 771, JPS, 100, false);
+        test("arena2", 275, 206, 4, 98, false);
+        test("AR0011SR", 65, 84, 203, 71, false);
+        test("lak505d", 171, 152, 135, 178, false);
     }
 
-    private static void run(String mapName, int startX, int startY, int goalX,
-            int goalY, int algoIdx, int n, boolean print) {
+    private static void test(String mapName, int startX, int startY, int goalX,
+            int goalY, boolean print) {
 
         Grid grid = new Grid(mapName);
-        int startIdx = grid.getIdx(startX, startY);
-        int goalIdx = grid.getIdx(goalX, goalY);
+        printMapName(mapName);
         AStarAbstract algo;
-        switch (algoIdx) {
-            case DIJKSTRA:
+        for (String algoName : ALGOS) {
+            if (algoName.equals("Dijkstra")) {
                 algo = new Dijkstra(grid);
-                break;
-            case ASTAR:
+            } else if (algoName.equals("AStar")) {
                 algo = new AStar(grid);
-                break;
-            case JPS:
+            } else {
                 algo = new JPS(grid);
-                break;
-            default:
-                return;
+            }
+
+            long cpuTimeSum = runAlgo(algo, startX, startY, goalX, goalY);
+            if (print) {
+                printMarkedGrid(algo);
+            }
+
+            printStatistics(algo, grid);
+            printCpuTime(cpuTimeSum);
+            System.out.println("");
+        }
+    }
+
+    private static void printMapName(String mapName) {
+        for (int i = 0; i < mapName.length(); i++) {
+            System.out.print("-");
         }
 
-        for (int i = 0; i < n; i++) {
-            algo.run(startIdx, goalIdx);
+        System.out.println("");
+        System.out.println(mapName);
+        for (int i = 0; i < mapName.length(); i++) {
+            System.out.print("-");
         }
 
-        if (print) {
-            printMarkedGrid(algo);
+        System.out.println("\n");
+    }
+
+    private static long runAlgo(AStarAbstract algo, int startX, int startY,
+            int goalX, int goalY) {
+
+        long cpuTimeSum = 0;
+        for (int i = 0; i < SAMPLE_SIZE; i++) {
+            long startCpuTime = BEAN.getCurrentThreadCpuTime();
+            algo.run(startX, startY, goalX, goalY);
+            cpuTimeSum += BEAN.getCurrentThreadCpuTime() - startCpuTime;
         }
 
-        printStatistics(algo, grid);
+        return cpuTimeSum;
     }
 
     private static void printMarkedGrid(AStarAbstract algo) {
@@ -92,10 +106,21 @@ public class Main {
 
         System.out.println("Lyhimmän polun pituus: " + algo.getRoundedDist(6)
                 + ".");
-        System.out.println("Solmujen määrä: " + grid.getN() + ".");
+
+        System.out.println("Solmujen määrä: " + grid.getPassableNodeCount()
+                + ".");
+
         System.out.println("Käsiteltyjen solmujen määrä: "
                 + algo.getClosedNodeCount() + ".");
+
         System.out.println("Keko-operaatioiden määrä: "
                 + algo.getHeapOperCount() + ".");
+    }
+
+    private static void printCpuTime(long cpuTimeSum) {
+        System.out.println("Suoritusaika: " + new BigDecimal(cpuTimeSum)
+                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1000000))
+                .setScale(3, RoundingMode.HALF_UP)
+                .toString() + " ms.");
     }
 }

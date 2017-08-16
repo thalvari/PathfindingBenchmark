@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> pathfindingbenchmark.datastructures;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> pathfindingbenchmark.grid.Node;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> pathfindingbenchmark.util.Node;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * Minimikeko solmu-olioille.</em>
@@ -23,7 +23,7 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../pathfindingbenchmark/datastructures/NodeMinHeap.html">NodeMinHeap</a> {
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INIT_ARR_LEN = 8;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">private</strong> <a href="../../pathfindingbenchmark/grid/Node.html">Node</a>[] arr;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">private</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a>[] arr;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong>[] heapIdx;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> length;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  
@@ -33,7 +33,7 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">     * @param n Solmujen määrä.</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">public</strong> <a href="../../pathfindingbenchmark/datastructures/NodeMinHeap.html">NodeMinHeap</a>(<strong class="jxr_keyword">int</strong> n) {
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>          arr = <strong class="jxr_keyword">new</strong> <a href="../../pathfindingbenchmark/grid/Node.html">Node</a>[INIT_ARR_LEN];
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>          arr = <strong class="jxr_keyword">new</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a>[INIT_ARR_LEN];
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          heapIdx = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[n + 1];
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      }
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">     * @param u Solmu.</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> insert(<a href="../../pathfindingbenchmark/grid/Node.html">Node</a> u) {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> insert(<a href="../../pathfindingbenchmark/util/Node.html">Node</a> u) {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>          checkIfFull();
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>          length++;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">int</strong> idx = length;
@@ -56,13 +56,13 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkIfFull() {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">if</strong> (length == arr.length) {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>              <a href="../../pathfindingbenchmark/grid/Node.html">Node</a>[] newArr = <strong class="jxr_keyword">new</strong> <a href="../../pathfindingbenchmark/grid/Node.html">Node</a>[arr.length * 2];
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>              <a href="../../pathfindingbenchmark/util/Node.html">Node</a>[] newArr = <strong class="jxr_keyword">new</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a>[arr.length * 2];
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>              System.arraycopy(arr, 0, newArr, 0, length);
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>              arr = newArr;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> <a href="../../pathfindingbenchmark/grid/Node.html">Node</a> getNode(<strong class="jxr_keyword">int</strong> idx) {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a> getNode(<strong class="jxr_keyword">int</strong> idx) {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">return</strong> arr[idx - 1];
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      }
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
@@ -70,7 +70,7 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          <strong class="jxr_keyword">return</strong> idx / 2;
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setNode(<a href="../../pathfindingbenchmark/grid/Node.html">Node</a> u, <strong class="jxr_keyword">int</strong> idx) {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setNode(<a href="../../pathfindingbenchmark/util/Node.html">Node</a> u, <strong class="jxr_keyword">int</strong> idx) {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          arr[idx - 1] = u;
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          heapIdx[u.getIdx()] = idx;
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
@@ -80,8 +80,8 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">     * @return Solmu.</em>
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">public</strong> <a href="../../pathfindingbenchmark/grid/Node.html">Node</a> delMin() {
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <a href="../../pathfindingbenchmark/grid/Node.html">Node</a> min = getNode(1);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">public</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a> delMin() {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <a href="../../pathfindingbenchmark/util/Node.html">Node</a> min = getNode(1);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>          setNode(getNode(length), 1);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          length--;
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          heapify(1);
@@ -115,7 +115,7 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     }
 <a class="jxr_linenumber" name="L108" href="#L108">108</a> 
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> swap(<strong class="jxr_keyword">int</strong> idx1, <strong class="jxr_keyword">int</strong> idx2) {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <a href="../../pathfindingbenchmark/grid/Node.html">Node</a> u = getNode(idx1);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <a href="../../pathfindingbenchmark/util/Node.html">Node</a> u = getNode(idx1);
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>         setNode(getNode(idx2), idx1);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>         setNode(u, idx2);
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
@@ -130,14 +130,14 @@
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>     }
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> 
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     * Pienentää keossa olevan solmun prioriteettia.</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     * Pienentää keossa olevan solmun etäisyyttä lähtösolmusta.</em>
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * @param nodeIdx Solmun indeksi verkossa.</em>
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     * @param newDist Uusi etäisyys lähtösolmuun.</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> decKey(<strong class="jxr_keyword">int</strong> nodeIdx, <strong class="jxr_keyword">long</strong> newDist) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">int</strong> idx = heapIdx[nodeIdx];
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <a href="../../pathfindingbenchmark/grid/Node.html">Node</a> u = getNode(idx);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <a href="../../pathfindingbenchmark/util/Node.html">Node</a> u = getNode(idx);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>         u.setDist(newDist);
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">while</strong> (idx &gt; 1 &amp;&amp; u.compareTo(getNode(parent(idx))) &lt; 0) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>             swap(idx, parent(idx));

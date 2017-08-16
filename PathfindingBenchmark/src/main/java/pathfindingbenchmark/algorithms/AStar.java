@@ -21,6 +21,5 @@ public class AStar extends AStarAbstract {
      */
     public AStar(Grid grid) {
         super(grid);
-        grid.createAdjList();
     }
 }

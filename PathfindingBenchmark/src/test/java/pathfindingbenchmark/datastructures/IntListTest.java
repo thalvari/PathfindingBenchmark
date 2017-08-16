@@ -28,7 +28,7 @@ public class IntListTest {
     }
 
     @Test
-    public void testAdd() {
+    public void testAdd1() {
         list.add(2);
         assertEquals(1, list.size());
         assertEquals(2, list.get(0));

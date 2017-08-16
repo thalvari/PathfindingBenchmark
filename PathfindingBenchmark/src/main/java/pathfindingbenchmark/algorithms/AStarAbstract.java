@@ -12,7 +12,7 @@ import java.util.Arrays;
 import pathfindingbenchmark.datastructures.IntList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
-import pathfindingbenchmark.grid.Node;
+import pathfindingbenchmark.util.Node;
 
 /**
  * A*-pohjaista reitinhakualgoritmia kuvaava abstrakti luokka.
@@ -22,7 +22,7 @@ import pathfindingbenchmark.grid.Node;
 public abstract class AStarAbstract {
 
     /**
-     * Verkko.
+     * Käytettävä verkko.
      */
     protected final Grid grid;
 
@@ -38,6 +38,10 @@ public abstract class AStarAbstract {
     private NodeMinHeap heap;
     private boolean closed[];
     private long dist[];
+
+    /**
+     * Edellisen solmun indeksi polulla lähtösolmuun.
+     */
     protected int prev[];
     private int closedNodeCount;
     private int heapOperCount;
@@ -55,11 +59,13 @@ public abstract class AStarAbstract {
      * Laskee lyhimmän polun pituuden lähtösolmusta maalisolmuun ja ottaa
      * kyseisen polun talteen.
      *
-     * @param startIdx Lähtösolmun indeksi.
-     * @param goalIdx Maalisolmun indeksi.
+     * @param startX Lähtösolmun x-koordinaatti.
+     * @param startY Lähtösolmun y-koordinaatti.
+     * @param goalY Maalisolmun x-koordinaatti.
+     * @param goalX Maalisolmun y-koordinaatti.
      */
-    public void run(int startIdx, int goalIdx) {
-        init(startIdx, goalIdx);
+    public void run(int startX, int startY, int goalX, int goalY) {
+        init(startX, startY, goalX, goalY);
         heap.insert(new Node(startIdx, 0, heuristic(startIdx)));
         heapOperCount++;
         while (!heap.empty()) {
@@ -81,13 +87,13 @@ public abstract class AStarAbstract {
         }
     }
 
-    private void init(int startIdx, int goalIdx) {
-        this.startIdx = startIdx;
-        this.goalIdx = goalIdx;
-        heap = new NodeMinHeap(grid.getN());
-        closed = new boolean[grid.getN() + 1];
-        dist = new long[grid.getN() + 1];
-        prev = new int[grid.getN() + 1];
+    private void init(int startX, int startY, int goalX, int goalY) {
+        startIdx = grid.getIdx(startX, startY);
+        goalIdx = grid.getIdx(goalX, goalY);
+        heap = new NodeMinHeap(grid.getSize());
+        closed = new boolean[grid.getSize() + 1];
+        dist = new long[grid.getSize() + 1];
+        prev = new int[grid.getSize() + 1];
         Arrays.fill(dist, Long.MAX_VALUE);
         dist[startIdx] = 0;
         closedNodeCount = 0;
@@ -95,9 +101,10 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa solmun oktiilisen etäisyyden maalisolmuun.
+     * Palauttaa solmun heuristisena arvona käytettävän oktiilisen etäisyyden
+     * maalisolmuun tai Dijkstran tapauksessa luvun 0.
      *
-     * @param idx Indeksi.
+     * @param idx Solmun indeksi.
      * @return Heuristinen arvo.
      */
     protected long heuristic(int idx) {
@@ -108,6 +115,13 @@ public abstract class AStarAbstract {
                 * Math.min(xDif, yDif);
     }
 
+    /**
+     * Palauttaa listan solmun naapurisolmujen indekseistä tai JPS:n tapauksessa
+     * listan hyppysolmujen indekseistä.
+     *
+     * @param idx Solmun indeksi.
+     * @return Lista seuraajasolmujen indekseistä.
+     */
     protected IntList getSuccList(int idx) {
         return grid.getAdjList(idx);
     }
@@ -131,7 +145,7 @@ public abstract class AStarAbstract {
      * Palauttaa taulukkoesityksen verkosta, johon lyhin polku ja käsitellyt
      * solmut on merkitty.
      *
-     * @return Taulukkoesitys kartasta.
+     * @return Taulukkoesitys verkosta.
      */
     public String[][] getMarkedGrid() {
         IntList pathIdxs = getPathIdxs();
@@ -153,7 +167,7 @@ public abstract class AStarAbstract {
 
     private IntList getClosedIdxs() {
         IntList idxs = new IntList();
-        for (int idx = 1; idx <= grid.getN(); idx++) {
+        for (int idx = 1; idx < closed.length; idx++) {
             if (closed[idx]) {
                 idxs.add(idx);
             }
@@ -193,5 +207,14 @@ public abstract class AStarAbstract {
      */
     public int getHeapOperCount() {
         return heapOperCount;
+    }
+
+    /**
+     * Palauttaa algoritmin käyttämän verkko-olion.
+     *
+     * @return Verkko-olio.
+     */
+    public Grid getGrid() {
+        return grid;
     }
 }

@@ -16,82 +16,88 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class JPSTest {
 
-    private Grid grid1;
-    private Grid grid2;
-    private Grid grid3;
-    private JPS jps1;
-    private JPS jps2;
-    private JPS jps3;
-    private int startIdx;
-    private int goalIdx;
+    private AStarAbstract algo1;
+    private AStarAbstract algo2;
+    private AStarAbstract algo3;
+    private AStarAbstract algo4;
 
     @Before
     public void setUp() {
-        grid1 = new Grid("AR0011SR-512");
-        grid2 = new Grid("AcrosstheCape");
-        grid3 = new Grid("8room_000");
-        jps1 = new JPS(grid1);
-        jps2 = new JPS(grid2);
-        jps3 = new JPS(grid3);
+        algo1 = new JPS(new Grid("maze512-2-2"));
+        algo2 = new JPS(new Grid("32room_002"));
+        algo3 = new JPS(new Grid("orz100d"));
+        algo4 = new JPS(new Grid("random512-40-5"));
     }
 
     @Test
     public void testRun1() {
-        startIdx = grid1.getIdx(327, 119);
-        goalIdx = grid1.getIdx(403, 294);
-        jps1.run(startIdx, goalIdx);
-        assertEquals("510.99", jps1.getRoundedDist(5));
-        assertEquals(103, jps1.getClosedNodeCount());
-        assertEquals(217, jps1.getHeapOperCount());
+        algo1.run(145, 419, 483, 58);
+        assertEquals("4754.04", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun2() {
-        startIdx = grid1.getIdx(123, 236);
-        goalIdx = grid1.getIdx(429, 143);
-        jps1.run(startIdx, goalIdx);
-        assertEquals("492.91", jps1.getRoundedDist(5));
-        assertEquals(185, jps1.getClosedNodeCount());
-        assertEquals(393, jps1.getHeapOperCount());
+        algo1.run(449, 236, 440, 46);
+        assertEquals("4754.32", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun3() {
-        startIdx = grid2.getIdx(690, 310);
-        goalIdx = grid2.getIdx(8, 685);
-        jps2.run(startIdx, goalIdx);
-        assertEquals("1179.8", jps2.getRoundedDist(6));
-        assertEquals(1266, jps2.getClosedNodeCount());
-        assertEquals(2657, jps2.getHeapOperCount());
+        algo1.run(479, 4, 2, 376);
+        assertEquals("4753.94", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun4() {
-        startIdx = grid2.getIdx(666, 737);
-        goalIdx = grid2.getIdx(10, 5);
-        jps2.run(startIdx, goalIdx);
-        assertEquals("1176.61", jps2.getRoundedDist(6));
-        assertEquals(1239, jps2.getClosedNodeCount());
-        assertEquals(2586, jps2.getHeapOperCount());
+        algo2.run(481, 47, 9, 506);
+        assertEquals("811.649", algo2.getRoundedDist(6));
     }
 
     @Test
     public void testRun5() {
-        startIdx = grid3.getIdx(7, 463);
-        goalIdx = grid3.getIdx(484, 37);
-        jps3.run(startIdx, goalIdx);
-        assertEquals("778.955", jps3.getRoundedDist(6));
-        assertEquals(9122, jps3.getClosedNodeCount());
-        assertEquals(18993, jps3.getHeapOperCount());
+        algo2.run(486, 414, 82, 41);
+        assertEquals("809.566", algo2.getRoundedDist(6));
     }
 
     @Test
     public void testRun6() {
-        startIdx = grid3.getIdx(447, 502);
-        goalIdx = grid3.getIdx(7, 59);
-        jps3.run(startIdx, goalIdx);
-        assertEquals("779.985", jps3.getRoundedDist(6));
-        assertEquals(11266, jps3.getClosedNodeCount());
-        assertEquals(23372, jps3.getHeapOperCount());
+        algo2.run(23, 20, 459, 364);
+        assertEquals("810.85", algo2.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun7() {
+        algo3.run(397, 233, 149, 17);
+        assertEquals("971.82", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun8() {
+        algo3.run(392, 32, 386, 229);
+        assertEquals("971.59", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun9() {
+        algo3.run(407, 329, 138, 15);
+        assertEquals("937.365", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun10() {
+        algo4.run(114, 240, 82, 322);
+        assertEquals("2004.81", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun11() {
+        algo4.run(32, 308, 183, 232);
+        assertEquals("2005.36", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun12() {
+        algo4.run(8, 99, 179, 423);
+        assertEquals("1785.83", algo4.getRoundedDist(6));
     }
 }

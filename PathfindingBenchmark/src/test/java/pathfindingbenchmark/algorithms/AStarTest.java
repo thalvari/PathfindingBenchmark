@@ -16,71 +16,104 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class AStarTest {
 
-    private Grid grid;
-    private AStar aStar;
-    private int startIdx;
-    private int goalIdx;
+    private AStarAbstract algo1;
+    private AStarAbstract algo2;
+    private AStarAbstract algo3;
+    private AStarAbstract algo4;
 
     @Before
     public void setUp() {
-        grid = new Grid("AR0011SR-512");
-        aStar = new AStar(grid);
+        algo1 = new AStar(new Grid("maze512-2-2"));
+        algo2 = new AStar(new Grid("32room_002"));
+        algo3 = new AStar(new Grid("orz100d"));
+        algo4 = new AStar(new Grid("random512-40-5"));
     }
 
     @Test
-    public void testRun() {
-        startIdx = grid.getIdx(210, 395);
-        goalIdx = grid.getIdx(87, 201);
-        aStar.run(startIdx, goalIdx);
-        assertEquals("244.95", aStar.getRoundedDist(5));
-        assertEquals(195, aStar.getClosedNodeCount());
+    public void testRun1() {
+        algo1.run(145, 419, 483, 58);
+        assertEquals("4754.04", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun2() {
-        startIdx = grid.getIdx(324, 107);
-        goalIdx = grid.getIdx(375, 360);
-        aStar.run(startIdx, goalIdx);
-        assertEquals("454.62", aStar.getRoundedDist(5));
-        assertEquals(24924, aStar.getClosedNodeCount());
+        algo1.run(449, 236, 440, 46);
+        assertEquals("4754.32", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun3() {
-        startIdx = grid.getIdx(210, 54);
-        goalIdx = grid.getIdx(382, 255);
-        aStar.run(startIdx, goalIdx);
-        assertEquals("455.66", aStar.getRoundedDist(5));
-        assertEquals(25473, aStar.getClosedNodeCount());
+        algo1.run(479, 4, 2, 376);
+        assertEquals("4753.94", algo1.getRoundedDist(6));
     }
 
     @Test
     public void testRun4() {
-        grid = new Grid("maze512-32-6");
-        aStar = new AStar(grid);
-        startIdx = grid.getIdx(114, 464);
-        goalIdx = grid.getIdx(289, 153);
-        aStar.run(startIdx, goalIdx);
-        assertEquals("2275.04", aStar.getRoundedDist(6));
-        assertEquals(220792, aStar.getClosedNodeCount());
+        algo2.run(481, 47, 9, 506);
+        assertEquals("811.649", algo2.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun5() {
+        algo2.run(486, 414, 82, 41);
+        assertEquals("809.566", algo2.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun6() {
+        algo2.run(23, 20, 459, 364);
+        assertEquals("810.85", algo2.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun7() {
+        algo3.run(397, 233, 149, 17);
+        assertEquals("971.82", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun8() {
+        algo3.run(392, 32, 386, 229);
+        assertEquals("971.59", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun9() {
+        algo3.run(407, 329, 138, 15);
+        assertEquals("937.365", algo3.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun10() {
+        algo4.run(114, 240, 82, 322);
+        assertEquals("2004.81", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun11() {
+        algo4.run(32, 308, 183, 232);
+        assertEquals("2005.36", algo4.getRoundedDist(6));
+    }
+
+    @Test
+    public void testRun12() {
+        algo4.run(8, 99, 179, 423);
+        assertEquals("1785.83", algo4.getRoundedDist(6));
     }
 
     @Test
     public void testHeuristic() {
-        startIdx = grid.getIdx(210, 395);
-        goalIdx = grid.getIdx(87, 201);
-        aStar.run(startIdx, goalIdx);
-        assertEquals(0, aStar.heuristic(goalIdx));
+        algo1.run(145, 419, 483, 58);
+        assertEquals(0, algo1.heuristic(algo1.getGrid().getIdx(483, 58)));
     }
 
     @Test
     public void testHeuristic2() {
-        startIdx = grid.getIdx(210, 395);
-        goalIdx = grid.getIdx(87, 201);
-        aStar.run(startIdx, goalIdx);
-        long octileDist = (194 - 123) * Grid.HOR_VER_NODE_DIST + 123
+        algo1.run(145, 419, 483, 58);
+        long octileDist = (361 - 338) * Grid.HOR_VER_NODE_DIST + 338
                 * Grid.DIAG_NODE_DIST;
 
-        assertEquals(octileDist, aStar.heuristic(startIdx));
+        assertEquals(octileDist,
+                algo1.heuristic(algo1.getGrid().getIdx(145, 419)));
     }
 }

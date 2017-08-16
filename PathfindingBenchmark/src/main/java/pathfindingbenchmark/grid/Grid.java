@@ -24,12 +24,14 @@ public class Grid {
     public static final long HOR_VER_NODE_DIST = 665857;
 
     /**
-     * Kahden solmun etäisyys liikuttaessa viistoon.
+     * Kahden solmun etäisyys liikuttaessa viistoon. Tämän ja ylläolevan luvun
+     * suhde on noin sqrt(2).
      */
     public static final long DIAG_NODE_DIST = 941664;
 
     private int height;
     private int width;
+    private int passableNodeCount;
     private IntList[] adjLists;
     private String[][] mapData;
 
@@ -43,6 +45,7 @@ public class Grid {
         List<String> lines = readFile(mapName);
         if (lines != null) {
             parseMapData(lines);
+            createAdjLists();
         }
     }
 
@@ -69,22 +72,27 @@ public class Grid {
         }
     }
 
-    public void createAdjList() {
-        if (mapData == null) {
-            return;
-        }
-
+    private void createAdjLists() {
         adjLists = new IntList[height * width + 1];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (isPassable(x, y)) {
                     int idx = getIdx(x, y);
                     adjLists[idx] = createAdjListForIdx(idx);
+                    passableNodeCount++;
                 }
             }
         }
     }
 
+    /**
+     * Kertoo sijaitsevatko annetut koordinaatit kartalla ja onko niitä vastaava
+     * solmu läpikuljettava.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @return Totuusarvo.
+     */
     public boolean isPassable(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height
                 && (mapData[y][x].equals(".")
@@ -123,7 +131,7 @@ public class Grid {
         return (idx - 1) / width;
     }
 
-    public IntList createAdjListForIdx(int idx) {
+    private IntList createAdjListForIdx(int idx) {
         IntList adjList = new IntList();
         for (int adjY = getY(idx) - 1; adjY <= getY(idx) + 1; adjY++) {
             for (int adjX = getX(idx) - 1; adjX <= getX(idx) + 1; adjX++) {
@@ -186,12 +194,21 @@ public class Grid {
     }
 
     /**
-     * Palauttaa solmujen määrän.
+     * Palauttaa kartan taulukkoesityksen koon.
+     *
+     * @return Koko.
+     */
+    public int getSize() {
+        return height * width;
+    }
+
+    /**
+     * Palauttaa läpikuljettavien solmujen määrän.
      *
      * @return Solmujen määrä.
      */
-    public int getN() {
-        return height * width;
+    public int getPassableNodeCount() {
+        return passableNodeCount;
     }
 
     /**
@@ -212,7 +229,7 @@ public class Grid {
     }
 
     private String[][] copyMapData() {
-        String[][] copy = mapData.clone();
+        String[][] copy = new String[height][width];
         for (int i = 0; i < mapData.length; i++) {
             copy[i] = mapData[i].clone();
         }
