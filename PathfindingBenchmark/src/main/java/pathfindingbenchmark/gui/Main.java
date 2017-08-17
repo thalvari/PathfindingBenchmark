@@ -23,20 +23,30 @@ public class Main {
 
     private static final String[] ALGOS = {"Dijkstra", "AStar", "JPS"};
     private static final int SAMPLE_SIZE = 100;
+    private static final Runtime RUNTIME = Runtime.getRuntime();
     private static final ThreadMXBean BEAN =
             ManagementFactory.getThreadMXBean();
 
+    private static long cpuTimeSum;
+    private static long usedMemorySum;
+
     public static void main(String[] args) {
-        test("arena2", 275, 206, 4, 98, false);
         test("AR0011SR", 65, 84, 203, 71, false);
         test("lak505d", 171, 152, 135, 178, false);
+        test("rmtst01", 176, 22, 1, 23, false);
+        test("maze512-1-0", 497, 89, 467, 44, false);
+        test("maze512-32-0", 59, 434, 101, 194, false);
+        test("random512-10-0", 19, 44, 509, 436, false);
+        test("random512-40-5", 114, 240, 82, 322, false);
+        test("8room_000", 7, 463, 484, 37, false);
+        test("64room_000", 496, 505, 48, 17, false);
     }
 
     private static void test(String mapName, int startX, int startY, int goalX,
             int goalY, boolean print) {
 
         Grid grid = new Grid(mapName);
-        printMapName(mapName);
+        printMapInfo(mapName, grid);
         AStarAbstract algo;
         for (String algoName : ALGOS) {
             if (algoName.equals("Dijkstra")) {
@@ -47,24 +57,29 @@ public class Main {
                 algo = new JPS(grid);
             }
 
-            long cpuTimeSum = runAlgo(algo, startX, startY, goalX, goalY);
+            cpuTimeSum = 0;
+            usedMemorySum = 0;
+            runAlgo(algo, startX, startY, goalX, goalY);
             if (print) {
                 printMarkedGrid(algo);
             }
 
             printStatistics(algo, grid);
-            printCpuTime(cpuTimeSum);
             System.out.println("");
         }
     }
 
-    private static void printMapName(String mapName) {
+    private static void printMapInfo(String mapName, Grid grid) {
         for (int i = 0; i < mapName.length(); i++) {
             System.out.print("-");
         }
 
         System.out.println("");
-        System.out.println(mapName);
+        System.out.println("Kartan nimi: " + mapName);
+        System.out.println("Kartan koko: " + grid.getSize());
+        System.out.println("Solmujen määrä: "
+                + grid.getPassableNodeCount());
+
         for (int i = 0; i < mapName.length(); i++) {
             System.out.print("-");
         }
@@ -72,21 +87,22 @@ public class Main {
         System.out.println("\n");
     }
 
-    private static long runAlgo(AStarAbstract algo, int startX, int startY,
+    private static void runAlgo(AStarAbstract algo, int startX, int startY,
             int goalX, int goalY) {
 
-        long cpuTimeSum = 0;
         for (int i = 0; i < SAMPLE_SIZE; i++) {
+            RUNTIME.gc();
+            long startUsedMemory = RUNTIME.totalMemory() - RUNTIME.freeMemory();
             long startCpuTime = BEAN.getCurrentThreadCpuTime();
             algo.run(startX, startY, goalX, goalY);
             cpuTimeSum += BEAN.getCurrentThreadCpuTime() - startCpuTime;
+            usedMemorySum += RUNTIME.totalMemory() - RUNTIME.freeMemory()
+                    - startUsedMemory;
         }
-
-        return cpuTimeSum;
     }
 
     private static void printMarkedGrid(AStarAbstract algo) {
-        String[][] mapData = algo.getMarkedGrid();
+        String[][] mapData = algo.getMarkedMap();
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[0].length; x++) {
                 System.out.print(mapData[y][x]);
@@ -107,20 +123,23 @@ public class Main {
         System.out.println("Lyhimmän polun pituus: " + algo.getRoundedDist(6)
                 + ".");
 
-        System.out.println("Solmujen määrä: " + grid.getPassableNodeCount()
-                + ".");
+        System.out.println("Keon insert-operaatioiden määrä: "
+                + algo.getHeapInsertOperCount() + ".");
 
-        System.out.println("Käsiteltyjen solmujen määrä: "
-                + algo.getClosedNodeCount() + ".");
+        System.out.println("Keon del-min-operaatioiden määrä: "
+                + algo.getHeapDelMinOperCount() + ".");
 
-        System.out.println("Keko-operaatioiden määrä: "
-                + algo.getHeapOperCount() + ".");
-    }
+        System.out.println("Keon dec-key-operaatioiden määrä: "
+                + algo.getHeapDecKeyOperCount() + ".");
 
-    private static void printCpuTime(long cpuTimeSum) {
         System.out.println("Suoritusaika: " + new BigDecimal(cpuTimeSum)
-                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1000000))
+                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1000000L))
                 .setScale(3, RoundingMode.HALF_UP)
                 .toString() + " ms.");
+
+        System.out.println("Käytetty muisti: " + new BigDecimal(usedMemorySum)
+                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1024L * 1024L))
+                .setScale(3, RoundingMode.HALF_UP)
+                .toString() + " MB.");
     }
 }

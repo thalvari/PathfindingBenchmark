@@ -16,7 +16,7 @@ public class NodeMinHeap {
 
     private static final int INIT_ARR_LEN = 8;
     private Node[] arr;
-    private int[] heapIdx;
+    private final int[] heapIdx;
     private int length;
 
     /**

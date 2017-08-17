@@ -43,8 +43,9 @@ public abstract class AStarAbstract {
      * Edellisen solmun indeksi polulla lähtösolmuun.
      */
     protected int prev[];
-    private int closedNodeCount;
-    private int heapOperCount;
+    private int heapDecKeyOperCount;
+    private int heapDelMinOperCount;
+    private int heapInsertOperCount;
 
     /**
      * Konstruktori.
@@ -67,12 +68,11 @@ public abstract class AStarAbstract {
     public void run(int startX, int startY, int goalX, int goalY) {
         init(startX, startY, goalX, goalY);
         heap.insert(new Node(startIdx, 0, heuristic(startIdx)));
-        heapOperCount++;
+        heapInsertOperCount++;
         while (!heap.empty()) {
             int idx = heap.delMin().getIdx();
-            heapOperCount++;
+            heapDelMinOperCount++;
             closed[idx] = true;
-            closedNodeCount++;
             if (idx == goalIdx) {
                 break;
             }
@@ -96,8 +96,9 @@ public abstract class AStarAbstract {
         prev = new int[grid.getSize() + 1];
         Arrays.fill(dist, Long.MAX_VALUE);
         dist[startIdx] = 0;
-        closedNodeCount = 0;
-        heapOperCount = 0;
+        heapDecKeyOperCount = 0;
+        heapDelMinOperCount = 0;
+        heapInsertOperCount = 0;
     }
 
     /**
@@ -123,7 +124,7 @@ public abstract class AStarAbstract {
      * @return Lista seuraajasolmujen indekseistä.
      */
     protected IntList getSuccList(int idx) {
-        return grid.getAdjList(idx);
+        return grid.createAdjList(idx);
     }
 
     private void relax(int idx, int succIdx) {
@@ -133,11 +134,11 @@ public abstract class AStarAbstract {
             prev[succIdx] = idx;
             if (heap.hasNode(succIdx)) {
                 heap.decKey(succIdx, newDist);
+                heapDecKeyOperCount++;
             } else {
                 heap.insert(new Node(succIdx, newDist, heuristic(succIdx)));
+                heapInsertOperCount++;
             }
-
-            heapOperCount++;
         }
     }
 
@@ -147,30 +148,16 @@ public abstract class AStarAbstract {
      *
      * @return Taulukkoesitys verkosta.
      */
-    public String[][] getMarkedGrid() {
-        IntList pathIdxs = getPathIdxs();
-        IntList closedIdxs = getClosedIdxs();
-        return grid.getMarkedGrid(pathIdxs, closedIdxs);
+    public String[][] getMarkedMap() {
+        return grid.getMarkedMap(closed, getPathIdxs());
     }
 
     private IntList getPathIdxs() {
         IntList idxs = new IntList();
-        idxs.add(goalIdx);
-        int prevIdx = prev[goalIdx];
+        int prevIdx = goalIdx;
         while (prevIdx != 0) {
             idxs.add(prevIdx);
             prevIdx = prev[prevIdx];
-        }
-
-        return idxs;
-    }
-
-    private IntList getClosedIdxs() {
-        IntList idxs = new IntList();
-        for (int idx = 1; idx < closed.length; idx++) {
-            if (closed[idx]) {
-                idxs.add(idx);
-            }
         }
 
         return idxs;
@@ -192,21 +179,30 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa käsiteltyjen solmujen määrän.
+     * Palauttaa keon dec-key-operaatioiden määrän.
      *
      * @return Määrä.
      */
-    public int getClosedNodeCount() {
-        return closedNodeCount;
+    public int getHeapDecKeyOperCount() {
+        return heapDecKeyOperCount;
     }
 
     /**
-     * Palauttaa keko-operaatioiden määrän.
+     * Palauttaa keon del-min-operaatioiden määrän.
      *
      * @return Määrä.
      */
-    public int getHeapOperCount() {
-        return heapOperCount;
+    public int getHeapDelMinOperCount() {
+        return heapDelMinOperCount;
+    }
+
+    /**
+     * Palauttaa keon insert-operaatioiden määrän.
+     *
+     * @return Määrä.
+     */
+    public int getHeapInsertOperCount() {
+        return heapInsertOperCount;
     }
 
     /**

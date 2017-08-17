@@ -35,33 +35,32 @@ public class GridTest {
     @Test
     public void testGrid2() {
         Grid grid = new Grid("?");
-        assertNull(grid.getAdjList(grid.getIdx(0, 0)));
         assertEquals(0, grid.getSize());
     }
 
     @Test
-    public void testGetAdjList1() {
-        assertNull(grid1.getAdjList(grid1.getIdx(5, 0)));
+    public void testCreateAdjList1() {
+        assertNull(grid1.createAdjList(grid1.getIdx(5, 0)));
     }
 
     @Test
-    public void testGetAdjList2() {
-        assertEquals(3, grid1.getAdjList(grid1.getIdx(3, 1)).size());
+    public void testCreateAdjList2() {
+        assertEquals(3, grid1.createAdjList(grid1.getIdx(3, 1)).size());
     }
 
     @Test
-    public void testGetAdjList3() {
-        assertEquals(1, grid1.getAdjList(grid1.getIdx(19, 1)).size());
+    public void testCreateAdjList3() {
+        assertEquals(1, grid1.createAdjList(grid1.getIdx(19, 1)).size());
     }
 
     @Test
-    public void testGetAdjList4() {
-        assertEquals(8, grid1.getAdjList(grid1.getIdx(5, 5)).size());
+    public void testCreateAdjList4() {
+        assertEquals(8, grid1.createAdjList(grid1.getIdx(5, 5)).size());
     }
 
     @Test
-    public void testGetAdjList5() {
-        IntList adjList = grid1.getAdjList(grid1.getIdx(14, 3));
+    public void testCreateAdjList5() {
+        IntList adjList = grid1.createAdjList(grid1.getIdx(14, 3));
         assertTrue(adjList.get(0) == grid1.getIdx(13, 2));
         assertTrue(adjList.get(1) == grid1.getIdx(14, 2));
         assertTrue(adjList.get(2) == grid1.getIdx(13, 3));
@@ -72,17 +71,17 @@ public class GridTest {
     }
 
     @Test
-    public void testGetAdjList6() {
-        assertEquals(3, grid2.getAdjList(grid2.getIdx(0, 0)).size());
+    public void testCreateAdjList6() {
+        assertEquals(3, grid2.createAdjList(grid2.getIdx(0, 0)).size());
     }
 
     @Test
-    public void testGetAdjList7() {
-        assertEquals(3, grid2.getAdjList(grid2.getIdx(3, 3)).size());
+    public void testCreateAdjList7() {
+        assertEquals(3, grid2.createAdjList(grid2.getIdx(3, 3)).size());
     }
 
     @Test
-    public void testPassableNodeCount() {
+    public void testGetPassableNodeCount() {
         assertEquals(2054, grid1.getPassableNodeCount());
     }
 }
