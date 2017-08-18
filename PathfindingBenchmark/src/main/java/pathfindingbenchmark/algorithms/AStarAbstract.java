@@ -37,7 +37,7 @@ public abstract class AStarAbstract {
     protected int goalIdx;
     private NodeMinHeap heap;
     private boolean closed[];
-    private long dist[];
+    private int dist[];
 
     /**
      * Edellisen solmun indeksi polulla lähtösolmuun.
@@ -46,6 +46,7 @@ public abstract class AStarAbstract {
     private int heapDecKeyOperCount;
     private int heapDelMinOperCount;
     private int heapInsertOperCount;
+    private int succListTotalSize;
 
     /**
      * Konstruktori.
@@ -78,6 +79,7 @@ public abstract class AStarAbstract {
             }
 
             IntList succList = getSuccList(idx);
+            succListTotalSize += succList.size();
             for (int i = 0; i < succList.size(); i++) {
                 int succIdx = succList.get(i);
                 if (!closed[succIdx]) {
@@ -92,13 +94,14 @@ public abstract class AStarAbstract {
         goalIdx = grid.getIdx(goalX, goalY);
         heap = new NodeMinHeap(grid.getSize());
         closed = new boolean[grid.getSize() + 1];
-        dist = new long[grid.getSize() + 1];
+        dist = new int[grid.getSize() + 1];
         prev = new int[grid.getSize() + 1];
-        Arrays.fill(dist, Long.MAX_VALUE);
+        Arrays.fill(dist, Integer.MAX_VALUE);
         dist[startIdx] = 0;
         heapDecKeyOperCount = 0;
         heapDelMinOperCount = 0;
         heapInsertOperCount = 0;
+        succListTotalSize = 0;
     }
 
     /**
@@ -108,7 +111,7 @@ public abstract class AStarAbstract {
      * @param idx Solmun indeksi.
      * @return Heuristinen arvo.
      */
-    protected long heuristic(int idx) {
+    protected int heuristic(int idx) {
         int xDif = Math.abs(grid.getX(idx) - grid.getX(goalIdx));
         int yDif = Math.abs(grid.getY(idx) - grid.getY(goalIdx));
         return Grid.HOR_VER_NODE_DIST * Math.max(xDif, yDif)
@@ -128,7 +131,7 @@ public abstract class AStarAbstract {
     }
 
     private void relax(int idx, int succIdx) {
-        long newDist = dist[idx] + grid.getNodeDist(idx, succIdx);
+        int newDist = dist[idx] + grid.getNodeDist(idx, succIdx);
         if (newDist < dist[succIdx]) {
             dist[succIdx] = newDist;
             prev[succIdx] = idx;
@@ -179,6 +182,15 @@ public abstract class AStarAbstract {
     }
 
     /**
+     * Palauttaa algoritmin käyttämän verkko-olion.
+     *
+     * @return Verkko-olio.
+     */
+    public Grid getGrid() {
+        return grid;
+    }
+
+    /**
      * Palauttaa keon dec-key-operaatioiden määrän.
      *
      * @return Määrä.
@@ -206,11 +218,11 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa algoritmin käyttämän verkko-olion.
+     * Palauttaa kaikkien haettujen seuraajalistojen kokojen summan.
      *
-     * @return Verkko-olio.
+     * @return Summa.
      */
-    public Grid getGrid() {
-        return grid;
+    public int getSuccListTotalSize() {
+        return succListTotalSize;
     }
 }

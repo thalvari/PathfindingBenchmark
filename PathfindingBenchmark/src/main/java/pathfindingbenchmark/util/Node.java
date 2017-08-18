@@ -7,15 +7,15 @@ package pathfindingbenchmark.util;
 
 /**
  * Kekoon laitettavien solmuolioiden toteutus. Solmujen keskinäinen järjestys
- * määräytyy ensin prioriteetin, sitten heuristisen arvon mukaan.
+ * määräytyy ensin prioriteetin, sitten heuristisen arvon perusteella.
  *
  * @author thalvari
  */
 public class Node implements Comparable<Node> {
 
     private final int idx;
-    private long dist;
-    private final long heuristic;
+    private int dist;
+    private final int heuristic;
 
     /**
      * Konstruktori.
@@ -24,7 +24,7 @@ public class Node implements Comparable<Node> {
      * @param dist Solmun etäisyys lähtösolmuun.
      * @param heuristic Solmun heuristinen arvo.
      */
-    public Node(int idx, long dist, long heuristic) {
+    public Node(int idx, int dist, int heuristic) {
         this.idx = idx;
         this.dist = dist;
         this.heuristic = heuristic;
@@ -42,13 +42,13 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node o) {
         if (getPriority() == o.getPriority()) {
-            return Long.valueOf(heuristic).compareTo(o.heuristic);
+            return Integer.valueOf(heuristic).compareTo(o.heuristic);
         } else {
-            return Long.valueOf(getPriority()).compareTo(o.getPriority());
+            return Integer.valueOf(getPriority()).compareTo(o.getPriority());
         }
     }
 
-    private long getPriority() {
+    private int getPriority() {
         return dist + heuristic;
     }
 
@@ -57,7 +57,7 @@ public class Node implements Comparable<Node> {
      *
      * @param dist Uusi etäisyys.
      */
-    public void setDist(long dist) {
+    public void setDist(int dist) {
         this.dist = dist;
     }
 }

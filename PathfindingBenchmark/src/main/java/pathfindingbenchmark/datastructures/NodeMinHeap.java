@@ -127,7 +127,7 @@ public class NodeMinHeap {
      * @param nodeIdx Solmun indeksi verkossa.
      * @param newDist Uusi etäisyys lähtösolmuun.
      */
-    public void decKey(int nodeIdx, long newDist) {
+    public void decKey(int nodeIdx, int newDist) {
         int idx = heapIdx[nodeIdx];
         Node u = getNode(idx);
         u.setDist(newDist);

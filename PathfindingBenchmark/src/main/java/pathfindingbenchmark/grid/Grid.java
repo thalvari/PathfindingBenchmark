@@ -21,13 +21,13 @@ public class Grid {
     /**
      * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
      */
-    public static final long HOR_VER_NODE_DIST = 665857;
+    public static final int HOR_VER_NODE_DIST = 13860;
 
     /**
      * Kahden solmun etäisyys liikuttaessa viistoon. Tämän ja ylläolevan luvun
      * suhde on noin sqrt(2).
      */
-    public static final long DIAG_NODE_DIST = 941664;
+    public static final int DIAG_NODE_DIST = 19601;
 
     private int height;
     private int width;
@@ -171,7 +171,7 @@ public class Grid {
      * @param idx2 Toisen solmun indeksi.
      * @return Etäisyys.
      */
-    public long getNodeDist(int idx1, int idx2) {
+    public int getNodeDist(int idx1, int idx2) {
         int xDif = Math.abs(getX(idx1) - getX(idx2));
         int yDif = Math.abs(getY(idx1) - getY(idx2));
         return HOR_VER_NODE_DIST * Math.max(xDif, yDif)
@@ -217,10 +217,13 @@ public class Grid {
             }
         }
 
+        markPath(markedMap, pathIdxs);
+        return markedMap;
+    }
+
+    private void markPath(String[][] markedMap, IntList pathIdxs) {
         for (int i = 0; i < pathIdxs.size(); i++) {
             markedMap[getY(pathIdxs.get(i))][getX(pathIdxs.get(i))] = "X";
         }
-
-        return markedMap;
     }
 }

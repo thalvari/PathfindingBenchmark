@@ -1,0 +1,7 @@
+# Viikkoraportti 4
+- Käytetty tuntimäärä: 17h.
+- Tällä viikolla käytin aikaa erityisesti JPS:n toteuttamiseen ja debuggaamiseen. Aikaa kului myös tekstimuotoisen suorituskykyvertailun esittävän koodin tekemiseen ja dokumentaatioon.
+- Aluksi toteutin JPS:n naapurinkarsimissäännöt, jotka hieman eroavat alkuperäisen JPS:n säännöistä, joissa kulmien leikkaus on sallittu. Muutaman erikoistapauksen tarvitsevat säännöt lisäsin vasta myöhemmin testauksen ansiosta. Sitten toteutin rekursiivisen osion, jossa hyödynsin jo valmiita sääntöjä pakotettujen naapureiden tunnistamiseen. Seuraavaksi refaktoroin hieman muuta koodia tulostukseen liittyen, lisäsin laskureita ja käyttäen tarvittavia järjestelmämetodeja, sain tulostukseen mukaan algoritmikohtaisen muistinkulutuksen ja suoritusajan.
+- Opin tällä viikolla erityisesti JPS:stä.
+- Hieman epäselväksi jäi JPS:n aikavaativuus. Olisiko pahin tapaus tilanne, jossa JPS onnistuu karsimaan mahdollisimman pienen määrän naapureita, myös rekursioiden jäädessä mahdollisimman lyhyeksi, jotta juuri minkään solmun yli ei voida hypätä, eli käytännössä jonkinlainen tiheä "metsä". Tällöin keon koko ja keko-operaatioiden määrä olisi mahdollisimman suuri, mutta todella lyhyiden rekursioiden takia seuraajalistan etsiminen olisi vakioaikaista, jolloin JPS:n aikavativuus olisi yhä A*:n O((|E| + |V|) log |V|). Haluaisin myös varmistaa onhan muistinkulutus ja suoritusaika mitattu oikealla tavalla?
+- Seuraavaksi tarkoituksena on toteuttaa graafinen käyttöliittymä.

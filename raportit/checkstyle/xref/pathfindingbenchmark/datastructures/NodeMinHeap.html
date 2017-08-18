@@ -24,7 +24,7 @@
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INIT_ARR_LEN = 8;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">private</strong> <a href="../../pathfindingbenchmark/util/Node.html">Node</a>[] arr;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong>[] heapIdx;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong>[] heapIdx;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> length;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>      <em class="jxr_javadoccomment">/**</em>
@@ -135,7 +135,7 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * @param nodeIdx Solmun indeksi verkossa.</em>
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     * @param newDist Uusi etäisyys lähtösolmuun.</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> decKey(<strong class="jxr_keyword">int</strong> nodeIdx, <strong class="jxr_keyword">long</strong> newDist) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> decKey(<strong class="jxr_keyword">int</strong> nodeIdx, <strong class="jxr_keyword">int</strong> newDist) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">int</strong> idx = heapIdx[nodeIdx];
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         <a href="../../pathfindingbenchmark/util/Node.html">Node</a> u = getNode(idx);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>         u.setDist(newDist);

@@ -116,6 +116,12 @@ public class AStarAbstractTest {
     }
 
     @Test
+    public void testGetSuccListTotalSize() {
+        algo1.run(14, 4, 27, 9);
+        assertEquals(1058, algo1.getSuccListTotalSize());
+    }
+
+    @Test
     public void testInit() {
         algo3.run(26, 15, 3, 11);
         algo3.run(14, 4, 27, 9);

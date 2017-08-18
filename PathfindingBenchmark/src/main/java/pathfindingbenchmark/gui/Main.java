@@ -22,7 +22,7 @@ import pathfindingbenchmark.grid.Grid;
 public class Main {
 
     private static final String[] ALGOS = {"Dijkstra", "AStar", "JPS"};
-    private static final int SAMPLE_SIZE = 100;
+    private static final int SAMPLE_SIZE = 20;
     private static final Runtime RUNTIME = Runtime.getRuntime();
     private static final ThreadMXBean BEAN =
             ManagementFactory.getThreadMXBean();
@@ -31,9 +31,10 @@ public class Main {
     private static long usedMemorySum;
 
     public static void main(String[] args) {
-        test("AR0011SR", 65, 84, 203, 71, false);
-        test("lak505d", 171, 152, 135, 178, false);
-        test("rmtst01", 176, 22, 1, 23, false);
+//        test("AR0011SR", 65, 84, 203, 71, true);
+//        test("lak505d", 171, 152, 135, 178, true);
+//        test("rmtst01", 176, 22, 1, 23, true);
+
         test("maze512-1-0", 497, 89, 467, 44, false);
         test("maze512-32-0", 59, 434, 101, 194, false);
         test("random512-10-0", 19, 44, 509, 436, false);
@@ -46,7 +47,7 @@ public class Main {
             int goalY, boolean print) {
 
         Grid grid = new Grid(mapName);
-        printMapInfo(mapName, grid);
+        printMapInfo(mapName, startX, startY, goalX, goalY, grid);
         AStarAbstract algo;
         for (String algoName : ALGOS) {
             if (algoName.equals("Dijkstra")) {
@@ -60,16 +61,17 @@ public class Main {
             cpuTimeSum = 0;
             usedMemorySum = 0;
             runAlgo(algo, startX, startY, goalX, goalY);
+            printStatistics(algo, grid);
             if (print) {
                 printMarkedGrid(algo);
             }
 
-            printStatistics(algo, grid);
             System.out.println("");
         }
     }
 
-    private static void printMapInfo(String mapName, Grid grid) {
+    private static void printMapInfo(String mapName, int startX, int startY,
+            int goalX, int goalY, Grid grid) {
         for (int i = 0; i < mapName.length(); i++) {
             System.out.print("-");
         }
@@ -80,6 +82,8 @@ public class Main {
         System.out.println("Solmujen määrä: "
                 + grid.getPassableNodeCount());
 
+        System.out.println("Lähtösolmu: (" + startX + ", " + startY + ")");
+        System.out.println("Maalisolmu: (" + goalX + ", " + goalY + ")");
         for (int i = 0; i < mapName.length(); i++) {
             System.out.print("-");
         }
@@ -102,6 +106,7 @@ public class Main {
     }
 
     private static void printMarkedGrid(AStarAbstract algo) {
+        System.out.println("");
         String[][] mapData = algo.getMarkedMap();
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[0].length; x++) {
@@ -123,6 +128,11 @@ public class Main {
         System.out.println("Lyhimmän polun pituus: " + algo.getRoundedDist(6)
                 + ".");
 
+        System.out.println("Seuraajalistan koon ka: "
+                + divideAndRound(algo.getSuccListTotalSize(),
+                        algo.getHeapDelMinOperCount() - 1)
+                + ".");
+
         System.out.println("Keon insert-operaatioiden määrä: "
                 + algo.getHeapInsertOperCount() + ".");
 
@@ -132,14 +142,22 @@ public class Main {
         System.out.println("Keon dec-key-operaatioiden määrä: "
                 + algo.getHeapDecKeyOperCount() + ".");
 
-        System.out.println("Suoritusaika: " + new BigDecimal(cpuTimeSum)
-                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1000000L))
-                .setScale(3, RoundingMode.HALF_UP)
-                .toString() + " ms.");
+        System.out.println("Suoritusaika: "
+                + divideAndRound(cpuTimeSum, SAMPLE_SIZE * 1000000L)
+                + " ms.");
 
-        System.out.println("Käytetty muisti: " + new BigDecimal(usedMemorySum)
-                .divide(BigDecimal.valueOf(SAMPLE_SIZE * 1024L * 1024L))
-                .setScale(3, RoundingMode.HALF_UP)
-                .toString() + " MB.");
+        System.out.println("Käytetty muisti: "
+                + divideAndRound(usedMemorySum, SAMPLE_SIZE * 1024L * 1024L)
+                + " MB.");
+    }
+
+    private static String divideAndRound(long numer, long denom) {
+        if (denom == 0) {
+            return "0";
+        }
+
+        return new BigDecimal(numer)
+                .divide(BigDecimal.valueOf(denom), 3, RoundingMode.HALF_UP)
+                .toString();
     }
 }
