@@ -182,15 +182,6 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa algoritmin käyttämän verkko-olion.
-     *
-     * @return Verkko-olio.
-     */
-    public Grid getGrid() {
-        return grid;
-    }
-
-    /**
      * Palauttaa keon dec-key-operaatioiden määrän.
      *
      * @return Määrä.

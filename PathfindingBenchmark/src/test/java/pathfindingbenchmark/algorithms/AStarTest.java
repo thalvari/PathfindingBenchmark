@@ -104,7 +104,7 @@ public class AStarTest {
     @Test
     public void testHeuristic() {
         algo1.run(145, 419, 483, 58);
-        assertEquals(0, algo1.heuristic(algo1.getGrid().getIdx(483, 58)));
+        assertEquals(0, algo1.heuristic(30180));
     }
 
     @Test
@@ -114,6 +114,6 @@ public class AStarTest {
                 * Grid.DIAG_NODE_DIST;
 
         assertEquals(octileDist,
-                algo1.heuristic(algo1.getGrid().getIdx(145, 419)));
+                algo1.heuristic(214674));
     }
 }
