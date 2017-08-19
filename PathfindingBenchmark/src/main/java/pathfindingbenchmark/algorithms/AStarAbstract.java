@@ -6,10 +6,8 @@
 package pathfindingbenchmark.algorithms;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import pathfindingbenchmark.datastructures.IntList;
+import pathfindingbenchmark.datastructures.NodeList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.util.Node;
@@ -29,20 +27,13 @@ public abstract class AStarAbstract {
     /**
      * Lähtösolmun indeksi.
      */
-    protected int startIdx;
+    protected Node start;
 
     /**
      * Maalisolmun indeksi.
      */
-    protected int goalIdx;
+    protected Node goal;
     private NodeMinHeap heap;
-    private boolean closed[];
-    private int dist[];
-
-    /**
-     * Edellisen solmun indeksi polulla lähtösolmuun.
-     */
-    protected int prev[];
     private int heapDecKeyOperCount;
     private int heapDelMinOperCount;
     private int heapInsertOperCount;
@@ -68,36 +59,33 @@ public abstract class AStarAbstract {
      */
     public void run(int startX, int startY, int goalX, int goalY) {
         init(startX, startY, goalX, goalY);
-        heap.insert(new Node(startIdx, 0, heuristic(startIdx)));
+        start.setDist(0);
+        start.setHeuristic(heuristic(start));
+        heap.insert(start);
         heapInsertOperCount++;
         while (!heap.empty()) {
-            int idx = heap.delMin().getIdx();
+            Node node = heap.delMin();
             heapDelMinOperCount++;
-            closed[idx] = true;
-            if (idx == goalIdx) {
+            node.setClosed(true);
+            if (node.equals(goal)) {
                 break;
             }
 
-            IntList succList = getSuccList(idx);
+            NodeList succList = getSuccList(node);
             succListTotalSize += succList.size();
             for (int i = 0; i < succList.size(); i++) {
-                int succIdx = succList.get(i);
-                if (!closed[succIdx]) {
-                    relax(idx, succIdx);
+                Node succ = succList.get(i);
+                if (!succ.isClosed()) {
+                    relax(node, succ);
                 }
             }
         }
     }
 
     private void init(int startX, int startY, int goalX, int goalY) {
-        startIdx = grid.getIdx(startX, startY);
-        goalIdx = grid.getIdx(goalX, goalY);
-        heap = new NodeMinHeap(grid.getSize());
-        closed = new boolean[grid.getSize() + 1];
-        dist = new int[grid.getSize() + 1];
-        prev = new int[grid.getSize() + 1];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[startIdx] = 0;
+        start = grid.getNode(startX, startY);
+        goal = grid.getNode(goalX, goalY);
+        heap = new NodeMinHeap();
         heapDecKeyOperCount = 0;
         heapDelMinOperCount = 0;
         heapInsertOperCount = 0;
@@ -111,9 +99,9 @@ public abstract class AStarAbstract {
      * @param idx Solmun indeksi.
      * @return Heuristinen arvo.
      */
-    protected int heuristic(int idx) {
-        int xDif = Math.abs(grid.getX(idx) - grid.getX(goalIdx));
-        int yDif = Math.abs(grid.getY(idx) - grid.getY(goalIdx));
+    protected int heuristic(Node node) {
+        int xDif = Math.abs(node.getX() - goal.getX());
+        int yDif = Math.abs(node.getY() - goal.getY());
         return Grid.HOR_VER_NODE_DIST * Math.max(xDif, yDif)
                 + (Grid.DIAG_NODE_DIST - Grid.HOR_VER_NODE_DIST)
                 * Math.min(xDif, yDif);
@@ -126,20 +114,21 @@ public abstract class AStarAbstract {
      * @param idx Solmun indeksi.
      * @return Lista seuraajasolmujen indekseistä.
      */
-    protected IntList getSuccList(int idx) {
-        return grid.createAdjList(idx);
+    protected NodeList getSuccList(Node node) {
+        return grid.createAdjList(node);
     }
 
-    private void relax(int idx, int succIdx) {
-        int newDist = dist[idx] + grid.getNodeDist(idx, succIdx);
-        if (newDist < dist[succIdx]) {
-            dist[succIdx] = newDist;
-            prev[succIdx] = idx;
-            if (heap.hasNode(succIdx)) {
-                heap.decKey(succIdx, newDist);
+    private void relax(Node node, Node succ) {
+        int newDist = node.getDist() + grid.getNodeDist(node, succ);
+        if (newDist < succ.getDist()) {
+            succ.setDist(newDist);
+            succ.setPrev(node);
+            if (succ.getHeapIdx() != 0) {
+                heap.decKey(succ, newDist);
                 heapDecKeyOperCount++;
             } else {
-                heap.insert(new Node(succIdx, newDist, heuristic(succIdx)));
+                succ.setHeuristic(heuristic(succ));
+                heap.insert(succ);
                 heapInsertOperCount++;
             }
         }
@@ -151,19 +140,8 @@ public abstract class AStarAbstract {
      *
      * @return Taulukkoesitys verkosta.
      */
-    public String[][] getMarkedMap() {
-        return grid.getMarkedMap(closed, getPathIdxs());
-    }
-
-    private IntList getPathIdxs() {
-        IntList idxs = new IntList();
-        int prevIdx = goalIdx;
-        while (prevIdx != 0) {
-            idxs.add(prevIdx);
-            prevIdx = prev[prevIdx];
-        }
-
-        return idxs;
+    public char[][] getMarkedMap() {
+        return grid.getMarkedMap(goal);
     }
 
     /**
@@ -174,9 +152,10 @@ public abstract class AStarAbstract {
      * @return Etäisyys.
      */
     public String getRoundedDist(int n) {
-        return new BigDecimal(dist[goalIdx])
+        return new BigDecimal(goal.getDist())
                 .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
-                        new MathContext(n, RoundingMode.HALF_EVEN))
+                        n,
+                        RoundingMode.HALF_UP)
                 .stripTrailingZeros()
                 .toString();
     }

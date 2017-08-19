@@ -13,7 +13,9 @@ import pathfindingbenchmark.algorithms.AStar;
 import pathfindingbenchmark.algorithms.AStarAbstract;
 import pathfindingbenchmark.algorithms.Dijkstra;
 import pathfindingbenchmark.algorithms.JPS;
+import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.util.Node;
 
 /**
  *
@@ -24,23 +26,28 @@ public class Main {
     private static final String[] ALGOS = {"Dijkstra", "AStar", "JPS"};
     private static final int SAMPLE_SIZE = 20;
     private static final Runtime RUNTIME = Runtime.getRuntime();
-    private static final ThreadMXBean BEAN =
-            ManagementFactory.getThreadMXBean();
+    private static final ThreadMXBean BEAN
+            = ManagementFactory.getThreadMXBean();
 
     private static long cpuTimeSum;
     private static long usedMemorySum;
 
     public static void main(String[] args) {
+        NodeMinHeap heap = new NodeMinHeap();
+        Node node = new Node(1, 0, ' ');
+        heap.insert(node);
+        node = heap.delMin();
+        System.out.println(node.getX());
+
 //        test("AR0011SR", 65, 84, 203, 71, true);
 //        test("lak505d", 171, 152, 135, 178, true);
 //        test("rmtst01", 176, 22, 1, 23, true);
-
-        test("maze512-1-0", 497, 89, 467, 44, false);
-        test("maze512-32-0", 59, 434, 101, 194, false);
-        test("random512-10-0", 19, 44, 509, 436, false);
-        test("random512-40-5", 114, 240, 82, 322, false);
-        test("8room_000", 7, 463, 484, 37, false);
-        test("64room_000", 496, 505, 48, 17, false);
+//        test("maze512-1-0", 497, 89, 467, 44, false);
+//        test("maze512-32-0", 59, 434, 101, 194, false);
+//        test("random512-10-0", 19, 44, 509, 436, false);
+//        test("random512-40-5", 114, 240, 82, 322, false);
+//        test("8room_000", 7, 463, 484, 37, false);
+//        test("64room_000", 496, 505, 48, 17, false);
     }
 
     private static void test(String mapName, int startX, int startY, int goalX,
@@ -107,7 +114,7 @@ public class Main {
 
     private static void printMarkedGrid(AStarAbstract algo) {
         System.out.println("");
-        String[][] mapData = algo.getMarkedMap();
+        char[][] mapData = algo.getMarkedMap();
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[0].length; x++) {
                 System.out.print(mapData[y][x]);

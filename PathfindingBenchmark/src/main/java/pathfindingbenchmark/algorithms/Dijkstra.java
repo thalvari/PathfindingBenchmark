@@ -6,6 +6,7 @@
 package pathfindingbenchmark.algorithms;
 
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.util.Node;
 
 /**
  * Dijkstran algoritmin toteutus.
@@ -24,7 +25,7 @@ public class Dijkstra extends AStarAbstract {
     }
 
     @Override
-    protected int heuristic(int idx) {
+    protected int heuristic(Node node) {
         return 0;
     }
 }

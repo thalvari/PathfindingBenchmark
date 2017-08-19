@@ -15,8 +15,7 @@ import pathfindingbenchmark.util.Node;
 public class NodeMinHeap {
 
     private static final int INIT_ARR_LEN = 8;
-    private Node[] arr;
-    private final int[] heapIdx;
+    private Node[] nodes;
     private int length;
 
     /**
@@ -24,9 +23,8 @@ public class NodeMinHeap {
      *
      * @param n Solmujen määrä.
      */
-    public NodeMinHeap(int n) {
-        arr = new Node[INIT_ARR_LEN];
-        heapIdx = new int[n + 1];
+    public NodeMinHeap() {
+        nodes = new Node[INIT_ARR_LEN];
     }
 
     /**
@@ -34,37 +32,38 @@ public class NodeMinHeap {
      *
      * @param u Solmu.
      */
-    public void insert(Node u) {
+    public void insert(Node node) {
         checkIfFull();
         length++;
         int idx = length;
-        while (idx > 1 && u.compareTo(getNode(parent(idx))) < 0) {
-            setNode(getNode(parent(idx)), idx);
+        Node parent = getNode(parent(idx));
+        while (idx > 1 && node.compareTo(parent) < 0) {
+            setNode(parent, idx);
             idx = parent(idx);
         }
 
-        setNode(u, idx);
+        setNode(node, idx);
     }
 
     private void checkIfFull() {
-        if (length == arr.length) {
-            Node[] newArr = new Node[arr.length * 2];
-            System.arraycopy(arr, 0, newArr, 0, length);
-            arr = newArr;
+        if (length == nodes.length) {
+            Node[] newNodes = new Node[nodes.length * 2];
+            System.arraycopy(nodes, 0, newNodes, 0, length);
+            nodes = newNodes;
         }
     }
 
     private Node getNode(int idx) {
-        return arr[idx - 1];
+        return nodes[idx - 1];
     }
 
     private int parent(int idx) {
         return idx / 2;
     }
 
-    private void setNode(Node u, int idx) {
-        arr[idx - 1] = u;
-        heapIdx[u.getIdx()] = idx;
+    private void setNode(Node node, int idx) {
+        node.setHeapIdx(idx);
+        nodes[idx - 1] = node;
     }
 
     /**
@@ -73,11 +72,11 @@ public class NodeMinHeap {
      * @return Solmu.
      */
     public Node delMin() {
-        Node min = getNode(1);
+        Node node = getNode(1);
         setNode(getNode(length), 1);
         length--;
         heapify(1);
-        return min;
+        return node;
     }
 
     private void heapify(int idx) {
@@ -107,9 +106,9 @@ public class NodeMinHeap {
     }
 
     private void swap(int idx1, int idx2) {
-        Node u = getNode(idx1);
+        Node node = getNode(idx1);
         setNode(getNode(idx2), idx1);
-        setNode(u, idx2);
+        setNode(node, idx2);
     }
 
     /**
@@ -127,23 +126,11 @@ public class NodeMinHeap {
      * @param nodeIdx Solmun indeksi verkossa.
      * @param newDist Uusi etäisyys lähtösolmuun.
      */
-    public void decKey(int nodeIdx, int newDist) {
-        int idx = heapIdx[nodeIdx];
-        Node u = getNode(idx);
-        u.setDist(newDist);
-        while (idx > 1 && u.compareTo(getNode(parent(idx))) < 0) {
+    public void decKey(Node node, int newDist) {
+        int idx = node.getHeapIdx();
+        while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
             swap(idx, parent(idx));
             idx = parent(idx);
         }
-    }
-
-    /**
-     * Kertoo onko solmu keossa.
-     *
-     * @param nodeIdx Solmun indeksi verkossa.
-     * @return Totuusarvo.
-     */
-    public boolean hasNode(int nodeIdx) {
-        return heapIdx[nodeIdx] != 0;
     }
 }

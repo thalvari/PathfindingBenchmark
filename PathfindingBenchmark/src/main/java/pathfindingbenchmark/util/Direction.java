@@ -5,8 +5,6 @@
  */
 package pathfindingbenchmark.util;
 
-import pathfindingbenchmark.grid.Grid;
-
 /**
  * Edettävää suuntaa koordinaatistossa kuvaava luokka.
  *
@@ -17,20 +15,24 @@ public class Direction {
     private final int x;
     private final int y;
 
+    public Direction(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     /**
      * Konstruktori laskee suuntavektorin arvot.
      *
      * @param parIdx Solmun vanhemman indeksi.
      * @param idx Solmun indeksi.
-     * @param grid Verkko.
      */
-    public Direction(int parIdx, int idx, Grid grid) {
-        x = calcXDir(parIdx, idx, grid);
-        y = calcYDir(parIdx, idx, grid);
+    public Direction(Node node, Node succ) {
+        x = calcX(node, succ);
+        y = calcY(node, succ);
     }
 
-    private int calcXDir(int parIdx, int idx, Grid grid) {
-        int xDif = grid.getX(idx) - grid.getX(parIdx);
+    private int calcX(Node node, Node succ) {
+        int xDif = succ.getX() - node.getX();
         if (xDif == 0) {
             return 0;
         } else {
@@ -38,8 +40,8 @@ public class Direction {
         }
     }
 
-    private int calcYDir(int parIdx, int idx, Grid grid) {
-        int yDif = grid.getY(idx) - grid.getY(parIdx);
+    private int calcY(Node node, Node succ) {
+        int yDif = succ.getY() - node.getY();
         if (yDif == 0) {
             return 0;
         } else {

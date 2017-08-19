@@ -13,9 +13,14 @@ package pathfindingbenchmark.util;
  */
 public class Node implements Comparable<Node> {
 
-    private final int idx;
+    private boolean closed;
     private int dist;
-    private final int heuristic;
+    private int heapIdx;
+    private int heuristic;
+    private Node prev;
+    private final char symbol;
+    private final int x;
+    private final int y;
 
     /**
      * Konstruktori.
@@ -24,19 +29,14 @@ public class Node implements Comparable<Node> {
      * @param dist Solmun etäisyys lähtösolmuun.
      * @param heuristic Solmun heuristinen arvo.
      */
-    public Node(int idx, int dist, int heuristic) {
-        this.idx = idx;
-        this.dist = dist;
-        this.heuristic = heuristic;
+    public Node(int x, int y, char symbol) {
+        this.x = x;
+        this.y = y;
+        this.symbol = symbol;
     }
 
-    /**
-     * Palauttaa solmun indeksin.
-     *
-     * @return Indeksi.
-     */
-    public int getIdx() {
-        return idx;
+    public boolean isPassable() {
+        return symbol == '.' || symbol == 'G' || symbol == 'S';
     }
 
     @Override
@@ -52,6 +52,56 @@ public class Node implements Comparable<Node> {
         return dist + heuristic;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Node o = (Node) obj;
+        return x == o.x && y == o.y;
+    }
+
+    public void reset() {
+        closed = false;
+        dist = Integer.MAX_VALUE;
+        heapIdx = 0;
+        heuristic = 0;
+        prev = null;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public int getDist() {
+        return dist;
+    }
+
+    public int getHeapIdx() {
+        return heapIdx;
+    }
+
+    public int getHeuristic() {
+        return heuristic;
+    }
+
+    public Node getPrev() {
+        return prev;
+    }
+
+    public char getSymbol() {
+        return symbol;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
     /**
      * Päivittää solmun etäisyyden lähtösolmusta.
      *
@@ -59,5 +109,21 @@ public class Node implements Comparable<Node> {
      */
     public void setDist(int dist) {
         this.dist = dist;
+    }
+
+    public void setHeapIdx(int heapIdx) {
+        this.heapIdx = heapIdx;
+    }
+
+    public void setHeuristic(int heuristic) {
+        this.heuristic = heuristic;
+    }
+
+    public void setIsClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public void setPrev(Node prev) {
+        this.prev = prev;
     }
 }

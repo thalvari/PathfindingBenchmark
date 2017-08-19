@@ -26,9 +26,9 @@ public class DirectionTest {
     @Before
     public void setUp() {
         grid = new Grid("empty_4");
-        dir1 = new Direction(1, 2, grid);
-        dir2 = new Direction(5, 1, grid);
-        dir3 = new Direction(1, 6, grid);
+        dir1 = new Direction(new Node(0, 0, ' '), new Node(1, 0, ' '));
+        dir2 = new Direction(0, -1);
+        dir3 = new Direction(1, -1);
     }
 
     @Test

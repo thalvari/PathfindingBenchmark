@@ -5,22 +5,23 @@
  */
 package pathfindingbenchmark.datastructures;
 
+import pathfindingbenchmark.util.Node;
+
 /**
- * Kokonaislukulistan toteutus.
  *
  * @author thalvari
  */
-public class IntList {
+public class NodeList {
 
     private static final int INIT_ARR_LEN = 8;
-    private int[] arr;
+    private Node[] array;
     private int length;
 
     /**
      * Konstruktori.
      */
-    public IntList() {
-        arr = new int[INIT_ARR_LEN];
+    public NodeList() {
+        array = new Node[INIT_ARR_LEN];
     }
 
     /**
@@ -28,20 +29,20 @@ public class IntList {
      *
      * @param i Kokonaisluku.
      */
-    public void add(int i) {
+    public void add(Node node) {
         checkIfFull();
-        arr[length] = i;
+        array[length] = node;
         length++;
     }
 
     private void checkIfFull() {
-        if (length == arr.length) {
-            int[] newArr = new int[arr.length * 2];
-            for (int j = 0; j < length; j++) {
-                newArr[j] = arr[j];
+        if (length == array.length) {
+            Node[] newArray = new Node[array.length * 2];
+            for (int i = 0; i < length; i++) {
+                newArray[i] = array[i];
             }
 
-            arr = newArr;
+            array = newArray;
         }
     }
 
@@ -51,8 +52,8 @@ public class IntList {
      * @param idx Indeksi.
      * @return Kokonaisluku.
      */
-    public int get(int idx) {
-        return arr[idx];
+    public Node get(int i) {
+        return array[i];
     }
 
     /**

@@ -100,20 +100,4 @@ public class AStarTest {
         algo4.run(8, 99, 179, 423);
         assertEquals("1785.83", algo4.getRoundedDist(6));
     }
-
-    @Test
-    public void testHeuristic() {
-        algo1.run(145, 419, 483, 58);
-        assertEquals(0, algo1.heuristic(30180));
-    }
-
-    @Test
-    public void testHeuristic2() {
-        algo1.run(145, 419, 483, 58);
-        long octileDist = (361 - 338) * Grid.HOR_VER_NODE_DIST + 338
-                * Grid.DIAG_NODE_DIST;
-
-        assertEquals(octileDist,
-                algo1.heuristic(214674));
-    }
 }

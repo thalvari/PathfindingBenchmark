@@ -22,15 +22,21 @@ public class NodeTest {
 
     @Before
     public void setUp() {
-        node1 = new Node(1, 2, 3);
-        node2 = new Node(2, 4, 2);
-        node3 = new Node(2, 6, 3);
+        node1 = new Node(0, 0, ' ');
+        node1.setDist(2);
+        node1.setHeuristic(3);
+        node2 = new Node(1, 1, ' ');
+        node2.setDist(4);
+        node2.setHeuristic(2);
+        node3 = new Node(1, 1, ' ');
+        node3.setDist(6);
+        node3.setHeuristic(3);
     }
 
     @Test
     public void testNode() {
-        assertEquals(1, node1.getIdx());
-
+        assertEquals(1, node2.getX());
+        assertEquals(1, node2.getX());
     }
 
     @Test

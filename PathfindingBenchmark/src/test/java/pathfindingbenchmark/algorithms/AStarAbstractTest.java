@@ -19,15 +19,17 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class AStarAbstractTest {
 
+    private Grid grid;
     private AStarAbstract algo1;
     private AStarAbstract algo2;
     private AStarAbstract algo3;
 
     @Before
     public void setUp() {
-        algo1 = new Dijkstra(new Grid("lak110d"));
+        grid = new Grid("lak110d");
+        algo1 = new Dijkstra(grid);
         algo2 = new Dijkstra(new Grid("empty_4"));
-        algo3 = new AStar(new Grid("lak110d"));
+        algo3 = new AStar(grid);
     }
 
     @Test
@@ -74,7 +76,7 @@ public class AStarAbstractTest {
     }
 
     private void printMarkedMap(AStarAbstract algo) {
-        String[][] mapData = algo.getMarkedMap();
+        char[][] mapData = algo.getMarkedMap();
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[0].length; x++) {
                 System.out.print(mapData[y][x]);
@@ -129,5 +131,20 @@ public class AStarAbstractTest {
         assertEquals(9, algo3.getHeapDecKeyOperCount());
         assertEquals(39, algo3.getHeapDelMinOperCount());
         assertEquals(68, algo3.getHeapInsertOperCount());
+    }
+
+    @Test
+    public void testHeuristic() {
+        algo1.run(145, 419, 483, 58);
+        assertEquals(0, algo1.heuristic(grid.getNode(483, 58)));
+    }
+
+    @Test
+    public void testHeuristic2() {
+        algo1.run(145, 419, 483, 58);
+        long octileDist = (361 - 338) * Grid.HOR_VER_NODE_DIST + 338
+                * Grid.DIAG_NODE_DIST;
+
+        assertEquals(octileDist, algo1.heuristic(grid.getNode(145, 419)));
     }
 }
