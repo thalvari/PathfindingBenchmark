@@ -25,9 +25,9 @@ public class Node implements Comparable<Node> {
     /**
      * Konstruktori.
      *
-     * @param idx Solmun indeksi.
-     * @param dist Solmun etäisyys lähtösolmuun.
-     * @param heuristic Solmun heuristinen arvo.
+     * @param x Solmun x-koordinaatti.
+     * @param y Solmun x-koordinaatti.
+     * @param symbol Koordinaatteja vastaava symboli kartalla.
      */
     public Node(int x, int y, char symbol) {
         this.x = x;
@@ -35,6 +35,11 @@ public class Node implements Comparable<Node> {
         this.symbol = symbol;
     }
 
+    /**
+     * Kertoo onko solmu läpikuljettavissa.
+     *
+     * @return Totuusarvo.
+     */
     public boolean isPassable() {
         return symbol == '.' || symbol == 'G' || symbol == 'S';
     }
@@ -58,6 +63,9 @@ public class Node implements Comparable<Node> {
         return x == o.x && y == o.y;
     }
 
+    /**
+     * Alustaa olion kentät.
+     */
     public void reset() {
         closed = false;
         dist = Integer.MAX_VALUE;
@@ -66,38 +74,74 @@ public class Node implements Comparable<Node> {
         prev = null;
     }
 
+    /**
+     * Kertoo onko solmu suljetussa joukossa.
+     *
+     * @return Totuusarvo.
+     */
     public boolean isClosed() {
         return closed;
     }
 
+    /**
+     * Palauttaa solmun etäisyyden lähtösolmuun.
+     *
+     * @return Etäisyys.
+     */
     public int getDist() {
         return dist;
     }
 
+    /**
+     * Palauttaa solmun indeksin keossa.
+     *
+     * @return Indeksi.
+     */
     public int getHeapIdx() {
         return heapIdx;
     }
 
-    public int getHeuristic() {
-        return heuristic;
-    }
-
+    /**
+     * Palauttaa edellisen solmun polulla lähtösolmuun.
+     *
+     * @return Solmu.
+     */
     public Node getPrev() {
         return prev;
     }
 
+    /**
+     * Palauttaa solmun koordinaatteja vastaavan symbolin kartalla.
+     *
+     * @return Symboli.
+     */
     public char getSymbol() {
         return symbol;
     }
 
+    /**
+     * Palauttaa solmun x-koordinaatin.
+     *
+     * @return X-koordinaatti.
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Palauttaa solmun y-koordinaatin.
+     *
+     * @return Y-koordinaatti.
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Siirtää solmun suljettuun joukkoon.
+     *
+     * @param closed Totuusarvo.
+     */
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
@@ -111,18 +155,29 @@ public class Node implements Comparable<Node> {
         this.dist = dist;
     }
 
+    /**
+     * Asettaa solmun kekoindeksin.
+     *
+     * @param heapIdx Indeksi.
+     */
     public void setHeapIdx(int heapIdx) {
         this.heapIdx = heapIdx;
     }
 
+    /**
+     * Asettaa solmun heuristisen arvon.
+     *
+     * @param heuristic Heuristisen arvo.
+     */
     public void setHeuristic(int heuristic) {
         this.heuristic = heuristic;
     }
 
-    public void setIsClosed(boolean closed) {
-        this.closed = closed;
-    }
-
+    /**
+     * Asettaa edeltävän solmun polulla lähtösolmuun.
+     *
+     * @param prev Solmu.
+     */
     public void setPrev(Node prev) {
         this.prev = prev;
     }

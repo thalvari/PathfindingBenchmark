@@ -40,7 +40,11 @@ public class Grid {
      * @param mapName Kartan nimi.
      */
     public Grid(String mapName) {
-        parseMapData(new MapReader().readFile(mapName));
+        MapReader reader = new MapReader();
+        reader.readFile(mapName);
+        if (!reader.isError()) {
+            parseMapData(reader.getMapData());
+        }
     }
 
     private void parseMapData(List<String> mapData) {
@@ -50,7 +54,7 @@ public class Grid {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 char symbol = mapData.get(4 + y).charAt(x);
-                nodes[y][x] = new Node(y, x, symbol);
+                nodes[y][x] = new Node(x, y, symbol);
                 if (nodes[y][x].isPassable()) {
                     passableNodeCount++;
                 }
@@ -68,8 +72,12 @@ public class Grid {
         NodeList adjList = new NodeList();
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
+                Direction dir = new Direction(x, y);
                 if ((x != 0 || y != 0)
-                        && isAdjNodePassable(node, new Direction(x, y))) {
+                        && ((dir.isDiag()
+                        && isNodeInDirAdj(node, dir))
+                        || (!dir.isDiag()
+                        && isNodeInDirPassable(node, dir)))) {
 
                     adjList.add(nodes[node.getY() + y][node.getX() + x]);
                 }
@@ -79,34 +87,31 @@ public class Grid {
         return adjList;
     }
 
-    /**
-     * Kertoo sijaitsevatko annetut koordinaatit kartalla ja onko niitä vastaava
-     * solmu läpikuljettava.
-     *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @return Totuusarvo.
-     */
-    public boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
-    public boolean isAdjNodePassable(Node node, Direction dir) {
+    public boolean isNodeInDirAdj(Node node, Direction dir) {
         if (!isInBounds(node.getX() + dir.getX(), node.getY() + dir.getY())) {
             return false;
         }
 
-        Node adj = nodes[node.getY() + dir.getY()][node.getX() + dir.getX()];
-        if (adj.isPassable() && (!dir.isDiag() || (isDiagAdjNode(node, adj)))) {
-            return true;
-        } else {
-            return false;
-        }
+        return getAdjNodeInDir(node, dir).isPassable()
+                && (!dir.isDiag()
+                || (nodes[node.getY() + dir.getY()][node.getX()].isPassable()
+                && nodes[node.getY()][node.getX() + dir.getX()].isPassable()));
     }
 
-    private boolean isDiagAdjNode(Node node1, Node node2) {
-        return nodes[node2.getY()][node1.getX()].isPassable()
-                && nodes[node1.getY()][node2.getX()].isPassable();
+    private boolean isInBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    public Node getAdjNodeInDir(Node node, Direction dir) {
+        return nodes[node.getY() + dir.getY()][node.getX() + dir.getX()];
+    }
+
+    public boolean isNodeInDirPassable(Node node, Direction dir) {
+        if (!isInBounds(node.getX() + dir.getX(), node.getY() + dir.getY())) {
+            return false;
+        }
+
+        return getAdjNodeInDir(node, dir).isPassable();
     }
 
     /**
@@ -116,9 +121,9 @@ public class Grid {
      * @param idx2 Toisen solmun indeksi.
      * @return Etäisyys.
      */
-    public int getNodeDist(Node node1, Node node2) {
-        int xDif = Math.abs(node1.getX() - node2.getX());
-        int yDif = Math.abs(node1.getY() - node2.getY());
+    public int getNodeDist(Node node1, Node adj) {
+        int xDif = Math.abs(node1.getX() - adj.getX());
+        int yDif = Math.abs(node1.getY() - adj.getY());
         return HOR_VER_NODE_DIST * Math.max(xDif, yDif)
                 + (DIAG_NODE_DIST - HOR_VER_NODE_DIST) * Math.min(xDif, yDif);
     }
@@ -167,7 +172,7 @@ public class Grid {
 
     private void markPath(char[][] markedMap, Node goal) {
         Node prev = goal;
-        while (goal.getPrev() != null) {
+        while (prev != null) {
             markedMap[prev.getY()][prev.getX()] = 'X';
             prev = prev.getPrev();
         }
@@ -182,11 +187,7 @@ public class Grid {
     }
 
     public Node getNode(int x, int y) {
-        if (isInBounds(x, y)) {
-            return nodes[y][x];
-        } else {
-            return null;
-        }
+        return nodes[y][x];
     }
 
     public void initNodes() {
@@ -194,14 +195,6 @@ public class Grid {
             for (int x = 0; x < width; x++) {
                 nodes[y][x].reset();
             }
-        }
-    }
-
-    public Node getAdjNodeInDir(Node node, Direction dir) {
-        if (isAdjNodePassable(node, dir)) {
-            return nodes[node.getY() + dir.getY()][node.getX() + dir.getX()];
-        } else {
-            return null;
         }
     }
 }

@@ -30,10 +30,10 @@ public class JPS extends AStarAbstract {
 
     @Override
     protected NodeList getSuccList(Node node) {
-        NodeList prunedAdjList = getPrunedAdjList(node);
+        NodeList pruned = getPruned(node);
         NodeList succList = new NodeList();
-        for (int i = 0; i < prunedAdjList.size(); i++) {
-            Node succ = jump(node, new Direction(node, prunedAdjList.get(i)));
+        for (int i = 0; i < pruned.size(); i++) {
+            Node succ = jump(node, new Direction(node, pruned.get(i)));
             if (succ != null) {
                 succList.add(succ);
             }
@@ -42,122 +42,128 @@ public class JPS extends AStarAbstract {
         return succList;
     }
 
-    private NodeList getPrunedAdjList(Node node) {
+    private NodeList getPruned(Node node) {
         Node parent = node.getPrev();
-        NodeList prunedAdjList = new NodeList();
         if (parent == null) {
             return grid.createAdjList(node);
         }
 
+        NodeList pruned = new NodeList();
         Direction dir = new Direction(parent, node);
         if (dir.isDiag()) {
-            checkDiagPruningRules(node, dir, prunedAdjList);
+            checkPruningRulesWhenDirDiag(node, dir, pruned);
         } else if (dir.isHor()) {
-            checkHorPruningRules(node, dir, prunedAdjList);
+            checkPruningRulesWhenDirHor(node, dir, pruned);
         } else {
-            checkVerPruningRules(node, dir, prunedAdjList);
+            checkPruningRulesWhenDirVer(node, dir, pruned);
         }
 
-        return prunedAdjList;
+        return pruned;
     }
 
-    private void checkDiagPruningRules(Node node, Direction dir,
-            NodeList prunedAdjList) {
+    private void checkPruningRulesWhenDirDiag(Node node, Direction dir,
+            NodeList pruned) {
 
         Direction naturalAdjDir1 = new Direction(dir.getX(), 0);
         Direction naturalAdjDir2 = new Direction(0, dir.getY());
         Direction naturalAdjDir3 = new Direction(dir.getX(), dir.getY());
-        boolean hasNaturalAdj1 = grid.isAdjNodePassable(node, naturalAdjDir1);
-        boolean hasNaturalAdj2 = grid.isAdjNodePassable(node, naturalAdjDir2);
-        boolean hasNaturalAdj3 = grid.isAdjNodePassable(node, naturalAdjDir3);
+        boolean hasNaturalAdj1 = grid.isNodeInDirPassable(node, naturalAdjDir1);
+        boolean hasNaturalAdj2 = grid.isNodeInDirPassable(node, naturalAdjDir2);
+        boolean hasNaturalAdj3 = grid.isNodeInDirPassable(node, naturalAdjDir3);
         if (hasNaturalAdj1) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, naturalAdjDir1));
+            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir1));
         }
 
         if (hasNaturalAdj2) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, naturalAdjDir2));
+            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir2));
         }
 
         if (hasNaturalAdj1 && hasNaturalAdj2 && hasNaturalAdj3) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, naturalAdjDir3));
+            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir3));
         }
     }
 
-    private void checkHorPruningRules(Node node, Direction dir,
-            NodeList prunedAdjList) {
+    private void checkPruningRulesWhenDirHor(Node node, Direction dir,
+            NodeList pruned) {
 
         Direction naturalAdjDir = new Direction(dir.getX(), 0);
         Direction forcedAdjDir1 = new Direction(0, -1);
         Direction forcedAdjDir2 = new Direction(dir.getX(), -1);
         Direction forcedAdjDir3 = new Direction(0, 1);
         Direction forcedAdjDir4 = new Direction(dir.getX(), 1);
-        Direction noAdjDir1 = new Direction(-dir.getX(), -1);
-        Direction noAdjDir2 = new Direction(-dir.getX(), 1);
-        boolean hasNaturalAdj = grid.isAdjNodePassable(node, naturalAdjDir);
-        boolean hasForcedAdj1 = grid.isAdjNodePassable(node, forcedAdjDir1);
-        boolean hasForcedAdj2 = grid.isAdjNodePassable(node, forcedAdjDir2);
-        boolean hasForcedAdj3 = grid.isAdjNodePassable(node, forcedAdjDir3);
-        boolean hasForcedAdj4 = grid.isAdjNodePassable(node, forcedAdjDir4);
-        boolean hasNoAdj1 = !grid.isAdjNodePassable(node, noAdjDir1);
-        boolean hasNoAdj2 = !grid.isAdjNodePassable(node, noAdjDir2);
-        if (hasNaturalAdj) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, naturalAdjDir));
+        boolean forcedPossibleUp = !grid.isNodeInDirPassable(node,
+                new Direction(-dir.getX(), -1));
+
+        boolean forcedPossibleDown = !grid.isNodeInDirPassable(node,
+                new Direction(-dir.getX(), 1));
+
+        if (grid.isNodeInDirPassable(node, naturalAdjDir)) {
+            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir));
         }
 
-        if (hasForcedAdj1 && hasNoAdj1) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
+        if (grid.isNodeInDirPassable(node, forcedAdjDir1) && forcedPossibleUp) {
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
         }
 
-        if (hasNaturalAdj && hasForcedAdj1 && hasForcedAdj2 && hasNoAdj1) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
+        if (grid.isNodeInDirAdj(node, forcedAdjDir2) && forcedPossibleUp) {
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
         }
 
-        if (hasForcedAdj3 && hasNoAdj2) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
+        if (grid.isNodeInDirPassable(node, forcedAdjDir3)
+                && forcedPossibleDown) {
+
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
         }
 
-        if (hasNaturalAdj && hasForcedAdj3 && hasForcedAdj4 && hasNoAdj2) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
+        if (grid.isNodeInDirAdj(node, forcedAdjDir4) && forcedPossibleDown) {
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
         }
     }
 
-    private void checkVerPruningRules(Node node, Direction dir,
-            NodeList prunedAdjList) {
+    private void checkPruningRulesWhenDirVer(Node node, Direction dir,
+            NodeList pruned) {
 
         Direction naturalAdjDir = new Direction(0, dir.getY());
         Direction forcedAdjDir1 = new Direction(-1, 0);
         Direction forcedAdjDir2 = new Direction(-1, dir.getY());
         Direction forcedAdjDir3 = new Direction(1, 0);
         Direction forcedAdjDir4 = new Direction(1, dir.getY());
-        Direction noAdjDir1 = new Direction(-1, -dir.getY());
-        Direction noAdjDir2 = new Direction(1, -dir.getY());
-        boolean hasNaturalAdj = grid.isAdjNodePassable(node, naturalAdjDir);
-        boolean hasForcedAdj1 = grid.isAdjNodePassable(node, forcedAdjDir1);
-        boolean hasForcedAdj2 = grid.isAdjNodePassable(node, forcedAdjDir2);
-        boolean hasForcedAdj3 = grid.isAdjNodePassable(node, forcedAdjDir3);
-        boolean hasForcedAdj4 = grid.isAdjNodePassable(node, forcedAdjDir4);
-        boolean hasNoAdj1 = !grid.isAdjNodePassable(node, noAdjDir1);
-        boolean hasNoAdj2 = !grid.isAdjNodePassable(node, noAdjDir2);
-        if (hasForcedAdj1 && hasNoAdj1) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
+        boolean forcedPossibleLeft = !grid.isNodeInDirPassable(node,
+                new Direction(-1, -dir.getY()));
+
+        boolean forcedPossibleRight = !grid.isNodeInDirPassable(node,
+                new Direction(1, -dir.getY()));
+
+        if (grid.isNodeInDirPassable(node, naturalAdjDir)) {
+            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir));
         }
 
-        if (hasNaturalAdj && hasForcedAdj1 && hasForcedAdj2 && hasNoAdj1) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
+        if (grid.isNodeInDirPassable(node, forcedAdjDir1)
+                && forcedPossibleLeft) {
+
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
         }
 
-        if (hasForcedAdj3 && hasNoAdj2) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
+        if (grid.isNodeInDirAdj(node, forcedAdjDir2) && forcedPossibleLeft) {
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
         }
 
-        if (hasNaturalAdj && hasForcedAdj3 && hasForcedAdj4 && hasNoAdj2) {
-            prunedAdjList.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
+        if (grid.isNodeInDirPassable(node, forcedAdjDir3)
+                && forcedPossibleRight) {
+
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
+        }
+
+        if (grid.isNodeInDirAdj(node, forcedAdjDir4) && forcedPossibleRight) {
+            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
         }
     }
 
     private Node jump(Node parent, Direction dir) {
-        Node node = grid.getAdjNodeInDir(parent, dir);
-        if (node == null) {
+        Node node;
+        if (grid.isNodeInDirAdj(parent, dir)) {
+            node = grid.getAdjNodeInDir(parent, dir);
+        } else {
             return null;
         }
 
@@ -165,34 +171,30 @@ public class JPS extends AStarAbstract {
             return node;
         }
 
-        if (dir.isHor()) {
-            Direction forcedAdjDir1 = new Direction(0, -1);
-            Direction forcedAdjDir2 = new Direction(0, 1);
-            Direction noAdjDir1 = new Direction(-dir.getX(), -1);
-            Direction noAdjDir2 = new Direction(-dir.getX(), 1);
-            boolean hasForcedAdj1 = grid.isAdjNodePassable(node, forcedAdjDir1);
-            boolean hasForcedAdj2 = grid.isAdjNodePassable(node, forcedAdjDir2);
-            boolean hasNoAdj1 = !grid.isAdjNodePassable(node, noAdjDir1);
-            boolean hasNoAdj2 = !grid.isAdjNodePassable(node, noAdjDir2);
-            if ((hasForcedAdj1 && hasNoAdj1) || (hasForcedAdj2 && hasNoAdj2)) {
-                return node;
-            }
-        } else if (dir.isVer()) {
-            Direction forcedAdjDir1 = new Direction(-1, 0);
-            Direction forcedAdjDir2 = new Direction(1, 0);
-            Direction noAdjDir1 = new Direction(-1, -dir.getX());
-            Direction noAdjDir2 = new Direction(1, -dir.getX());
-            boolean hasForcedAdj1 = grid.isAdjNodePassable(node, forcedAdjDir1);
-            boolean hasForcedAdj2 = grid.isAdjNodePassable(node, forcedAdjDir2);
-            boolean hasNoAdj1 = !grid.isAdjNodePassable(node, noAdjDir1);
-            boolean hasNoAdj2 = !grid.isAdjNodePassable(node, noAdjDir2);
-            if ((hasForcedAdj1 && hasNoAdj1) || (hasForcedAdj2 && hasNoAdj2)) {
-                return node;
-            }
-        } else if (jump(node, new Direction(dir.getX(), 0)) != null
-                || jump(node, new Direction(0, dir.getY())) != null) {
+        if (!dir.isDiag()) {
+            if ((dir.isHor()
+                    && ((grid.isNodeInDirPassable(node, new Direction(0, -1))
+                    && !grid.isNodeInDirPassable(node,
+                            new Direction(-dir.getX(), -1)))
+                    || (grid.isNodeInDirPassable(node, new Direction(0, 1))
+                    && !grid.isNodeInDirPassable(node,
+                            new Direction(-dir.getX(), 1)))))
+                    || (dir.isVer()
+                    && ((grid.isNodeInDirPassable(node, new Direction(-1, 0))
+                    && !grid.isNodeInDirPassable(node,
+                            new Direction(-1, -dir.getY())))
+                    || (grid.isNodeInDirPassable(node, new Direction(1, 0))
+                    && !grid.isNodeInDirPassable(node,
+                            new Direction(1, -dir.getY())))))) {
 
-            return node;
+                return node;
+            }
+        } else {
+            if (jump(node, new Direction(dir.getX(), 0)) != null
+                    || jump(node, new Direction(0, dir.getY())) != null) {
+
+                return node;
+            }
         }
 
         return jump(node, dir);

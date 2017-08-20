@@ -30,6 +30,8 @@ public class GridTest {
     @Test
     public void testGrid1() {
         assertEquals(2401, grid1.getSize());
+        assertEquals(49, grid1.getHeight());
+        assertEquals(49, grid1.getWidth());
     }
 
     @Test
@@ -40,43 +42,38 @@ public class GridTest {
 
     @Test
     public void testCreateAdjList1() {
-        assertEquals(0, grid1.createAdjList(new Node(5, 0, ' ')).size());
+        assertEquals(3, grid1.createAdjList(new Node(3, 1, ' ')).size());
     }
 
     @Test
     public void testCreateAdjList2() {
-        assertEquals(3, grid1.createAdjList(new Node(3, 1, ' ')));
-    }
-
-    @Test
-    public void testCreateAdjList3() {
         assertEquals(1, grid1.createAdjList(new Node(19, 1, ' ')).size());
     }
 
     @Test
-    public void testCreateAdjList4() {
+    public void testCreateAdjList3() {
         assertEquals(8, grid1.createAdjList(new Node(5, 5, ' ')).size());
     }
 
     @Test
-    public void testCreateAdjList5() {
+    public void testCreateAdjList4() {
         NodeList adjList = grid1.createAdjList(new Node(14, 3, ' '));
         assertTrue(adjList.get(0).equals(new Node(13, 2, ' ')));
         assertTrue(adjList.get(1).equals(new Node(14, 2, ' ')));
         assertTrue(adjList.get(2).equals(new Node(13, 3, ' ')));
-        assertTrue(adjList.get(3).equals(new Node(15, 2, ' ')));
+        assertTrue(adjList.get(3).equals(new Node(15, 3, ' ')));
         assertTrue(adjList.get(4).equals(new Node(13, 4, ' ')));
         assertTrue(adjList.get(5).equals(new Node(14, 4, ' ')));
         assertTrue(adjList.get(6).equals(new Node(15, 4, ' ')));
     }
 
     @Test
-    public void testCreateAdjList6() {
+    public void testCreateAdjList5() {
         assertEquals(3, grid2.createAdjList(new Node(0, 0, ' ')).size());
     }
 
     @Test
-    public void testCreateAdjList7() {
+    public void testCreateAdjList6() {
         assertEquals(3, grid2.createAdjList(new Node(3, 3, ' ')).size());
     }
 

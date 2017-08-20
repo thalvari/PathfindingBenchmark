@@ -135,16 +135,16 @@ public class AStarAbstractTest {
 
     @Test
     public void testHeuristic() {
-        algo1.run(145, 419, 483, 58);
-        assertEquals(0, algo1.heuristic(grid.getNode(483, 58)));
+        algo3.run(14, 4, 27, 9);
+        assertEquals(0, algo1.heuristic(grid.getNode(27, 9)));
     }
 
     @Test
     public void testHeuristic2() {
-        algo1.run(145, 419, 483, 58);
-        long octileDist = (361 - 338) * Grid.HOR_VER_NODE_DIST + 338
+        algo3.run(14, 4, 27, 9);
+        long octileDist = (13 - 5) * Grid.HOR_VER_NODE_DIST + 5
                 * Grid.DIAG_NODE_DIST;
 
-        assertEquals(octileDist, algo1.heuristic(grid.getNode(145, 419)));
+        assertEquals(octileDist, algo3.heuristic(grid.getNode(14, 4)));
     }
 }

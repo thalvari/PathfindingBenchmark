@@ -38,10 +38,7 @@ public class NodeList {
     private void checkIfFull() {
         if (length == array.length) {
             Node[] newArray = new Node[array.length * 2];
-            for (int i = 0; i < length; i++) {
-                newArray[i] = array[i];
-            }
-
+            System.arraycopy(array, 0, newArray, 0, length);
             array = newArray;
         }
     }

@@ -39,11 +39,12 @@ public class NodeListTest {
 
     @Test
     public void testAdd2() {
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i <= 9; i++) {
             list.add(new Node(i, 0, ' '));
         }
 
         assertEquals(9, list.size());
+        assertEquals(1, list.get(0).getX());
         assertEquals(9, list.get(8).getX());
     }
 }

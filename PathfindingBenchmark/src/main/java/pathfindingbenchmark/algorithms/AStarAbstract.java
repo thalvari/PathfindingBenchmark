@@ -6,6 +6,7 @@
 package pathfindingbenchmark.algorithms;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import pathfindingbenchmark.datastructures.NodeList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
@@ -60,7 +61,6 @@ public abstract class AStarAbstract {
     public void run(int startX, int startY, int goalX, int goalY) {
         init(startX, startY, goalX, goalY);
         start.setDist(0);
-        start.setHeuristic(heuristic(start));
         heap.insert(start);
         heapInsertOperCount++;
         while (!heap.empty()) {
@@ -85,6 +85,7 @@ public abstract class AStarAbstract {
     private void init(int startX, int startY, int goalX, int goalY) {
         start = grid.getNode(startX, startY);
         goal = grid.getNode(goalX, goalY);
+        grid.initNodes();
         heap = new NodeMinHeap();
         heapDecKeyOperCount = 0;
         heapDelMinOperCount = 0;
@@ -154,8 +155,7 @@ public abstract class AStarAbstract {
     public String getRoundedDist(int n) {
         return new BigDecimal(goal.getDist())
                 .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
-                        n,
-                        RoundingMode.HALF_UP)
+                        new MathContext(n, RoundingMode.HALF_UP))
                 .stripTrailingZeros()
                 .toString();
     }

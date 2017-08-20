@@ -36,9 +36,8 @@ public class NodeMinHeap {
         checkIfFull();
         length++;
         int idx = length;
-        Node parent = getNode(parent(idx));
-        while (idx > 1 && node.compareTo(parent) < 0) {
-            setNode(parent, idx);
+        while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
+            setNode(getNode(parent(idx)), idx);
             idx = parent(idx);
         }
 
@@ -127,6 +126,7 @@ public class NodeMinHeap {
      * @param newDist Uusi etäisyys lähtösolmuun.
      */
     public void decKey(Node node, int newDist) {
+        node.setDist(newDist);
         int idx = node.getHeapIdx();
         while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
             swap(idx, parent(idx));

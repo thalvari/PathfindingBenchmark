@@ -16,16 +16,27 @@ import java.util.List;
  */
 public class MapReader {
 
-    public List<String> readFile(String mapName) {
-        List<String> lines = new ArrayList<>();
-        try {
-            Files.lines(Paths.get("maps/" + mapName + ".map"))
-                    .forEach(lines::add);
-        } catch (Exception e) {
-            return null;
-        }
+    private List<String> mapData;
+    private boolean error;
 
-        return lines;
+    public MapReader() {
+        mapData = new ArrayList<>();
     }
 
+    public void readFile(String mapName) {
+        try {
+            Files.lines(Paths.get("maps/" + mapName + ".map"))
+                    .forEach(mapData::add);
+        } catch (Exception e) {
+            error = true;
+        }
+    }
+
+    public List<String> getMapData() {
+        return mapData;
+    }
+
+    public boolean isError() {
+        return error;
+    }
 }
