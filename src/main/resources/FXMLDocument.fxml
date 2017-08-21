@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pathfindingbenchmark.gui.FXMLDocumentController">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <fx:define>
+                <ToggleGroup fx:id="tg" />
+            </fx:define>
+            <children>
+                <Label text="Map:" />
+                <ComboBox fx:id="cb" onAction="#cbHandler">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="AR0011SR" />
+                            <String fx:value="lak505d" />
+                            <String fx:value="orz100d" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <RadioButton fx:id="rb1" selected="true" text="Dijkstra"
+                             toggleGroup="$tg" />
+                <RadioButton fx:id="rb2" text="AStar" toggleGroup="$tg" />
+                <RadioButton fx:id="rb3" text="JPS" toggleGroup="$tg" />
+                <Button onAction="#buttonHandler" text="Find path" />
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <TilePane fx:id="tp" minHeight="532" minWidth="532">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+        </TilePane>
+    </center>
+    <left>
+        <VBox alignment="CENTER" spacing="8">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+                <Label text="startX:" />
+                <TextField fx:id="tf1" prefColumnCount="2" />
+                <Label text="startY:" />
+                <TextField fx:id="tf2" prefColumnCount="2" />
+                <Label text="goalX:" />
+                <TextField fx:id="tf3" prefColumnCount="2" />
+                <Label text="goalY:" />
+                <TextField fx:id="tf4" prefColumnCount="2" />
+            </children>
+        </VBox>
+    </left>
+    <bottom>
+        <VBox alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <children>
+                        <Label text="Path length:" />
+                        <Label fx:id="lb3" />
+                        <Label text="Avg succ list size:" />
+                        <Label fx:id="lb4" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <children>
+                        <Label text="Heap-inserts:" />
+                        <Label fx:id="lb5" />
+                        <Label text="Heap-del-mins:" />
+                        <Label fx:id="lb6" />
+                        <Label text="Heap-dec-keys:" />
+                        <Label fx:id="lb7" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <children>
+                        <Label text="CPU time:" />
+                        <Label fx:id="lb8" />
+                        <Label text="Used memory:" />
+                        <Label fx:id="lb9" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+    <right>
+        <VBox alignment="CENTER" spacing="8">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+                <Label text="Size:" />
+                <Label fx:id="lb1" />
+                <Label text="Nodes:" />
+                <Label fx:id="lb2" />
+            </children>
+        </VBox>
+    </right>
+</BorderPane>

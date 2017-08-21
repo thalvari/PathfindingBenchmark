@@ -3,11 +3,11 @@
 }
 
 .closed {
-    -fx-background-color: red;
+    -fx-background-color: yellow;
 }
 
 .path {
-    -fx-background-color: yellow;
+    -fx-background-color: red;
 }
 
 .traversable {
