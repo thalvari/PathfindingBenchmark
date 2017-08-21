@@ -9,6 +9,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import pathfindingbenchmark.algorithms.AStar;
 import pathfindingbenchmark.algorithms.AStarAbstract;
 import pathfindingbenchmark.algorithms.Dijkstra;
@@ -19,7 +21,7 @@ import pathfindingbenchmark.grid.Grid;
  *
  * @author thalvari
  */
-public class Main {
+public class Main extends Application {
 
     private static final String[] ALGOS = {"Dijkstra", "AStar", "JPS"};
     private static final int SAMPLE_SIZE = 50;
@@ -31,16 +33,17 @@ public class Main {
     private static long usedMemorySum;
 
     public static void main(String[] args) {
+        launch();
+
 //        test("AR0011SR", 65, 84, 203, 71, true);
 //        test("lak505d", 171, 152, 135, 178, true);
 //        test("rmtst01", 176, 22, 1, 23, true);
-
-        test("maze512-1-0", 497, 89, 467, 44, false);
-        test("maze512-32-0", 59, 434, 101, 194, false);
-        test("random512-10-0", 19, 44, 509, 436, false);
-        test("random512-40-5", 114, 240, 82, 322, false);
-        test("8room_000", 7, 463, 484, 37, false);
-        test("64room_000", 496, 505, 48, 17, false);
+//        test("maze512-1-0", 497, 89, 467, 44, false);
+//        test("maze512-32-0", 59, 434, 101, 194, false);
+//        test("random512-10-0", 19, 44, 509, 436, false);
+//        test("random512-40-5", 114, 240, 82, 322, false);
+//        test("8room_000", 7, 463, 484, 37, false);
+//        test("64room_000", 496, 505, 48, 17, false);
     }
 
     private static void test(String mapName, int startX, int startY, int goalX,
@@ -161,5 +164,17 @@ public class Main {
         return new BigDecimal(numer)
                 .divide(BigDecimal.valueOf(denom), 3, RoundingMode.HALF_UP)
                 .toString();
+    }
+
+    @Override
+    public void start(Stage stage) {
+        try {
+            new Window(stage).show();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void stop() {
     }
 }

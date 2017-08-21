@@ -5,7 +5,7 @@
  */
 package pathfindingbenchmark.datastructures;
 
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *

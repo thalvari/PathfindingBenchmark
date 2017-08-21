@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pathfindingbenchmark.util;
+package pathfindingbenchmark.grid;
 
 /**
  * Kekoon laitettavien solmuolioiden toteutus. Solmujen keskinäinen järjestys

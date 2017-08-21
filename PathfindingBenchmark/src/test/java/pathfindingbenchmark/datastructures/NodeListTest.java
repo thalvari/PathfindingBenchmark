@@ -8,7 +8,7 @@ package pathfindingbenchmark.datastructures;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *

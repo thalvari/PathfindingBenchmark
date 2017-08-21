@@ -5,6 +5,8 @@
  */
 package pathfindingbenchmark.util;
 
+import pathfindingbenchmark.grid.Node;
+
 /**
  * Edettävää suuntaa koordinaatistossa kuvaava luokka.
  *

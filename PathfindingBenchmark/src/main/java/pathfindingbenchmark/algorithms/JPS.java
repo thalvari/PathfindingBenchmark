@@ -8,12 +8,12 @@ package pathfindingbenchmark.algorithms;
 import pathfindingbenchmark.datastructures.NodeList;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.util.Direction;
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.grid.Node;
 
 /**
- * JPS-algoritmin toteutus. Algoritmii karsii ensin huonot naapurisolmut ja
- * etsii loppujen tilalle mahdollisen hyppysolmun joka on samassa linjassa
- * solmun ja naapurin kanssa.
+ * JPS-algoritmin toteutus. Algoritmi karsii ensin huonot naapurisolmut ja etsii
+ * loppujen tilalle mahdollisen hyppysolmun joka on samassa linjassa solmun ja
+ * naapurin kanssa.
  *
  * @author thalvari
  */
@@ -50,11 +50,11 @@ public class JPS extends AStarAbstract {
 
         NodeList pruned = new NodeList();
         Direction dir = new Direction(parent, node);
-        if (dir.isDiag()) {
+        if (dir.isDiag()) { // Tarkistetaan karsimissäännöt viistoon edetessä.
             checkPruningRulesWhenDirDiag(node, dir, pruned);
-        } else if (dir.isHor()) {
+        } else if (dir.isHor()) { // Karsimissäännöt vaakasuuntaan edetessä.
             checkPruningRulesWhenDirHor(node, dir, pruned);
-        } else {
+        } else { // Karsimissäännöt pystysuuntaan edetessä.
             checkPruningRulesWhenDirVer(node, dir, pruned);
         }
 
@@ -161,7 +161,7 @@ public class JPS extends AStarAbstract {
 
     private Node jump(Node parent, Direction dir) {
         Node node;
-        if (grid.isNodeInDirAdj(parent, dir)) {
+        if (grid.isNodeInDirAdj(parent, dir)) { // Tarkastetaan voidaanko edetä.
             node = grid.getAdjNodeInDir(parent, dir);
         } else {
             return null;
@@ -171,7 +171,7 @@ public class JPS extends AStarAbstract {
             return node;
         }
 
-        if (!dir.isDiag()) {
+        if (!dir.isDiag()) { // Tarkastetaan onko pakotettuja naapureita.
             if ((dir.isHor()
                     && ((grid.isNodeInDirPassable(node, new Direction(0, -1))
                     && !grid.isNodeInDirPassable(node,
@@ -189,7 +189,7 @@ public class JPS extends AStarAbstract {
 
                 return node;
             }
-        } else {
+        } else { // Tarkastetaan löytyykö pysty- tai vaakasuunnasta pakotettuja.
             if (jump(node, new Direction(dir.getX(), 0)) != null
                     || jump(node, new Direction(0, dir.getY())) != null) {
 
@@ -197,6 +197,6 @@ public class JPS extends AStarAbstract {
             }
         }
 
-        return jump(node, dir);
+        return jump(node, dir); // Muuten jatketaan samaan suuntaan.
     }
 }

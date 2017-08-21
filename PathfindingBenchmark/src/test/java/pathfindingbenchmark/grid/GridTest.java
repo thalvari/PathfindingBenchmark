@@ -10,7 +10,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import pathfindingbenchmark.datastructures.NodeList;
-import pathfindingbenchmark.util.Node;
 
 /**
  *
@@ -29,7 +28,6 @@ public class GridTest {
 
     @Test
     public void testGrid1() {
-        assertEquals(2401, grid1.getSize());
         assertEquals(49, grid1.getHeight());
         assertEquals(49, grid1.getWidth());
     }
@@ -37,7 +35,8 @@ public class GridTest {
     @Test
     public void testGrid2() {
         Grid grid = new Grid("?");
-        assertEquals(0, grid.getSize());
+        assertEquals(0, grid.getHeight());
+        assertEquals(0, grid.getWidth());
     }
 
     @Test

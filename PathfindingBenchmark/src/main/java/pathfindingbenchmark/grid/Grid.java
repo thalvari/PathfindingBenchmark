@@ -8,7 +8,7 @@ package pathfindingbenchmark.grid;
 import java.util.List;
 import pathfindingbenchmark.datastructures.NodeList;
 import pathfindingbenchmark.util.Direction;
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.util.MapReader;
 
 /**
  * Kartan esitys verkkona.
@@ -55,7 +55,7 @@ public class Grid {
             for (int x = 0; x < width; x++) {
                 char symbol = mapData.get(4 + y).charAt(x);
                 nodes[y][x] = new Node(x, y, symbol);
-                if (nodes[y][x].isPassable()) {
+                if (getNode(x, y).isPassable()) {
                     passableNodeCount++;
                 }
             }
@@ -79,7 +79,7 @@ public class Grid {
                         || (!dir.isDiag()
                         && isNodeInDirPassable(node, dir)))) {
 
-                    adjList.add(nodes[node.getY() + y][node.getX() + x]);
+                    adjList.add(getNode(node.getX() + x, node.getY() + y));
                 }
             }
         }
@@ -94,16 +94,17 @@ public class Grid {
 
         return getAdjNodeInDir(node, dir).isPassable()
                 && (!dir.isDiag()
-                || (nodes[node.getY() + dir.getY()][node.getX()].isPassable()
-                && nodes[node.getY()][node.getX() + dir.getX()].isPassable()));
+                || (getNode(node.getX(), node.getY() + dir.getY()).isPassable()
+                && getNode(node.getX() + dir.getX(), node.getY())
+                        .isPassable()));
     }
 
-    private boolean isInBounds(int x, int y) {
+    public boolean isInBounds(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
     public Node getAdjNodeInDir(Node node, Direction dir) {
-        return nodes[node.getY() + dir.getY()][node.getX() + dir.getX()];
+        return getNode(node.getX() + dir.getX(), node.getY() + dir.getY());
     }
 
     public boolean isNodeInDirPassable(Node node, Direction dir) {
@@ -121,22 +122,21 @@ public class Grid {
      * @param idx2 Toisen solmun indeksi.
      * @return Etäisyys.
      */
-    public int getNodeDist(Node node1, Node adj) {
-        int xDif = Math.abs(node1.getX() - adj.getX());
-        int yDif = Math.abs(node1.getY() - adj.getY());
+    public int getNodeDist(Node node1, Node node2) {
+        int xDif = Math.abs(node1.getX() - node2.getX());
+        int yDif = Math.abs(node1.getY() - node2.getY());
         return HOR_VER_NODE_DIST * Math.max(xDif, yDif)
                 + (DIAG_NODE_DIST - HOR_VER_NODE_DIST) * Math.min(xDif, yDif);
     }
 
-    /**
-     * Palauttaa taulukkoesityksen koon.
-     *
-     * @return Koko.
-     */
-    public int getSize() {
-        return height * width;
-    }
-
+//    /**
+//     * Palauttaa taulukkoesityksen koon.
+//     *
+//     * @return Koko.
+//     */
+//    public int getSize() {
+//        return height * width;
+//    }
     /**
      * Palauttaa läpikuljettavien solmujen määrän kartalla.
      *
@@ -159,10 +159,10 @@ public class Grid {
         markPath(markedMap, goal);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (markedMap[y][x] != 'X' && nodes[y][x].isClosed()) {
+                if (markedMap[y][x] != 'X' && getNode(x, y).isClosed()) {
                     markedMap[y][x] = 'o';
                 } else if (markedMap[y][x] != 'X') {
-                    markedMap[y][x] = nodes[y][x].getSymbol();
+                    markedMap[y][x] = getNode(x, y).getSymbol();
                 }
             }
         }
@@ -193,7 +193,7 @@ public class Grid {
     public void initNodes() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                nodes[y][x].reset();
+                getNode(x, y).reset();
             }
         }
     }

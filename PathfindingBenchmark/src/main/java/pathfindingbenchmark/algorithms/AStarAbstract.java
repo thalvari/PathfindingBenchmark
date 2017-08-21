@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import pathfindingbenchmark.datastructures.NodeList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.grid.Node;
 
 /**
  * A*-pohjaista reitinhakualgoritmia kuvaava abstrakti luokka.

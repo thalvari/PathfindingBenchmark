@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pathfindingbenchmark.util;
+package pathfindingbenchmark.grid;
 
+import pathfindingbenchmark.grid.Node;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

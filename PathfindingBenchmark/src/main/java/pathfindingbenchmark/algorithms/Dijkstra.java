@@ -6,7 +6,7 @@
 package pathfindingbenchmark.algorithms;
 
 import pathfindingbenchmark.grid.Grid;
-import pathfindingbenchmark.util.Node;
+import pathfindingbenchmark.grid.Node;
 
 /**
  * Dijkstran algoritmin toteutus.
