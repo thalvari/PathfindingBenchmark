@@ -5,6 +5,7 @@
  */
 package pathfindingbenchmark.util;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,27 +17,27 @@ import java.util.List;
  */
 public class MapReader {
 
-    private List<String> mapData;
-    private boolean error;
+    public static final List<String> MAPS = new ArrayList<>();
 
-    public MapReader() {
-        mapData = new ArrayList<>();
+    static {
+        try {
+            Files.newDirectoryStream(Paths.get("maps/")).forEach((path) -> {
+                MAPS.add(path.getFileName().toString().split(".map")[0]);
+            });
+        } catch (IOException ex) {
+            MAPS.clear();
+        }
     }
 
-    public void readFile(String mapName) {
+    public List<String> readMap(String mapName) {
+        List<String> mapData = new ArrayList<>();
         try {
             Files.lines(Paths.get("maps/" + mapName + ".map"))
                     .forEach(mapData::add);
         } catch (Exception e) {
-            error = true;
+            return null;
         }
-    }
 
-    public List<String> getMapData() {
         return mapData;
-    }
-
-    public boolean isError() {
-        return error;
     }
 }

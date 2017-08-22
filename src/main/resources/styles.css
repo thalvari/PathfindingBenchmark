@@ -1,20 +1,12 @@
 .endpoint {
-    -fx-background-color: green;
-}
-
-.closed {
-    -fx-background-color: yellow;
-}
-
-.path {
     -fx-background-color: red;
 }
 
-.traversable {
-    -fx-background-color: lightgrey;
+.passable {
+    -fx-background-color: grey;
 }
 
-.obstacle {
+.outofbounds {
     -fx-background-color: black;
 }
 
@@ -26,10 +18,14 @@
     -fx-background-color: purple;
 }
 
-.trees {
-    -fx-background-color: green;
+.water {
+    -fx-background-color: blue;
 }
 
-.water {
-    -fx-background-color: lightblue;
+.closed {
+    -fx-background-color: yellow;
+}
+
+.path {
+    -fx-background-color: red;
 }

@@ -5,10 +5,6 @@
  */
 package pathfindingbenchmark.gui;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +12,18 @@ import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
-import pathfindingbenchmark.algorithms.AStar;
-import pathfindingbenchmark.algorithms.AStarAbstract;
-import pathfindingbenchmark.algorithms.Dijkstra;
-import pathfindingbenchmark.algorithms.JPS;
-import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.util.MapReader;
 
 /**
- * FXML Controller class
  *
  * @author thalvari
  */
@@ -38,6 +31,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML private BorderPane root;
     @FXML private ComboBox cb;
+    @FXML private ToggleGroup tg;
     @FXML private RadioButton rb1;
     @FXML private RadioButton rb2;
     @FXML private TilePane tp;
@@ -54,23 +48,40 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Label lb7;
     @FXML private Label lb8;
     @FXML private Label lb9;
-    private Grid grid;
-    private AStarAbstract algo;
-    private static long cpuTimeSum;
-    private static long usedMemorySum;
-    private static final int SAMPLE_SIZE = 25;
-    private static final Runtime RUNTIME = Runtime.getRuntime();
-    private static final ThreadMXBean BEAN = ManagementFactory
-            .getThreadMXBean();
+    private Wrapper wrapper;
 
     @FXML
     private void cbHandler(Event event) {
-        grid = new Grid((String) cb.getValue());
-        showMap(grid.getMarkedMap(null));
+        wrapper.setGrid((String) cb.getValue());
+        lb1.setText(wrapper.getWidth() + " x " + wrapper.getHeight());
+        lb2.setText("" + wrapper.getGrid().getPassableNodeCount());
+        lb3.setText("");
+        lb4.setText("");
+        lb5.setText("");
+        lb6.setText("");
+        lb7.setText("");
+        lb8.setText("");
+        lb9.setText("");
+        tf1.clear();
+        tf2.clear();
+        tf3.clear();
+        tf4.clear();
+        showMap(wrapper.getStyles(0, 0, 0, 0), calcCoef());
+    }
+
+    private int calcCoef() {
+        int coef = 1;
+        if (wrapper.getHeight() <= 128 && wrapper.getWidth() <= 128) {
+            coef = 3;
+        } else if (wrapper.getHeight() <= 256 && wrapper.getWidth() <= 256) {
+            coef = 2;
+        }
+
+        return coef;
     }
 
     @FXML
-    private void buttonHandler(Event event) {
+    private void btHandler(Event event) {
         int startX;
         int startY;
         int goalX;
@@ -84,108 +95,60 @@ public class FXMLDocumentController implements Initializable {
             return;
         }
 
-        if (grid == null
-                || !grid.isInBounds(startX, startY)
-                || !grid.getNode(startX, startY).isPassable()
-                || !grid.isInBounds(goalX, goalY)
-                || !grid.getNode(goalX, goalY).isPassable()) {
-
+        if (!wrapper.checkCoordinates(startX, startY, goalX, goalY)) {
             return;
         }
 
-        if (rb1.isSelected()) {
-            algo = new Dijkstra(grid);
-        } else if (rb2.isSelected()) {
-            algo = new AStar(grid);
-        } else {
-            algo = new JPS(grid);
-        }
-
-        runAlgo(startX, startY, goalX, goalY);
+        wrapper.setAlgo(((RadioButton) tg.getSelectedToggle()).getText());
+        wrapper.runAlgo(startX, startY, goalX, goalY);
         showResults();
-        showMap(algo.getMarkedMap());
-    }
-
-    private void runAlgo(int startX, int startY, int goalX, int goalY) {
-        cpuTimeSum = 0;
-        usedMemorySum = 0;
-        for (int i = 0; i < SAMPLE_SIZE; i++) {
-            RUNTIME.gc();
-            long startUsedMemory = RUNTIME.totalMemory() - RUNTIME.freeMemory();
-            long startCpuTime = BEAN.getCurrentThreadCpuTime();
-            algo.run(startX, startY, goalX, goalY);
-            cpuTimeSum += BEAN.getCurrentThreadCpuTime() - startCpuTime;
-            usedMemorySum += RUNTIME.totalMemory() - RUNTIME.freeMemory()
-                    - startUsedMemory;
-        }
-    }
-
-    private String divideAndRound(long numer, long denom) {
-        if (denom == 0) {
-            return "0";
-        }
-
-        return new BigDecimal(numer)
-                .divide(BigDecimal.valueOf(denom), 3, RoundingMode.HALF_UP)
-                .toString();
+        showPath(wrapper.getStyles(startX, startY, goalX, goalY));
     }
 
     private void showResults() {
-        lb3.setText(algo.getRoundedDist(6));
-        lb4.setText(divideAndRound(algo.getSuccListTotalSize(),
-                algo.getHeapDelMinOperCount() - 1));
-
-        lb5.setText("" + algo.getHeapInsertOperCount());
-        lb6.setText("" + algo.getHeapDelMinOperCount());
-        lb7.setText("" + algo.getHeapDecKeyOperCount());
-        lb8.setText(divideAndRound(cpuTimeSum, SAMPLE_SIZE * 1000000L) + " ms");
-        lb9.setText(divideAndRound(usedMemorySum, SAMPLE_SIZE * 1024L * 1024L)
-                + " MB");
+        lb3.setText(wrapper.getDist());
+        lb4.setText(wrapper.getAvgSuccListSize());
+        lb5.setText("" + wrapper.getAlgo().getHeapInsertOperCount());
+        lb6.setText("" + wrapper.getAlgo().getHeapDelMinOperCount());
+        lb7.setText("" + wrapper.getAlgo().getHeapDecKeyOperCount());
+        lb8.setText(wrapper.getCpuTime());
+        lb9.setText(wrapper.getUsedMemory());
     }
 
-    private void showMap(char[][] map) {
+    private void showMap(List<String> styles, int coef) {
         tp.getChildren().clear();
-        tp.setMaxSize(grid.getWidth() + 20, grid.getHeight() + 20);
-        tp.setMinSize(grid.getWidth() + 20, grid.getHeight() + 20);
-        tp.setPrefColumns(grid.getWidth());
-        List<Pane> panes = getMapAsPanes(map);
+        tp.setMaxSize(coef * wrapper.getWidth() + 20,
+                coef * wrapper.getHeight() + 20);
+
+        tp.setMinSize(coef * wrapper.getWidth() + 20,
+                coef * wrapper.getHeight() + 20);
+
+        tp.setPrefColumns(coef * wrapper.getWidth());
+        List<Node> panes = new ArrayList<>();
+        styles.forEach((style) -> {
+            Pane pane = new Pane();
+            pane.setMinSize(coef, coef);
+            pane.getStyleClass().add(style);
+            panes.add(pane);
+        });
+
         tp.getChildren().addAll(panes);
-        lb1.setText(grid.getWidth() + " x " + grid.getHeight());
-        lb2.setText("" + grid.getPassableNodeCount());
         root.getScene().getWindow().sizeToScene();
     }
 
-    private List<Pane> getMapAsPanes(char[][] map) {
-        List<Pane> panes = new ArrayList<>();
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                Pane pane = new Pane();
-                pane.setMinSize(1, 1);
-                char c = map[y][x];
-                if (c == '.' || c == 'G') {
-                    pane.getStyleClass().add("traversable");
-                } else if (c == '@' || c == 'O') {
-                    pane.getStyleClass().add("obstacle");
-                } else if (c == 'T') {
-                    pane.getStyleClass().add("trees");
-                } else if (c == 'S') {
-                    pane.getStyleClass().add("swamp");
-                } else if (c == 'W') {
-                    pane.getStyleClass().add("water");
-                } else if (c == 'o') {
-                    pane.getStyleClass().add("closed");
-                } else {
-                    pane.getStyleClass().add("path");
-                }
-
-                panes.add(pane);
+    private void showPath(List<String> styles) {
+        List<Node> nodes = tp.getChildren();
+        for (int i = 0; i < nodes.size(); i++) {
+            if (!nodes.get(i).getStyleClass().contains(styles.get(i))) {
+                nodes.get(i).getStyleClass().clear();
+                nodes.get(i).getStyleClass().add(styles.get(i));
             }
         }
-
-        return panes;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        wrapper = new Wrapper();
+        cb.getItems().addAll(MapReader.MAPS);
     }
 }

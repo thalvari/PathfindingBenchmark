@@ -41,9 +41,9 @@ public class Grid {
      */
     public Grid(String mapName) {
         MapReader reader = new MapReader();
-        reader.readFile(mapName);
-        if (!reader.isError()) {
-            parseMapData(reader.getMapData());
+        List<String> mapData = reader.readMap(mapName);
+        if (mapData != null) {
+            parseMapData(mapData);
         }
     }
 

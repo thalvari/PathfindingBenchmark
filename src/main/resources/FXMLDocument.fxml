@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.111"
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="pathfindingbenchmark.gui.FXMLDocumentController">
     <top>
@@ -27,20 +27,17 @@
             </fx:define>
             <children>
                 <Label text="Map:" />
-                <ComboBox fx:id="cb" onAction="#cbHandler">
-                    <items>
+                <ComboBox fx:id="cb" onAction="#cbHandler" promptText="Select">
+                    <!--                    <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="AR0011SR" />
-                            <String fx:value="lak505d" />
-                            <String fx:value="orz100d" />
                         </FXCollections>
-                    </items>
+                    </items>-->
                 </ComboBox>
                 <RadioButton fx:id="rb1" selected="true" text="Dijkstra"
                              toggleGroup="$tg" />
                 <RadioButton fx:id="rb2" text="AStar" toggleGroup="$tg" />
                 <RadioButton fx:id="rb3" text="JPS" toggleGroup="$tg" />
-                <Button onAction="#buttonHandler" text="Find path" />
+                <Button onAction="#btHandler" text="Find path" />
             </children>
         </HBox>
     </top>
