@@ -31,7 +31,6 @@ public class Main extends Application {
         }
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("styles.css");
         stage.setScene(scene);
         stage.setTitle("Pathfinding benchmark");
         stage.show();

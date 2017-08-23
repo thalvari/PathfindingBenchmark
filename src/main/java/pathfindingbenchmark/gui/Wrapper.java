@@ -9,8 +9,9 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import pathfindingbenchmark.algorithms.AStar;
 import pathfindingbenchmark.algorithms.AStarAbstract;
 import pathfindingbenchmark.algorithms.Dijkstra;
@@ -23,13 +24,14 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class Wrapper {
 
-    private static long cpuTimeSum;
-    private static long usedMemorySum;
+    private static final int IMAGE_SCALE_FACTOR = 6;
     private static final int SAMPLE_SIZE = 25;
     private static final Runtime RUNTIME = Runtime.getRuntime();
     private static final ThreadMXBean BEAN = ManagementFactory
             .getThreadMXBean();
 
+    private static long cpuTimeSum;
+    private static long usedMemorySum;
     private Grid grid;
     private AStarAbstract algo;
 
@@ -56,44 +58,48 @@ public class Wrapper {
         algo = null;
     }
 
-    public List<String> getStyles(int startX, int startY, int goalX,
-            int goalY) {
+    public WritableImage getMapAsWritebleImage() {
+        WritableImage writableImage = new WritableImage(
+                IMAGE_SCALE_FACTOR * grid.getWidth(),
+                IMAGE_SCALE_FACTOR * grid.getHeight());
 
-        char[][] mapData;
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+        char[][] map;
         if (algo == null) {
-            mapData = grid.getMarkedMap(null);
+            map = grid.getMarkedMap(null);
         } else {
-            mapData = algo.getMarkedMap();
+            map = algo.getMarkedMap();
         }
 
-        List<String> styles = new ArrayList<>();
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                char c = mapData[y][x];
-                if (algo != null
-                        && ((x == startX && y == startY)
-                        || (x == goalX && y == goalY))) {
-
-                    styles.add("endpoint");
-                } else if (c == '.' || c == 'G') {
-                    styles.add("passable");
-                } else if (c == '@' || c == 'O') {
-                    styles.add("outofbounds");
-                } else if (c == 'T') {
-                    styles.add("trees");
-                } else if (c == 'S') {
-                    styles.add("swamp");
-                } else if (c == 'W') {
-                    styles.add("water");
-                } else if (c == 'o') {
-                    styles.add("closed");
-                } else {
-                    styles.add("path");
-                }
+        for (int y = 0; y < IMAGE_SCALE_FACTOR * grid.getHeight(); y++) {
+            for (int x = 0; x < IMAGE_SCALE_FACTOR * grid.getWidth(); x++) {
+                pixelWriter.setColor(x, y, getColor(
+                        map[y / IMAGE_SCALE_FACTOR][x / IMAGE_SCALE_FACTOR]));
             }
         }
 
-        return styles;
+        return writableImage;
+    }
+
+    private Color getColor(char c) {
+        switch (c) {
+            case '.':
+            case 'G':
+                return Color.GREY;
+            case '@':
+            case 'O':
+                return Color.BLACK;
+            case 'T':
+                return Color.GREEN;
+            case 'S':
+                return Color.PURPLE;
+            case 'W':
+                return Color.BLUE;
+            case 'o':
+                return Color.YELLOW;
+            default:
+                return Color.RED;
+        }
     }
 
     public int getHeight() {

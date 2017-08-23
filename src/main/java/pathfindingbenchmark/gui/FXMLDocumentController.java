@@ -6,21 +6,17 @@
 package pathfindingbenchmark.gui;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import pathfindingbenchmark.util.MapReader;
 
 /**
@@ -29,26 +25,43 @@ import pathfindingbenchmark.util.MapReader;
  */
 public class FXMLDocumentController implements Initializable {
 
-    @FXML private BorderPane root;
-    @FXML private ComboBox cb;
-    @FXML private ToggleGroup tg;
-    @FXML private RadioButton rb1;
-    @FXML private RadioButton rb2;
-    @FXML private TilePane tp;
-    @FXML private TextField tf1;
-    @FXML private TextField tf2;
-    @FXML private TextField tf3;
-    @FXML private TextField tf4;
-    @FXML private Label lb1;
-    @FXML private Label lb2;
-    @FXML private Label lb3;
-    @FXML private Label lb4;
-    @FXML private Label lb5;
-    @FXML private Label lb6;
-    @FXML private Label lb7;
-    @FXML private Label lb8;
-    @FXML private Label lb9;
     private Wrapper wrapper;
+    @FXML
+    private BorderPane root;
+    @FXML
+    private ComboBox cb;
+    @FXML
+    private ToggleGroup tg;
+    @FXML
+    private ImageView iv;
+    @FXML
+    private TextField tf1;
+    @FXML
+    private TextField tf2;
+    @FXML
+    private TextField tf3;
+    @FXML
+    private TextField tf4;
+    @FXML
+    private Label lb1;
+    @FXML
+    private Label lb2;
+    @FXML
+    private Label lb3;
+    @FXML
+    private Label lb4;
+    @FXML
+    private Label lb5;
+    @FXML
+    private Label lb6;
+    @FXML
+    private Label lb7;
+    @FXML
+    private Label lb8;
+    @FXML
+    private Label lb9;
+    @FXML
+    private Label lb10;
 
     @FXML
     private void cbHandler(Event event) {
@@ -66,18 +79,8 @@ public class FXMLDocumentController implements Initializable {
         tf2.clear();
         tf3.clear();
         tf4.clear();
-        showMap(wrapper.getStyles(0, 0, 0, 0), calcCoef());
-    }
-
-    private int calcCoef() {
-        int coef = 1;
-        if (wrapper.getHeight() <= 128 && wrapper.getWidth() <= 128) {
-            coef = 3;
-        } else if (wrapper.getHeight() <= 256 && wrapper.getWidth() <= 256) {
-            coef = 2;
-        }
-
-        return coef;
+        iv.setImage(wrapper.getMapAsWritebleImage());
+        root.getScene().getWindow().sizeToScene();
     }
 
     @FXML
@@ -92,17 +95,21 @@ public class FXMLDocumentController implements Initializable {
             goalX = Integer.parseInt(tf3.getText());
             goalY = Integer.parseInt(tf4.getText());
         } catch (NumberFormatException e) {
+            lb10.setVisible(true);
             return;
         }
 
+        lb10.setVisible(false);
         if (!wrapper.checkCoordinates(startX, startY, goalX, goalY)) {
+            lb10.setVisible(true);
             return;
         }
 
         wrapper.setAlgo(((RadioButton) tg.getSelectedToggle()).getText());
         wrapper.runAlgo(startX, startY, goalX, goalY);
         showResults();
-        showPath(wrapper.getStyles(startX, startY, goalX, goalY));
+        iv.setImage(wrapper.getMapAsWritebleImage());
+        root.getScene().getWindow().sizeToScene();
     }
 
     private void showResults() {
@@ -113,37 +120,6 @@ public class FXMLDocumentController implements Initializable {
         lb7.setText("" + wrapper.getAlgo().getHeapDecKeyOperCount());
         lb8.setText(wrapper.getCpuTime());
         lb9.setText(wrapper.getUsedMemory());
-    }
-
-    private void showMap(List<String> styles, int coef) {
-        tp.getChildren().clear();
-        tp.setMaxSize(coef * wrapper.getWidth() + 20,
-                coef * wrapper.getHeight() + 20);
-
-        tp.setMinSize(coef * wrapper.getWidth() + 20,
-                coef * wrapper.getHeight() + 20);
-
-        tp.setPrefColumns(coef * wrapper.getWidth());
-        List<Node> panes = new ArrayList<>();
-        styles.forEach((style) -> {
-            Pane pane = new Pane();
-            pane.setMinSize(coef, coef);
-            pane.getStyleClass().add(style);
-            panes.add(pane);
-        });
-
-        tp.getChildren().addAll(panes);
-        root.getScene().getWindow().sizeToScene();
-    }
-
-    private void showPath(List<String> styles) {
-        List<Node> nodes = tp.getChildren();
-        for (int i = 0; i < nodes.size(); i++) {
-            if (!nodes.get(i).getStyleClass().contains(styles.get(i))) {
-                nodes.get(i).getStyleClass().clear();
-                nodes.get(i).getStyleClass().add(styles.get(i));
-            }
-        }
     }
 
     @Override
