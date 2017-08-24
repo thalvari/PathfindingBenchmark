@@ -75,6 +75,7 @@ public class FXMLDocumentController implements Initializable {
         lb7.setText("");
         lb8.setText("");
         lb9.setText("");
+        lb10.setText("");
         tf1.clear();
         tf2.clear();
         tf3.clear();
@@ -95,16 +96,16 @@ public class FXMLDocumentController implements Initializable {
             goalX = Integer.parseInt(tf3.getText());
             goalY = Integer.parseInt(tf4.getText());
         } catch (NumberFormatException e) {
-            lb10.setVisible(true);
+            lb10.setText("Out of bounds");
             return;
         }
 
-        lb10.setVisible(false);
         if (!wrapper.checkCoordinates(startX, startY, goalX, goalY)) {
-            lb10.setVisible(true);
+            lb10.setText("Out of bounds");
             return;
         }
 
+        lb10.setText("");
         wrapper.setAlgo(((RadioButton) tg.getSelectedToggle()).getText());
         wrapper.runAlgo(startX, startY, goalX, goalY);
         showResults();
@@ -125,6 +126,10 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         wrapper = new Wrapper();
-        cb.getItems().addAll(MapReader.MAPS);
+        if (MapReader.MAPS != null) {
+            cb.getItems().addAll(MapReader.MAPS);
+        } else {
+            lb10.setText("No maps");
+        }
     }
 }

@@ -33,7 +33,7 @@ public class MapReader {
 
     private static Object[] getPaths() {
         try {
-            return Files.list(Paths.get("maps/")).toArray();
+            return Files.list(Paths.get("maps/")).sorted().toArray();
         } catch (IOException e) {
             return null;
         }

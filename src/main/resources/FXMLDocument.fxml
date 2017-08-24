@@ -35,7 +35,7 @@
                 <RadioButton text="AStar" toggleGroup="$tg" />
                 <RadioButton text="JPS" toggleGroup="$tg" />
                 <Button onAction="#btHandler" text="Find path" />
-                <Label text="Try again" fx:id="lb10" visible="false" />
+                <Label text="" fx:id="lb10" />
             </children>
         </HBox>
     </top>
