@@ -5,23 +5,21 @@
  */
 package pathfindingbenchmark.datastructures;
 
-import pathfindingbenchmark.grid.Node;
-
 /**
  *
  * @author thalvari
  */
-public class NodeList {
+public class MyList<T> {
 
     private static final int INIT_ARR_LEN = 8;
-    private Node[] array;
+    private Object[] array;
     private int length;
 
     /**
      * Konstruktori.
      */
-    public NodeList() {
-        array = new Node[INIT_ARR_LEN];
+    public MyList() {
+        array = new Object[INIT_ARR_LEN];
     }
 
     /**
@@ -29,15 +27,15 @@ public class NodeList {
      *
      * @param i Kokonaisluku.
      */
-    public void add(Node node) {
+    public void add(T t) {
         checkIfFull();
-        array[length] = node;
+        array[length] = t;
         length++;
     }
 
     private void checkIfFull() {
         if (length == array.length) {
-            Node[] newArray = new Node[array.length * 2];
+            Object[] newArray = new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, length);
             array = newArray;
         }
@@ -49,8 +47,9 @@ public class NodeList {
      * @param idx Indeksi.
      * @return Kokonaisluku.
      */
-    public Node get(int i) {
-        return array[i];
+    @SuppressWarnings("unchecked")
+    public T get(int i) {
+        return (T) array[i];
     }
 
     /**
@@ -60,5 +59,12 @@ public class NodeList {
      */
     public int size() {
         return length;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T[] toArray() {
+        Object[] newArray = new Object[length];
+        System.arraycopy(array, 0, newArray, 0, length);
+        return (T[]) newArray;
     }
 }

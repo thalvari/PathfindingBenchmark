@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import pathfindingbenchmark.datastructures.NodeList;
+import pathfindingbenchmark.datastructures.MyList;
 
 /**
  *
@@ -56,7 +56,7 @@ public class GridTest {
 
     @Test
     public void testCreateAdjList4() {
-        NodeList adjList = grid1.createAdjList(new Node(14, 3, ' '));
+        MyList<Node> adjList = grid1.createAdjList(new Node(14, 3, ' '));
         assertTrue(adjList.get(0).equals(new Node(13, 2, ' ')));
         assertTrue(adjList.get(1).equals(new Node(14, 2, ' ')));
         assertTrue(adjList.get(2).equals(new Node(13, 3, ' ')));

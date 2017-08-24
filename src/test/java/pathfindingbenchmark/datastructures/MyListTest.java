@@ -14,13 +14,13 @@ import pathfindingbenchmark.grid.Node;
  *
  * @author thalvari
  */
-public class NodeListTest {
+public class MyListTest {
 
-    private NodeList list;
+    private MyList<Node> list;
 
     @Before
     public void setUp() {
-        list = new NodeList();
+        list = new MyList<>();
     }
 
     @Test

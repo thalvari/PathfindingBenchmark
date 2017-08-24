@@ -5,7 +5,7 @@
  */
 package pathfindingbenchmark.grid;
 
-import pathfindingbenchmark.datastructures.NodeList;
+import pathfindingbenchmark.datastructures.MyList;
 import pathfindingbenchmark.util.Direction;
 import pathfindingbenchmark.util.MapReader;
 
@@ -27,6 +27,7 @@ public class Grid {
      */
     public static final int DIAG_NODE_DIST = 19601;
 
+    private MapReader reader;
     private int height;
     private int width;
     private Node[][] nodes;
@@ -39,26 +40,11 @@ public class Grid {
      * @param mapName Kartan nimi.
      */
     public Grid(String mapName) {
-        MapReader reader = new MapReader();
-        String[] mapData = reader.readMap(mapName);
-        if (mapData != null) {
-            parseMapData(mapData);
-        }
-    }
-
-    private void parseMapData(String[] mapData) {
-        height = Integer.parseInt(mapData[1].split(" ")[1]);
-        width = Integer.parseInt(mapData[2].split(" ")[1]);
-        nodes = new Node[height][width];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                char symbol = mapData[4 + y].charAt(x);
-                nodes[y][x] = new Node(x, y, symbol);
-                if (getNode(x, y).isPassable()) {
-                    passableNodeCount++;
-                }
-            }
-        }
+        reader = new MapReader(mapName);
+        height = reader.getHeight();
+        width = reader.getWidth();
+        nodes = reader.getNodes();
+        passableNodeCount = reader.getPassableNodeCount();
     }
 
     /**
@@ -67,8 +53,8 @@ public class Grid {
      * @param idx Solmun indeksi.
      * @return Indeksilista.
      */
-    public NodeList createAdjList(Node node) {
-        NodeList adjList = new NodeList();
+    public MyList<Node> createAdjList(Node node) {
+        MyList<Node> adjList = new MyList<>();
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 Direction dir = new Direction(x, y);
@@ -95,7 +81,7 @@ public class Grid {
                 && (!dir.isDiag()
                 || (getNode(node.getX(), node.getY() + dir.getY()).isPassable()
                 && getNode(node.getX() + dir.getX(), node.getY())
-                .isPassable()));
+                        .isPassable()));
     }
 
     public boolean isInBounds(int x, int y) {

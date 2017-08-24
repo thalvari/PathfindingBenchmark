@@ -5,7 +5,7 @@
  */
 package pathfindingbenchmark.algorithms;
 
-import pathfindingbenchmark.datastructures.NodeList;
+import pathfindingbenchmark.datastructures.MyList;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 import pathfindingbenchmark.util.Direction;
@@ -29,9 +29,9 @@ public class JPS extends AStarAbstract {
     }
 
     @Override
-    protected NodeList getSuccList(Node node) {
-        NodeList pruned = getPruned(node);
-        NodeList succList = new NodeList();
+    protected MyList<Node> getSuccList(Node node) {
+        MyList<Node> pruned = getPruned(node);
+        MyList<Node> succList = new MyList<>();
         for (int i = 0; i < pruned.size(); i++) {
             Node succ = jump(node, new Direction(node, pruned.get(i)));
             if (succ != null) {
@@ -42,13 +42,13 @@ public class JPS extends AStarAbstract {
         return succList;
     }
 
-    private NodeList getPruned(Node node) {
+    private MyList<Node> getPruned(Node node) {
         Node parent = node.getPrev();
         if (parent == null) {
             return grid.createAdjList(node);
         }
 
-        NodeList pruned = new NodeList();
+        MyList<Node> pruned = new MyList<>();
         Direction dir = new Direction(parent, node);
         if (dir.isDiag()) { // Tarkistetaan karsimissäännöt viistoon edetessä.
             checkPruningRulesWhenDirDiag(node, dir, pruned);
@@ -62,7 +62,7 @@ public class JPS extends AStarAbstract {
     }
 
     private void checkPruningRulesWhenDirDiag(Node node, Direction dir,
-            NodeList pruned) {
+            MyList<Node> pruned) {
 
         Direction naturalAdjDir1 = new Direction(dir.getX(), 0);
         Direction naturalAdjDir2 = new Direction(0, dir.getY());
@@ -84,7 +84,7 @@ public class JPS extends AStarAbstract {
     }
 
     private void checkPruningRulesWhenDirHor(Node node, Direction dir,
-            NodeList pruned) {
+            MyList<Node> pruned) {
 
         Direction naturalAdjDir = new Direction(dir.getX(), 0);
         Direction forcedAdjDir1 = new Direction(0, -1);
@@ -121,7 +121,7 @@ public class JPS extends AStarAbstract {
     }
 
     private void checkPruningRulesWhenDirVer(Node node, Direction dir,
-            NodeList pruned) {
+            MyList<Node> pruned) {
 
         Direction naturalAdjDir = new Direction(0, dir.getY());
         Direction forcedAdjDir1 = new Direction(-1, 0);

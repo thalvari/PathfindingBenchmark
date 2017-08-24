@@ -63,6 +63,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label lb10;
 
+    public FXMLDocumentController() {
+        wrapper = new Wrapper();
+    }
+
     @FXML
     private void cbHandler(Event event) {
         wrapper.setGrid((String) cb.getValue());
@@ -125,9 +129,8 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        wrapper = new Wrapper();
-        if (MapReader.MAPS != null) {
-            cb.getItems().addAll(MapReader.MAPS);
+        if (MapReader.MAP_NAMES != null) {
+            cb.getItems().addAll(MapReader.MAP_NAMES.toArray());
         } else {
             lb10.setText("No maps");
         }

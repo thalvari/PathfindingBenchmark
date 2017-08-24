@@ -8,7 +8,7 @@ package pathfindingbenchmark.algorithms;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import pathfindingbenchmark.datastructures.NodeList;
+import pathfindingbenchmark.datastructures.MyList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
@@ -71,7 +71,7 @@ public abstract class AStarAbstract {
                 break;
             }
 
-            NodeList succList = getSuccList(node);
+            MyList<Node> succList = getSuccList(node);
             succListTotalSize += succList.size();
             for (int i = 0; i < succList.size(); i++) {
                 Node succ = succList.get(i);
@@ -115,7 +115,7 @@ public abstract class AStarAbstract {
      * @param idx Solmun indeksi.
      * @return Lista seuraajasolmujen indekseistä.
      */
-    protected NodeList getSuccList(Node node) {
+    protected MyList<Node> getSuccList(Node node) {
         return grid.createAdjList(node);
     }
 
