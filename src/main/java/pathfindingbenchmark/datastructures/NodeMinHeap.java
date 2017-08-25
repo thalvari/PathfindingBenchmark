@@ -20,8 +20,6 @@ public class NodeMinHeap {
 
     /**
      * Konstruktori.
-     *
-     * @param n Solmujen määrä.
      */
     public NodeMinHeap() {
         nodes = new Node[INIT_ARR_LEN];
@@ -30,7 +28,7 @@ public class NodeMinHeap {
     /**
      * Lisää solmun kekoon.
      *
-     * @param u Solmu.
+     * @param node Solmu.
      */
     public void insert(Node node) {
         checkIfFull();
@@ -122,7 +120,7 @@ public class NodeMinHeap {
     /**
      * Pienentää keossa olevan solmun etäisyyttä lähtösolmusta.
      *
-     * @param nodeIdx Solmun indeksi verkossa.
+     * @param node Solmu.
      * @param newDist Uusi etäisyys lähtösolmuun.
      */
     public void decKey(Node node, int newDist) {

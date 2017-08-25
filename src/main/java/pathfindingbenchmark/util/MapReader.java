@@ -11,11 +11,15 @@ import pathfindingbenchmark.datastructures.MyList;
 import pathfindingbenchmark.grid.Node;
 
 /**
+ * Kartanlukija.
  *
  * @author thalvari
  */
 public class MapReader {
 
+    /**
+     * Lista /maps -kansiossa olevien karttojen nimistä.
+     */
     public static final MyList<String> MAP_NAMES;
 
     static {
@@ -25,6 +29,11 @@ public class MapReader {
     private MyList<String> mapData;
     private int passableNodeCount;
 
+    /**
+     * Konstruktori.
+     *
+     * @param mapName Kartan nimi.
+     */
     public MapReader(String mapName) {
         readMap(mapName);
     }
@@ -52,6 +61,11 @@ public class MapReader {
         }
     }
 
+    /**
+     * Palauttaa kartan korkeuden.
+     *
+     * @return Korkeus.
+     */
     public int getHeight() {
         if (mapData == null) {
             return 0;
@@ -60,6 +74,11 @@ public class MapReader {
         }
     }
 
+    /**
+     * Palauttaa kartan leveyden.
+     *
+     * @return Leveys.
+     */
     public int getWidth() {
         if (mapData == null) {
             return 0;
@@ -68,6 +87,11 @@ public class MapReader {
         }
     }
 
+    /**
+     * Palauttaa kartan alustettuna solmu-olioilla.
+     *
+     * @return Solmuja sisältävä taulukko.
+     */
     public Node[][] getNodes() {
         if (mapData == null) {
             return null;
@@ -87,6 +111,11 @@ public class MapReader {
         return nodes;
     }
 
+    /**
+     * Palauttaa läpikuljettavien solmujen määrän.
+     *
+     * @return Määrä.
+     */
     public int getPassableNodeCount() {
         return passableNodeCount;
     }

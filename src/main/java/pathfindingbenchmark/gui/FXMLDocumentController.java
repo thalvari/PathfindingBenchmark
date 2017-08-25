@@ -25,7 +25,7 @@ import pathfindingbenchmark.util.MapReader;
  */
 public class FXMLDocumentController implements Initializable {
 
-    private Wrapper wrapper;
+    private final Wrapper wrapper;
     @FXML
     private BorderPane root;
     @FXML
@@ -130,7 +130,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (MapReader.MAP_NAMES != null) {
-            cb.getItems().addAll(MapReader.MAP_NAMES.toArray());
+            for (int i = 0; i < MapReader.MAP_NAMES.size(); i++) {
+                cb.getItems().add(MapReader.MAP_NAMES.get(i));
+            }
         } else {
             lb10.setText("No maps");
         }

@@ -71,15 +71,15 @@ public class JPS extends AStarAbstract {
         boolean hasNaturalAdj2 = grid.isNodeInDirPassable(node, naturalAdjDir2);
         boolean hasNaturalAdj3 = grid.isNodeInDirPassable(node, naturalAdjDir3);
         if (hasNaturalAdj1) {
-            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir1));
+            pruned.add(grid.getNodeInDir(node, naturalAdjDir1));
         }
 
         if (hasNaturalAdj2) {
-            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir2));
+            pruned.add(grid.getNodeInDir(node, naturalAdjDir2));
         }
 
         if (hasNaturalAdj1 && hasNaturalAdj2 && hasNaturalAdj3) {
-            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir3));
+            pruned.add(grid.getNodeInDir(node, naturalAdjDir3));
         }
     }
 
@@ -98,25 +98,25 @@ public class JPS extends AStarAbstract {
                 new Direction(-dir.getX(), 1));
 
         if (grid.isNodeInDirPassable(node, naturalAdjDir)) {
-            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir));
+            pruned.add(grid.getNodeInDir(node, naturalAdjDir));
         }
 
         if (grid.isNodeInDirPassable(node, forcedAdjDir1) && forcedPossibleUp) {
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir1));
         }
 
         if (grid.isNodeInDirAdj(node, forcedAdjDir2) && forcedPossibleUp) {
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir2));
         }
 
         if (grid.isNodeInDirPassable(node, forcedAdjDir3)
                 && forcedPossibleDown) {
 
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir3));
         }
 
         if (grid.isNodeInDirAdj(node, forcedAdjDir4) && forcedPossibleDown) {
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir4));
         }
     }
 
@@ -135,34 +135,34 @@ public class JPS extends AStarAbstract {
                 new Direction(1, -dir.getY()));
 
         if (grid.isNodeInDirPassable(node, naturalAdjDir)) {
-            pruned.add(grid.getAdjNodeInDir(node, naturalAdjDir));
+            pruned.add(grid.getNodeInDir(node, naturalAdjDir));
         }
 
         if (grid.isNodeInDirPassable(node, forcedAdjDir1)
                 && forcedPossibleLeft) {
 
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir1));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir1));
         }
 
         if (grid.isNodeInDirAdj(node, forcedAdjDir2) && forcedPossibleLeft) {
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir2));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir2));
         }
 
         if (grid.isNodeInDirPassable(node, forcedAdjDir3)
                 && forcedPossibleRight) {
 
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir3));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir3));
         }
 
         if (grid.isNodeInDirAdj(node, forcedAdjDir4) && forcedPossibleRight) {
-            pruned.add(grid.getAdjNodeInDir(node, forcedAdjDir4));
+            pruned.add(grid.getNodeInDir(node, forcedAdjDir4));
         }
     }
 
     private Node jump(Node parent, Direction dir) {
         Node node;
         if (grid.isNodeInDirAdj(parent, dir)) { // Tarkastetaan voidaanko edetä.
-            node = grid.getAdjNodeInDir(parent, dir);
+            node = grid.getNodeInDir(parent, dir);
         } else {
             return null;
         }
@@ -189,12 +189,11 @@ public class JPS extends AStarAbstract {
 
                 return node;
             }
-        } else { // Etsii pysty- ja vaakasuunnista solmuja, joilla pakotettuja.
-            if (jump(node, new Direction(dir.getX(), 0)) != null
-                    || jump(node, new Direction(0, dir.getY())) != null) {
-
-                return node;
-            }
+        } else if (jump(node, new Direction(dir.getX(), 0)) != null
+                || jump(node, new Direction(0, dir.getY())) != null) {
+            // Jos edetään viistoon ja pysty- tai vaakasuunnasta löytyy solmu,
+            // jolla on pakotettuja naapureita, olemme hyppysolmussa.
+            return node;
         }
 
         return jump(node, dir); // Muuten jatketaan samaan suuntaan.

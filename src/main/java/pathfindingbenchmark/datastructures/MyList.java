@@ -6,8 +6,10 @@
 package pathfindingbenchmark.datastructures;
 
 /**
+ * Listan toteutus.
  *
  * @author thalvari
+ * @param <T> Listan alkioiden tyyppi.
  */
 public class MyList<T> {
 
@@ -23,9 +25,9 @@ public class MyList<T> {
     }
 
     /**
-     * Lisää kokonaisluvun listalle.
+     * Lisää alkion listalle.
      *
-     * @param i Kokonaisluku.
+     * @param t Alkio.
      */
     public void add(T t) {
         checkIfFull();
@@ -42,10 +44,10 @@ public class MyList<T> {
     }
 
     /**
-     * Palauttaa indeksiä vastaavan kokonaisluvun kokonaisluvun.
+     * Palauttaa indeksiä vastaavan alkion listalta.
      *
-     * @param idx Indeksi.
-     * @return Kokonaisluku.
+     * @param i Indeksi.
+     * @return Alkio.
      */
     @SuppressWarnings("unchecked")
     public T get(int i) {
@@ -61,10 +63,20 @@ public class MyList<T> {
         return length;
     }
 
+    /**
+     * Tarkastaa sisältääkö lista tietyn alkion.
+     *
+     * @param t Alkio.
+     * @return Totuusarvo.
+     */
     @SuppressWarnings("unchecked")
-    public T[] toArray() {
-        Object[] newArray = new Object[length];
-        System.arraycopy(array, 0, newArray, 0, length);
-        return (T[]) newArray;
+    public boolean contains(T t) {
+        for (int i = 0; i < length; i++) {
+            if (t.equals((T) array[i])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

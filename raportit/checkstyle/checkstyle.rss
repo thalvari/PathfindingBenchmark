@@ -25,8 +25,8 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
     <item>
-      <title>File: 9,
-             Errors: 3,
+      <title>File: 10,
+             Errors: 2,
              Warnings: 0,
              Infos: 0
       </title>
@@ -88,20 +88,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="${project.url}/checkstyle.html#pathfindingbenchmark.util.Node.java">pathfindingbenchmark/util/Node.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="${project.url}/checkstyle.html#pathfindingbenchmark.algorithms.AStar.java">pathfindingbenchmark/algorithms/AStar.java</a>
                 </td>
                 <td>
@@ -144,7 +130,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="${project.url}/checkstyle.html#pathfindingbenchmark.datastructures.IntList.java">pathfindingbenchmark/datastructures/IntList.java</a>
+                  <a href="${project.url}/checkstyle.html#pathfindingbenchmark.datastructures.MyList.java">pathfindingbenchmark/datastructures/MyList.java</a>
                 </td>
                 <td>
                   0
@@ -167,7 +153,35 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#pathfindingbenchmark.grid.Node.java">pathfindingbenchmark/grid/Node.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#pathfindingbenchmark.util.MapReader.java">pathfindingbenchmark/util/MapReader.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                       </tbody>

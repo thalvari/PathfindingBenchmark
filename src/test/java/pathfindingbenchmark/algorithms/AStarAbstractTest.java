@@ -72,7 +72,6 @@ public class AStarAbstractTest {
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
-        assertTrue(out.contains("\n"));
     }
 
     private void printMarkedMap(AStarAbstract algo) {

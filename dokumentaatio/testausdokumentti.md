@@ -11,7 +11,7 @@ Reitinhakualgoritmien testaamisessa syötteenä on käytetty [Moving AI Labin](h
 Esimerkiksi JPS:n kohdalla löysin parikin bugia koodistani ajaessani Random obstacles -karttojen testitapauksia ja huomatessani tulosten virheellisyyden. Tämän jälkeen tutkin algoritmin toimintaa visuaalisesti tulosteiden avulla ja huomasin tilanteen, jossa koodissa oli puutteita.
 
 ## Toistettavuus
-Testitapaukset voidaan toistaa ajamalla yksikkötestit. Muita ongelmia voidaan ajaa käyttöliittymän avulla antamalla kartan nimi sekä alku- ja loppukoordinaatit ja vertaamalla tuloksia scenario-tiedostojen tuloksiin.
+Testitapaukset voidaan toistaa ajamalla yksikkötestit. Muita ongelmia voidaan ajaa käyttöliittymän avulla antamalla kartan nimi sekä alku- ja loppukoordinaatit ja vertaamalla tuloksia edellä mainittujen scenario-tiedostojen tuloksiin.
 
 ## Tulokset
 Yksikkötestit voidaan ajaa Mavenin komennolla ```mvn test```, jolloin Maven antaa graafisen esityksen yksikkötestien tuloksista, kunhan repon sisällön lataa ensin omalle koneelle. PIT-raportissa on puolestaan tarkempi analyysi testien rivi- ja mutaatiokattavuudesta sekä testatuista mutaatioista.

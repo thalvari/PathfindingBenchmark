@@ -17,9 +17,6 @@ import pathfindingbenchmark.grid.Grid;
 public class DijkstraTest {
 
     private Grid grid1;
-    private Grid grid2;
-    private Grid grid3;
-    private Grid grid4;
     private AStarAbstract algo1;
     private AStarAbstract algo2;
     private AStarAbstract algo3;
@@ -28,13 +25,10 @@ public class DijkstraTest {
     @Before
     public void setUp() {
         grid1 = new Grid("maze512-2-2");
-        grid2 = new Grid("32room_002");
-        grid3 = new Grid("orz100d");
-        grid4 = new Grid("random512-40-5");
         algo1 = new Dijkstra(grid1);
-        algo2 = new Dijkstra(grid2);
-        algo3 = new Dijkstra(grid3);
-        algo4 = new Dijkstra(grid4);
+        algo2 = new Dijkstra(new Grid("32room_002"));
+        algo3 = new Dijkstra(new Grid("orz100d"));
+        algo4 = new Dijkstra(new Grid("random512-40-5"));
     }
 
     @Test

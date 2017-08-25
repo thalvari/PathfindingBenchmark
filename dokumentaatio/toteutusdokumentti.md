@@ -4,22 +4,22 @@
 ![Luokkakaavio](luokkakaavio.png)
 
 ## Ohjelman rakenne
-Ohjelma on jaettu viiteen pakkaukseen, jotka ovat algoritmit, tietorakenteet, verkko, käyttöliittymä ja muut apuluokat. Toteutuksessa on pyritty siihen, että algoritmeillä olisi kunkin suoritusvuoron alussa mahdollisimman tasapuoliset lähtökohdat, eli käytännössä pelkkä taulukkoon luettu verkko ilman esim. valmiiksi tehtyjä vieruslistoja, koska tällöin ei juurikaan vieruslistoja hyödyntävä JPS olisi alakynnessä.
+Ohjelma on jaettu viiteen pakkaukseen, jotka ovat algoritmit, tietorakenteet, verkko, käyttöliittymä ja muut apuluokat. Toteutuksessa on pyritty siihen, että kullakin algoritmilla olisi suorituksensa alussa mahdollisimman tasapuoliset lähtökohdat, joten niillä on käytettävissä vain verkkoa esittävä taulukko solmu-olioita. Käytössä ei ole esim. valmiiksi tehtyjä vieruslistoja, koska tällöin ei juurikaan vieruslistoja hyödyntävä JPS olisi alakynnessä.
 
 Algorithms-pakkauksessa sijaitsevat abstrakti AStarAbstract, joka toimii pohjana kaikille kolmelle algoritmille, sekä kolmea toteutettua algoritmia kuvaavat luokat AStar, Dijkstra ja JPS. Algoritmiuokat on kirjoitettu siten, että mahdollisimman suuri osa algoista on yhteistä ja sijaitsee AStarAbstract-luokassa. Dijksta-luokassa on täten vain luvun 0 palauttava heuristinen funktio. JPS-luokka sisältää metodin, joka etsii keosta poistetun solmun seuraajat, sekä tämän lukuisat apumetodit. Muuten sekään ei eroa AStarAbstract-luokasta.
 
-Datastructures-pakkauksesta löytyy minimikeko NodeMinHeap ja kokonaislukulista IntList. NodeMinHeap on toteutettu binäärikekona. Keon alkioina ovat Node-oliot ja avaimena toimii solmujen etäisyyden ja heuristisen arvon summana saatu prioriteetti. Keon toteutus tukee myös heap-dec-key-operaatiota. Samassa pakkauksessa oleva IntList tukee vain tarvittavia operaatioita add, get ja size.
+Datastructures-pakkauksesta löytyy minimikeko NodeMinHeap ja geneerisen listan toteutus MyList. NodeMinHeap on toteutettu binäärikekona. Keon alkioina ovat Node-oliot ja avaimena toimii solmujen etäisyyden ja heuristisen arvon summana saatu prioriteetti. Keon toteutus tukee myös heap-dec-key-operaatiota. MyList tukee vain tarvittavia operaatioita add, get, size ja contains.
 
-Grid-pakkaus sisältää luokan samannimisen Grid, joka puolestaan sisältää tiedostosta luetun kartan esityksen kaksiulotteisena taulukkona ja tukee esim. tietyn indeksin läpikuljettavuuden selvittämistä sekä tietyssä indeksissä sijaitsevan solmun vieruslistan etsimistä.
+Grid-pakkaus sisältää samannimisen luokan Grid, joka puolestaan sisältää tiedostosta luetun kartan esityksen kaksiulotteisena, solmu-olioita sisältävänä taulukkona ja tukee esim. kartan tiettyissä koordinaateissa sijaitsevan solmun läpikuljettavuuden selvittämistä, solmun vieruslistan etsimistä sekä tietyssä suunnassa sijaitsevan solmun läpikuljettavuuden selvittämistä. Grid-olio osaa myös kertoa voidaanko solmusta edetä tiettyyn suuntaan, ottaen huomioon että kulmien läpi ei saa oikaista. Pakkauksessa on myös verkon solmua kuvaava Node-olio, jonka luokkamuuttujia ovat mm. solmun etäisyys lähtösolmusta, solmun heuristinen arvo, solmun koordinaatit, sen tyyppi sekä tieto siitä kuuluuko solmu suljettuun joukkoon.
 
-GUI-pakkaus tulee sisältämään graafisen käyttöliittymän.
+GUI-pakkaus sisältää graafisen käyttöliittymän. Itse graafisten komponenttien määrittely löytyy resurssitiedostosta FXMLDocument, mutta mm. tapahtumankäsittelijät sijaitsevat FXMLDocumentController-luokassa. Algoritmiluokkien tarjoamat tulokset käyttäjälle esitettävään muotoon puolestaan muokkaa Wrapper-luokka, jota käyttöliittymä aktiivisesti hyödyntää.
 
-Util-pakkauksen sisältöön kuuluu JPS:n käyttämä Direction, joka on käytännössä suuntavektori, sekä kekoon laitettava Node-olio. Muussa ohjelmassa solmua kuvataan pelkällä indeksillä, mutta kekoon laitettaessa mukana täytyy olla myös etäisyys sekä heuristinen arvo, jotta solmut saadaan ulos keosta oikeassa järjestyksessä, joten nämä pakataan samaan olioon kekoon laitettaessa.
+Util-pakkauksen sisältöön kuuluu JPS:n käyttämä Direction, joka on käytännössä suuntavektori, sekä kartanlukijaa kuvaava luokka MapReader. MapReader osaa mm. kertoa mitä karttoja on tarjolla maps/ -kansiossa Se osaa myös luoda yksittäisestä map-tiedostosta solmuolioita sisältävän taulukon.
 
 ## Vaativuusanalyysi ja vaativuuksien vertailu
-Kokonaislukulistan osalta get ja size operaatiot ovat vakioaikaisia ja add-operaatio tasoitetusti vakioaikainen, koska raskas yksiulotteisen taulukon koon kasvatusoperaatio suoritetaan harvoin.
+Listan osalta get ja size operaatiot ovat vakioaikaisia ja add-operaatio tasoitetusti vakioaikainen, koska raskas yksiulotteisen taulukon koon kasvatusoperaatio suoritetaan harvoin. Contains-operaation aikavaativuus on lineaarinen, koska se käy tarvittaessa koko taulukon läpi. Listan tilavaativuus on lineaarinen lukujen määrän suhteen.
 
-IntListin tilavaativuus on lineaarinen lukujen määrän suhteen. Koska minimikeko on toteutettu binäärikekona, on sen kaikkien toteutettujen operaatioiden aikavaativuus O(log |V|). Koska keon koko riippuu sen sisältämien solmujen määrästä on sen tilavaativuusO(|V|).
+Koska minimikeko on toteutettu binäärikekona, on sen kaikkien toteutettujen operaatioiden aikavaativuus O(log |V|). Koska keon koko riippuu sen sisältämien solmujen määrästä on sen tilavaativuus O(|V|).
 
 Koska Dijkstran algoritmi lisää ja poistaa jokaisen solmun keosta korkeintaan kerran, suorittaa heap-dec-key-operaation korkeintaan kaarien määrän verran ja keko-operaatioilla on edellä mainittu logaritminen aikavaativuus, niin Dijkstran toteutuksen aikavaativuus on O((|E| + |V|) log |V|).
 
@@ -31,125 +31,27 @@ Koska pahimmillaan kaikki solmut voivat olla keossa samanaikaisesti ja koska apu
 
 ## Suorituskykyvertailu
 ### Yleistä
-Algoritmeja tullaan vertailemaan graafisen käyttöliittymän avulla, joka näyttää käyttäjälle mm. kuvan kartasta, johon on merkitty laajennettavat, eli keosta poistetut, solmut punaisella sekä lyhimmällä polulla olevat solmut sinisellä. Muut tavat vertailla algoritmien suorituskykyä on toteutettu erilaisten laskureiden ja järjestelmäkutsujen avulla. Nämä ovat lyhimmän polun pituus, keosta poistettuja solmuja laajennettaessa luodun vieras- tai seuraajalistan keskimääräinen koko, keon insert, del-min ja dec-key operaatioiden määrät, suoritusaika sekä käytetyn muistin määrä. Edellisten on tarkoitus myös näkyä GUI:ssa.
+Algoritmeja vertaillaan graafisen käyttöliittymän avulla, joka näyttää käyttäjälle mm. kuvan kartasta, johon on merkitty laajennettavat, eli keosta poistetut, solmut keltaisella sekä lyhimmällä polulla olevat solmut punaisella. Muut tavat vertailla algoritmien suorituskykyä on toteutettu erilaisten laskureiden ja järjestelmäkutsujen avulla. Nämä ovat lyhimmän polun pituus, keosta poistettuja solmuja laajennettaessa luodun vieras- tai seuraajalistan keskimääräinen koko, keon insert, del-min ja dec-key operaatioiden määrät, suoritusaika sekä käytetyn muistin määrä. Kaikki edellä mainitut näkyvät käyttäjälle GUI:ssa.
 
 ### Havainnot
 Todella tiheissä labyrinteissä A*:n heuristiikasta ei ole mitään hyötyä, joten sen suoritusaika on Dijkstran tasoa, mutta JPS osaa hyppiä suorien osuuksien yli.
 
-```
------------
-Kartan nimi: maze512-1-0
-Kartan koko: 262144
-Solmujen määrä: 131071
-Lähtösolmu: (497, 89)
-Maalisolmu: (467, 44)
------------
-
-Dijkstra:
-Lyhimmän polun pituus: 4787.
-Seuraajalistan koon ka: 2.000.
-Keon insert-operaatioiden määrä: 127300.
-Keon del-min-operaatioiden määrä: 127292.
-Keon dec-key-operaatioiden määrä: 0.
-Suoritusaika: 51.406 ms.
-Käytetty muisti: 33.564 MB.
-
-A*:
-Lyhimmän polun pituus: 4787.
-Seuraajalistan koon ka: 2.000.
-Keon insert-operaatioiden määrä: 121821.
-Keon del-min-operaatioiden määrä: 121795.
-Keon dec-key-operaatioiden määrä: 0.
-Suoritusaika: 52.969 ms.
-Käytetty muisti: 57.949 MB.
-
-JPS:
-Lyhimmän polun pituus: 4787.
-Seuraajalistan koon ka: 1.001.
-Keon insert-operaatioiden määrä: 33747.
-Keon del-min-operaatioiden määrä: 33729.
-Keon dec-key-operaatioiden määrä: 0.
-Suoritusaika: 26.250 ms.
-Käytetty muisti: 23.615 MB.
-```
+![maze512-1-0-dijkstra](maze512-1-0-dijkstra.png)
+![maze512-1-0-astar](maze512-1-0-astar.png)
+![maze512-1-0-jps](maze512-1-0-jps.png)
 
 Ei niin tiheissä labyrinteissä sama juttu Dijkstran ja A*:n osalta. Nyt heuristiikan hyödyttömyys näkyy erityisesti dec-key-operaatioiden määrässä, koska A* joutuu etsimään vaihtoehtoisia reittejä. JPS taas pystyy hyppimään paljon pidempiä matkoja ja on todella nopea.
 
-```
-------------
-Kartan nimi: maze512-32-0
-Kartan koko: 262144
-Solmujen määrä: 253840
-Lähtösolmu: (59, 434)
-Maalisolmu: (101, 194)
-------------
-
-Dijkstra:
-Lyhimmän polun pituus: 2306.94.
-Seuraajalistan koon ka: 7.805.
-Keon insert-operaatioiden määrä: 248450.
-Keon del-min-operaatioiden määrä: 248305.
-Keon dec-key-operaatioiden määrä: 0.
-Suoritusaika: 117.656 ms.
-Käytetty muisti: 152.305 MB.
-
-A*:
-Lyhimmän polun pituus: 2306.94.
-Seuraajalistan koon ka: 7.805.
-Keon insert-operaatioiden määrä: 237279.
-Keon del-min-operaatioiden määrä: 236897.
-Keon dec-key-operaatioiden määrä: 162388.
-Suoritusaika: 130.156 ms.
-Käytetty muisti: 176.781 MB.
-
-JPS:
-Lyhimmän polun pituus: 2306.94.
-Seuraajalistan koon ka: 1.013.
-Keon insert-operaatioiden määrä: 152.
-Keon del-min-operaatioiden määrä: 150.
-Keon dec-key-operaatioiden määrä: 0.
-Suoritusaika: 18.438 ms.
-Käytetty muisti: 10.080 MB.
-```
+![maze512-32-0-dijkstra](maze512-32-0-dijkstra.png)
+![maze512-32-0-astar](maze512-32-0-astar.png)
+![maze512-32-0-jps](maze512-32-0-jps.png)
 
 Kartoissa, jotka ovat tyypiltään tiheitä metsiä, heuristiikka nousee arvoonsa ja A* on todella hyvä. Toisaalta nyt JPS ei pysty karsimaan niin monia naapureita koska sen sääntöihin sopivia hyppysolmuja löytyy joka puolelta. Tämä näkyy JPS:n seuraajalistan koon korkeassa keskiarvossa sekä korkeassa määrässä kekoon lisättäviä solmuja suhteessa A*:een. Tämä taitaa olla yksi JPS:n pahimpia tapauksia.
 
-```
---------------
-Kartan nimi: random512-10-0
-Kartan koko: 262144
-Solmujen määrä: 235900
-Lähtösolmu: (19, 44)
-Maalisolmu: (509, 436)
---------------
+![random512-10-0-dijkstra](random512-10-0-dijkstra.png)
+![random512-10-0-astar](random512-10-0-astar.png)
+![random512-10-0-jps](random512-10-0-jps.png)
 
-Dijkstra:
-Lyhimmän polun pituus: 668.188.
-Seuraajalistan koon ka: 6.499.
-Keon insert-operaatioiden määrä: 233690.
-Keon del-min-operaatioiden määrä: 233565.
-Keon dec-key-operaatioiden määrä: 3487.
-Suoritusaika: 146.094 ms.
-Käytetty muisti: 166.329 MB.
-
-A*:
-Lyhimmän polun pituus: 668.188.
-Seuraajalistan koon ka: 6.562.
-Keon insert-operaatioiden määrä: 35951.
-Keon del-min-operaatioiden määrä: 34450.
-Keon dec-key-operaatioiden määrä: 24095.
-Suoritusaika: 27.344 ms.
-Käytetty muisti: 40.339 MB.
-
-JPS:
-Lyhimmän polun pituus: 668.188.
-Seuraajalistan koon ka: 2.174.
-Keon insert-operaatioiden määrä: 16025.
-Keon del-min-operaatioiden määrä: 15072.
-Keon dec-key-operaatioiden määrä: 4185.
-Suoritusaika: 21.875 ms.
-Käytetty muisti: 25.212 MB.
-```
 
 ## Lähteet
 - TiRa-kurssin materiaali.

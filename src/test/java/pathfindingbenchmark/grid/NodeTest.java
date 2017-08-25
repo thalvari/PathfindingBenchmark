@@ -5,8 +5,9 @@
  */
 package pathfindingbenchmark.grid;
 
-import pathfindingbenchmark.grid.Node;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +24,13 @@ public class NodeTest {
 
     @Before
     public void setUp() {
-        node1 = new Node(0, 0, ' ');
+        node1 = new Node(0, 0, '.');
         node1.setDist(2);
         node1.setHeuristic(3);
-        node2 = new Node(1, 1, ' ');
+        node2 = new Node(1, 1, 'G');
         node2.setDist(4);
         node2.setHeuristic(2);
-        node3 = new Node(1, 1, ' ');
+        node3 = new Node(1, 1, 'T');
         node3.setDist(6);
         node3.setHeuristic(3);
     }
@@ -37,7 +38,7 @@ public class NodeTest {
     @Test
     public void testNode() {
         assertEquals(1, node2.getX());
-        assertEquals(1, node2.getX());
+        assertEquals(1, node2.getY());
     }
 
     @Test
@@ -55,5 +56,24 @@ public class NodeTest {
     public void testCompareTo3() {
         node3.setDist(2);
         assertTrue(node1.compareTo(node3) == 0);
+    }
+
+    @Test
+    public void testIsPassable() {
+        assertTrue(node1.isPassable());
+        assertFalse(node3.isPassable());
+    }
+
+    @Test
+    public void testReset() {
+        node1.setDist(1);
+        node1.setClosed(true);
+        node1.setHeapIdx(1);
+        node1.setPrev(node2);
+        node1.reset();
+        assertEquals(Integer.MAX_VALUE, node1.getDist());
+        assertFalse(node1.isClosed());
+        assertEquals(0, node1.getHeapIdx());
+        assertNull(node1.getPrev());
     }
 }

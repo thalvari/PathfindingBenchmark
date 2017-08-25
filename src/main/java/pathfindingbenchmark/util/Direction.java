@@ -17,6 +17,12 @@ public class Direction {
     private final int x;
     private final int y;
 
+    /**
+     * Konstruktori.
+     *
+     * @param x Suunta vaaka-akselilla.
+     * @param y Suunta pystyakselilla.
+     */
     public Direction(int x, int y) {
         this.x = x;
         this.y = y;
@@ -25,16 +31,16 @@ public class Direction {
     /**
      * Konstruktori laskee suuntavektorin arvot.
      *
-     * @param parIdx Solmun vanhemman indeksi.
-     * @param idx Solmun indeksi.
+     * @param node1 Solmu.
+     * @param node2 Toinen solmu.
      */
-    public Direction(Node node, Node succ) {
-        x = calcX(node, succ);
-        y = calcY(node, succ);
+    public Direction(Node node1, Node node2) {
+        x = calcX(node1, node2);
+        y = calcY(node1, node2);
     }
 
-    private int calcX(Node node, Node succ) {
-        int xDif = succ.getX() - node.getX();
+    private int calcX(Node node1, Node node2) {
+        int xDif = node2.getX() - node1.getX();
         if (xDif == 0) {
             return 0;
         } else {
@@ -42,8 +48,8 @@ public class Direction {
         }
     }
 
-    private int calcY(Node node, Node succ) {
-        int yDif = succ.getY() - node.getY();
+    private int calcY(Node node1, Node node2) {
+        int yDif = node2.getY() - node1.getY();
         if (yDif == 0) {
             return 0;
         } else {

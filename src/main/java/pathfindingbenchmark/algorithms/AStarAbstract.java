@@ -97,7 +97,7 @@ public abstract class AStarAbstract {
      * Palauttaa solmun heuristisena arvona käytettävän oktiilisen etäisyyden
      * maalisolmuun tai Dijkstran tapauksessa luvun 0.
      *
-     * @param idx Solmun indeksi.
+     * @param node Solmu.
      * @return Heuristinen arvo.
      */
     protected int heuristic(Node node) {
@@ -109,11 +109,11 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa listan solmun naapurisolmujen indekseistä tai JPS:n tapauksessa
-     * listan hyppysolmujen indekseistä.
+     * Palauttaa listan naapurisolmuista tai JPS:n tapauksessa listan
+     * hyppysolmuista.
      *
-     * @param idx Solmun indeksi.
-     * @return Lista seuraajasolmujen indekseistä.
+     * @param node Solmu.
+     * @return Lista seuraajasolmuista.
      */
     protected MyList<Node> getSuccList(Node node) {
         return grid.createAdjList(node);
@@ -136,10 +136,10 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa taulukkoesityksen verkosta, johon lyhin polku ja käsitellyt
+     * Palauttaa taulukkoesityksen kartasta, johon lyhin polku ja käsitellyt
      * solmut on merkitty.
      *
-     * @return Taulukkoesitys verkosta.
+     * @return Taulukkoesitys kartasta.
      */
     public char[][] getMarkedMap() {
         return grid.getMarkedMap(goal);
@@ -188,7 +188,7 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa kaikkien haettujen seuraajalistojen kokojen summan.
+     * Palauttaa kaikkien tutkittujen seuraajalistojen kokojen summan.
      *
      * @return Summa.
      */

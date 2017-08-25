@@ -6,6 +6,8 @@
 package pathfindingbenchmark.datastructures;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import pathfindingbenchmark.grid.Node;
@@ -46,5 +48,12 @@ public class MyListTest {
         assertEquals(9, list.size());
         assertEquals(1, list.get(0).getX());
         assertEquals(9, list.get(8).getX());
+    }
+
+    @Test
+    public void testContains() {
+        list.add(new Node(0, 1, ' '));
+        assertTrue(list.contains(new Node(0, 1, ' ')));
+        assertFalse(list.contains(new Node(1, 1, ' ')));
     }
 }

@@ -6,10 +6,12 @@
 package pathfindingbenchmark.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import pathfindingbenchmark.datastructures.MyList;
+import pathfindingbenchmark.util.Direction;
 
 /**
  *
@@ -37,6 +39,7 @@ public class GridTest {
         Grid grid = new Grid("?");
         assertEquals(0, grid.getHeight());
         assertEquals(0, grid.getWidth());
+        assertFalse(grid.isInBounds(0, 0));
     }
 
     @Test
@@ -57,13 +60,13 @@ public class GridTest {
     @Test
     public void testCreateAdjList4() {
         MyList<Node> adjList = grid1.createAdjList(new Node(14, 3, ' '));
-        assertTrue(adjList.get(0).equals(new Node(13, 2, ' ')));
-        assertTrue(adjList.get(1).equals(new Node(14, 2, ' ')));
-        assertTrue(adjList.get(2).equals(new Node(13, 3, ' ')));
-        assertTrue(adjList.get(3).equals(new Node(15, 3, ' ')));
-        assertTrue(adjList.get(4).equals(new Node(13, 4, ' ')));
-        assertTrue(adjList.get(5).equals(new Node(14, 4, ' ')));
-        assertTrue(adjList.get(6).equals(new Node(15, 4, ' ')));
+        assertTrue(adjList.contains(new Node(13, 2, ' ')));
+        assertTrue(adjList.contains(new Node(14, 2, ' ')));
+        assertTrue(adjList.contains(new Node(13, 3, ' ')));
+        assertTrue(adjList.contains(new Node(15, 3, ' ')));
+        assertTrue(adjList.contains(new Node(13, 4, ' ')));
+        assertTrue(adjList.contains(new Node(14, 4, ' ')));
+        assertTrue(adjList.contains(new Node(15, 4, ' ')));
     }
 
     @Test
@@ -79,5 +82,51 @@ public class GridTest {
     @Test
     public void testGetPassableNodeCount() {
         assertEquals(2054, grid1.getPassableNodeCount());
+    }
+
+    @Test
+    public void testIsNodeInDirAdj() {
+        Node node = grid1.getNode(1, 3);
+        assertTrue(grid1.isNodeInDirAdj(node, new Direction(1, 0)));
+        assertFalse(grid1.isNodeInDirAdj(node, new Direction(1, -1)));
+        assertTrue(grid1.isNodeInDirAdj(node, new Direction(1, 1)));
+    }
+
+    @Test
+    public void testIsNodeInDirPassable() {
+        Node node = grid1.getNode(1, 3);
+        assertTrue(grid1.isNodeInDirPassable(node, new Direction(1, -1)));
+        assertFalse(grid1.isNodeInDirPassable(node, new Direction(0, -1)));
+    }
+
+    @Test
+    public void testNodeDist() {
+        Node node1 = grid1.getNode(1, 3);
+        Node node2 = grid1.getNode(5, 3);
+        Node node3 = grid1.getNode(3, 5);
+        assertEquals(4 * Grid.HOR_VER_NODE_DIST,
+                grid1.getNodeDist(node1, node2));
+
+        assertEquals(2 * Grid.DIAG_NODE_DIST,
+                grid1.getNodeDist(node1, node3));
+    }
+
+    @Test
+    public void testGetMarkedMap() {
+        char[][] map = grid1.getMarkedMap(null);
+        for (int y = 0; y < grid1.getHeight(); y++) {
+            for (int x = 0; x < grid1.getWidth(); x++) {
+                assertEquals(grid1.getNode(x, y).getSymbol(), map[y][x]);
+            }
+        }
+    }
+
+    @Test
+    public void testInitNodes() {
+        grid2.getNode(0, 0).setClosed(true);
+        grid2.getNode(3, 3).setClosed(true);
+        grid2.initNodes();
+        assertFalse(grid2.getNode(0, 0).isClosed());
+        assertFalse(grid2.getNode(3, 3).isClosed());
     }
 }
