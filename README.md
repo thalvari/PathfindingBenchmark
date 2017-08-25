@@ -14,3 +14,4 @@ Ohjelma tuettujen reitinhakualgoritmien suorituskyvyn vertailuun.
 - [Viikkoraportti 2](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_2.md)
 - [Viikkoraportti 3](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_3.md)
 - [Viikkoraportti 4](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_4.md)
+- [Viikkoraportti 5](https://github.com/thalvari/PathfindingBenchmark/blob/master/raportit/viikkoraportti_5.md)
