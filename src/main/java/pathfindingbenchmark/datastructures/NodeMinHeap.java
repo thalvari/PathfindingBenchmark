@@ -17,6 +17,7 @@ public class NodeMinHeap {
     private static final int INIT_ARR_LEN = 8;
     private Node[] nodes;
     private int length;
+    private int maxHeapSize;
 
     /**
      * Konstruktori.
@@ -33,6 +34,10 @@ public class NodeMinHeap {
     public void insert(Node node) {
         checkIfFull();
         length++;
+        if (length > maxHeapSize) {
+            maxHeapSize = length;
+        }
+
         int idx = length;
         while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
             setNode(getNode(parent(idx)), idx);
@@ -130,5 +135,9 @@ public class NodeMinHeap {
             swap(idx, parent(idx));
             idx = parent(idx);
         }
+    }
+
+    public int getMaxHeapSize() {
+        return maxHeapSize;
     }
 }

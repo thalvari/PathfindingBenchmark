@@ -27,7 +27,6 @@ public class MapReader {
     }
 
     private MyList<String> mapData;
-    private int passableNodeCount;
 
     /**
      * Konstruktori.
@@ -41,7 +40,7 @@ public class MapReader {
     private static MyList<String> getMapNames() {
         MyList<String> mapNames = new MyList<>();
         try {
-            Files.list(Paths.get("maps/")).sorted().forEach((path) -> {
+            Files.list(Paths.get("maps/")).forEach((path) -> {
                 mapNames.add(path.getFileName().toString().split(".map")[0]);
             });
         } catch (Exception e) {
@@ -92,7 +91,7 @@ public class MapReader {
      *
      * @return Solmuja sisältävä taulukko.
      */
-    public Node[][] getNodes() {
+    public Node[][] initNodes() {
         if (mapData == null) {
             return null;
         }
@@ -100,23 +99,14 @@ public class MapReader {
         Node[][] nodes = new Node[getHeight()][getWidth()];
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                char symbol = mapData.get(4 + y).charAt(x);
-                nodes[y][x] = new Node(x, y, symbol);
-                if (nodes[y][x].isPassable()) {
-                    passableNodeCount++;
-                }
+                nodes[y][x] = new Node(x, y, getOrigSymbol(x, y));
             }
         }
 
         return nodes;
     }
 
-    /**
-     * Palauttaa läpikuljettavien solmujen määrän.
-     *
-     * @return Määrä.
-     */
-    public int getPassableNodeCount() {
-        return passableNodeCount;
+    public char getOrigSymbol(int x, int y) {
+        return mapData.get(4 + y).charAt(x);
     }
 }

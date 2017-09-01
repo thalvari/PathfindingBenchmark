@@ -75,6 +75,8 @@
                         <Label fx:id="lb3" />
                         <Label text="Avg succ list size:" />
                         <Label fx:id="lb4" />
+                        <Label text="Max heap size:" />
+                        <Label fx:id="lb11" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" spacing="8">

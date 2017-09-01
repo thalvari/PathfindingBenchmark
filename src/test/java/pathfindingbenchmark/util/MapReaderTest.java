@@ -40,14 +40,8 @@ public class MapReaderTest {
     }
 
     @Test
-    public void testPassableNodeCount() {
-        reader.getNodes();
-        assertEquals(16, reader.getPassableNodeCount());
-    }
-
-    @Test
-    public void testGetNodes() {
-        Node[][] nodes = reader.getNodes();
+    public void testInitNodes() {
+        Node[][] nodes = reader.initNodes();
         for (int y = 0; y < reader.getHeight(); y++) {
             for (int x = 0; x < reader.getWidth(); x++) {
                 assertEquals(x, nodes[y][x].getX());

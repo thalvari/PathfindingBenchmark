@@ -17,6 +17,7 @@ import pathfindingbenchmark.algorithms.AStarAbstract;
 import pathfindingbenchmark.algorithms.Dijkstra;
 import pathfindingbenchmark.algorithms.JPS;
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *
@@ -64,25 +65,23 @@ public class Wrapper {
                 IMAGE_SCALE_FACTOR * grid.getHeight());
 
         PixelWriter pixelWriter = writableImage.getPixelWriter();
-        char[][] map;
-        if (algo == null) {
-            map = grid.getMarkedMap(null);
-        } else {
-            map = algo.getMarkedMap();
+        if (algo != null) {
+            algo.markPath();
         }
 
         for (int y = 0; y < IMAGE_SCALE_FACTOR * grid.getHeight(); y++) {
             for (int x = 0; x < IMAGE_SCALE_FACTOR * grid.getWidth(); x++) {
-                pixelWriter.setColor(x, y, getColor(
-                        map[y / IMAGE_SCALE_FACTOR][x / IMAGE_SCALE_FACTOR]));
+                pixelWriter.setColor(x, y, getColor(grid.getNode(
+                        x / IMAGE_SCALE_FACTOR,
+                        y / IMAGE_SCALE_FACTOR)));
             }
         }
 
         return writableImage;
     }
 
-    private Color getColor(char c) {
-        switch (c) {
+    private Color getColor(Node node) {
+        switch (node.getSymbol()) {
             case '.':
             case 'G':
                 return Color.GREY;
@@ -95,7 +94,7 @@ public class Wrapper {
                 return Color.PURPLE;
             case 'W':
                 return Color.BLUE;
-            case 'o':
+            case 'c':
                 return Color.YELLOW;
             default:
                 return Color.RED;
@@ -134,8 +133,8 @@ public class Wrapper {
         }
     }
 
-    public String getDist() {
-        return algo.getRoundedDist(6);
+    public String getMinDist() {
+        return divideAndRound(algo.getMinDist(), Grid.HOR_VER_NODE_DIST);
     }
 
     public String getAvgSuccListSize() {
@@ -159,6 +158,29 @@ public class Wrapper {
 
         return new BigDecimal(numer)
                 .divide(BigDecimal.valueOf(denom), 3, RoundingMode.HALF_UP)
+                .stripTrailingZeros()
                 .toString();
+    }
+
+    /**
+     * Palauttaa läpikuljettavien solmujen määrän kartalla.
+     *
+     * @return Määrä.
+     */
+    public int getPassableNodeCount() {
+        int passableNodeCount = 0;
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                if (grid.getNode(x, y).isPassable()) {
+                    passableNodeCount++;
+                }
+            }
+        }
+
+        return passableNodeCount;
+    }
+
+    public int getMaxHeapSize() {
+        return algo.getMaxHeapSize();
     }
 }

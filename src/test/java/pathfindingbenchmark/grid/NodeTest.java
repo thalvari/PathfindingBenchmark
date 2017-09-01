@@ -7,7 +7,6 @@ package pathfindingbenchmark.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,18 +61,5 @@ public class NodeTest {
     public void testIsPassable() {
         assertTrue(node1.isPassable());
         assertFalse(node3.isPassable());
-    }
-
-    @Test
-    public void testReset() {
-        node1.setDist(1);
-        node1.setClosed(true);
-        node1.setHeapIdx(1);
-        node1.setPrev(node2);
-        node1.reset();
-        assertEquals(Integer.MAX_VALUE, node1.getDist());
-        assertFalse(node1.isClosed());
-        assertEquals(0, node1.getHeapIdx());
-        assertNull(node1.getPrev());
     }
 }

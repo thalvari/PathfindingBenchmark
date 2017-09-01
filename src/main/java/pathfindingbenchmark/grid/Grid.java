@@ -30,8 +30,7 @@ public class Grid {
     private final MapReader reader;
     private final int height;
     private final int width;
-    private final Node[][] nodes;
-    private final int passableNodeCount;
+    private Node[][] nodes;
 
     /**
      * Konstruktori käyttää kartanlukijaa verkon tallentamiseen.
@@ -42,8 +41,7 @@ public class Grid {
         reader = new MapReader(mapName);
         height = reader.getHeight();
         width = reader.getWidth();
-        nodes = reader.getNodes();
-        passableNodeCount = reader.getPassableNodeCount();
+        nodes = reader.initNodes();
     }
 
     /**
@@ -141,44 +139,8 @@ public class Grid {
                 + (DIAG_NODE_DIST - HOR_VER_NODE_DIST) * Math.min(xDif, yDif);
     }
 
-    /**
-     * Palauttaa läpikuljettavien solmujen määrän kartalla.
-     *
-     * @return Määrä.
-     */
-    public int getPassableNodeCount() {
-        return passableNodeCount;
-    }
-
-    /**
-     * Palauttaa taulukkoesityksen kartasta, johon lyhin polku ja käsitellyt
-     * solmut on merkitty.
-     *
-     * @param goal Maalisolmu.
-     * @return Taulukkoesitys verkosta.
-     */
-    public char[][] getMarkedMap(Node goal) {
-        char[][] markedMap = new char[height][width];
-        markPath(markedMap, goal);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (markedMap[y][x] != 'X' && getNode(x, y).isClosed()) {
-                    markedMap[y][x] = 'o';
-                } else if (markedMap[y][x] != 'X') {
-                    markedMap[y][x] = getNode(x, y).getSymbol();
-                }
-            }
-        }
-
-        return markedMap;
-    }
-
-    private void markPath(char[][] markedMap, Node goal) {
-        Node prev = goal;
-        while (prev != null) {
-            markedMap[prev.getY()][prev.getX()] = 'X';
-            prev = prev.getPrev();
-        }
+    public Node[][] getNodes() {
+        return nodes;
     }
 
     /**
@@ -214,9 +176,13 @@ public class Grid {
      * Alustaa kaikki verkon solmut.
      */
     public void initNodes() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                getNode(x, y).reset();
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                nodes[y][x].setDist(Integer.MAX_VALUE);
+                nodes[y][x].setHeapIdx(0);
+                nodes[y][x].setHeuristic(0);
+                nodes[y][x].setPrev(null);
+                nodes[y][x].setSymbol(reader.getOrigSymbol(x, y));
             }
         }
     }

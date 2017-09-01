@@ -80,11 +80,6 @@ public class GridTest {
     }
 
     @Test
-    public void testGetPassableNodeCount() {
-        assertEquals(2054, grid1.getPassableNodeCount());
-    }
-
-    @Test
     public void testIsNodeInDirAdj() {
         Node node = grid1.getNode(1, 3);
         assertTrue(grid1.isNodeInDirAdj(node, new Direction(1, 0)));
@@ -112,21 +107,11 @@ public class GridTest {
     }
 
     @Test
-    public void testGetMarkedMap() {
-        char[][] map = grid1.getMarkedMap(null);
-        for (int y = 0; y < grid1.getHeight(); y++) {
-            for (int x = 0; x < grid1.getWidth(); x++) {
-                assertEquals(grid1.getNode(x, y).getSymbol(), map[y][x]);
-            }
-        }
-    }
-
-    @Test
     public void testInitNodes() {
-        grid2.getNode(0, 0).setClosed(true);
-        grid2.getNode(3, 3).setClosed(true);
+        grid2.getNode(0, 0).setSymbol('c');
+        grid2.getNode(3, 3).setSymbol('c');
         grid2.initNodes();
-        assertFalse(grid2.getNode(0, 0).isClosed());
-        assertFalse(grid2.getNode(3, 3).isClosed());
+        assertFalse(grid2.getNode(0, 0).getSymbol() == 'c');
+        assertFalse(grid2.getNode(3, 3).getSymbol() == 'c');
     }
 }

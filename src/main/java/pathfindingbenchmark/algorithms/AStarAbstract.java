@@ -5,9 +5,6 @@
  */
 package pathfindingbenchmark.algorithms;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import pathfindingbenchmark.datastructures.MyList;
 import pathfindingbenchmark.datastructures.NodeMinHeap;
 import pathfindingbenchmark.grid.Grid;
@@ -66,7 +63,7 @@ public abstract class AStarAbstract {
         while (!heap.empty()) {
             Node node = heap.delMin();
             heapDelMinOperCount++;
-            node.setClosed(true);
+            node.setSymbol('c');
             if (node.equals(goal)) {
                 break;
             }
@@ -75,7 +72,7 @@ public abstract class AStarAbstract {
             succListTotalSize += succList.size();
             for (int i = 0; i < succList.size(); i++) {
                 Node succ = succList.get(i);
-                if (!succ.isClosed()) {
+                if (succ.getSymbol() != 'c') {
                     relax(node, succ);
                 }
             }
@@ -83,9 +80,9 @@ public abstract class AStarAbstract {
     }
 
     private void init(int startX, int startY, int goalX, int goalY) {
+        grid.initNodes();
         start = grid.getNode(startX, startY);
         goal = grid.getNode(goalX, goalY);
-        grid.initNodes();
         heap = new NodeMinHeap();
         heapDecKeyOperCount = 0;
         heapDelMinOperCount = 0;
@@ -138,26 +135,22 @@ public abstract class AStarAbstract {
     /**
      * Palauttaa taulukkoesityksen kartasta, johon lyhin polku ja käsitellyt
      * solmut on merkitty.
-     *
-     * @return Taulukkoesitys kartasta.
      */
-    public char[][] getMarkedMap() {
-        return grid.getMarkedMap(goal);
+    public void markPath() {
+        Node prev = goal;
+        while (prev != null) {
+            prev.setSymbol('P');
+            prev = prev.getPrev();
+        }
     }
 
     /**
-     * Palauttaa solmun etäisyyden lähtösolmuun pyöristettynä haluttuun määrään
-     * merkitseviä numeroita.
+     * Palauttaa solmun etäisyyden lähtösolmuun.
      *
-     * @param n Merkitsevien numeroiden määrä.
      * @return Etäisyys.
      */
-    public String getRoundedDist(int n) {
-        return new BigDecimal(goal.getDist())
-                .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
-                        new MathContext(n, RoundingMode.HALF_UP))
-                .stripTrailingZeros()
-                .toString();
+    public int getMinDist() {
+        return goal.getDist();
     }
 
     /**
@@ -194,5 +187,9 @@ public abstract class AStarAbstract {
      */
     public int getSuccListTotalSize() {
         return succListTotalSize;
+    }
+
+    public int getMaxHeapSize() {
+        return heap.getMaxHeapSize();
     }
 }

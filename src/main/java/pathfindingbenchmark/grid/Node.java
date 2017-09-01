@@ -13,12 +13,11 @@ package pathfindingbenchmark.grid;
  */
 public class Node implements Comparable<Node> {
 
-    private boolean closed;
     private int dist;
     private int heapIdx;
     private int heuristic;
     private Node prev;
-    private final char symbol;
+    private char symbol;
     private final int x;
     private final int y;
 
@@ -33,6 +32,7 @@ public class Node implements Comparable<Node> {
         this.x = x;
         this.y = y;
         this.symbol = symbol;
+        dist = Integer.MAX_VALUE;
     }
 
     /**
@@ -41,7 +41,7 @@ public class Node implements Comparable<Node> {
      * @return Totuusarvo.
      */
     public boolean isPassable() {
-        return symbol == '.' || symbol == 'G' || symbol == 'S';
+        return symbol != '@' && symbol != 'O' && symbol != 'T' && symbol != 'W';
     }
 
     @Override
@@ -61,26 +61,6 @@ public class Node implements Comparable<Node> {
     public boolean equals(Object obj) {
         Node o = (Node) obj;
         return x == o.x && y == o.y;
-    }
-
-    /**
-     * Alustaa olion kentät.
-     */
-    public void reset() {
-        closed = false;
-        dist = Integer.MAX_VALUE;
-        heapIdx = 0;
-        heuristic = 0;
-        prev = null;
-    }
-
-    /**
-     * Kertoo onko solmu suljetussa joukossa.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isClosed() {
-        return closed;
     }
 
     /**
@@ -138,15 +118,6 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Siirtää solmun suljettuun joukkoon.
-     *
-     * @param closed Totuusarvo.
-     */
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
-
-    /**
      * Päivittää solmun etäisyyden lähtösolmusta.
      *
      * @param dist Uusi etäisyys.
@@ -180,5 +151,9 @@ public class Node implements Comparable<Node> {
      */
     public void setPrev(Node prev) {
         this.prev = prev;
+    }
+
+    public void setSymbol(char symbol) {
+        this.symbol = symbol;
     }
 }
