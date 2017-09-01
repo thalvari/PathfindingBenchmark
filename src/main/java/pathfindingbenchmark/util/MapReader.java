@@ -87,7 +87,7 @@ public class MapReader {
     }
 
     /**
-     * Palauttaa kartan alustettuna solmu-olioilla.
+     * Palauttaa kartan esityksen solmuja sisältävänä taulukkona.
      *
      * @return Solmuja sisältävä taulukko.
      */
@@ -106,6 +106,13 @@ public class MapReader {
         return nodes;
     }
 
+    /**
+     * Palauttaa kartan tietyissä koordinaateissa olevan merkin.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @return Merkki.
+     */
     public char getOrigSymbol(int x, int y) {
         return mapData.get(4 + y).charAt(x);
     }

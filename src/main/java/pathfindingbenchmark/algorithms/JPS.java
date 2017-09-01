@@ -160,13 +160,11 @@ public class JPS extends AStarAbstract {
     }
 
     private Node jump(Node parent, Direction dir) {
-        Node node;
-        if (grid.isNodeInDirAdj(parent, dir)) { // Tarkastetaan voidaanko edetä.
-            node = grid.getNodeInDir(parent, dir);
-        } else {
+        if (!grid.isNodeInDirAdj(parent, dir)) { // Katsotaan voidaanko edetä.
             return null;
         }
 
+        Node node = grid.getNodeInDir(parent, dir);
         if (node.equals(goal)) {
             return node;
         }
@@ -191,9 +189,8 @@ public class JPS extends AStarAbstract {
             }
         } else if (jump(node, new Direction(dir.getX(), 0)) != null
                 || jump(node, new Direction(0, dir.getY())) != null) {
-            // Jos edetään viistoon ja pysty- tai vaakasuunnasta löytyy solmu,
-            // jolla on pakotettuja naapureita, olemme hyppysolmussa.
-            return node;
+
+            return node; // Pysty- tai vaakasuunnassa solmu jolla pakotettuja.
         }
 
         return jump(node, dir); // Muuten jatketaan samaan suuntaan.

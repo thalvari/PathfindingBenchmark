@@ -29,7 +29,7 @@ public class Direction {
     }
 
     /**
-     * Konstruktori laskee suuntavektorin arvot.
+     * Vaihtoehtoinen konstruktori.
      *
      * @param node1 Solmu.
      * @param node2 Toinen solmu.

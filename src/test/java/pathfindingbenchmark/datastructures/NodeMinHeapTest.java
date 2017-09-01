@@ -117,4 +117,16 @@ public class NodeMinHeapTest {
         node.setHeuristic(heuristic);
         heap.insert(node);
     }
+
+    @Test
+    public void testGetMaxHeapSize() {
+        insertNode(1, 1, 1);
+        insertNode(2, 1, 1);
+        heap.delMin();
+        insertNode(3, 1, 1);
+        insertNode(4, 1, 1);
+        heap.delMin();
+        heap.delMin();
+        Assert.assertEquals(3, heap.getMaxHeapSize());
+    }
 }

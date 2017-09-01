@@ -6,8 +6,8 @@
 package pathfindingbenchmark.grid;
 
 /**
- * Kekoon laitettavien solmuolioiden toteutus. Solmujen keskinäinen järjestys
- * määräytyy ensin prioriteetin, sitten heuristisen arvon perusteella.
+ * Verkon solmun toteutus. Solmujen keskinäinen järjestys määräytyy ensin
+ * prioriteetin, sitten heuristisen arvon perusteella.
  *
  * @author thalvari
  */
@@ -26,7 +26,7 @@ public class Node implements Comparable<Node> {
      *
      * @param x Solmun x-koordinaatti.
      * @param y Solmun x-koordinaatti.
-     * @param symbol Koordinaatteja vastaava symboli kartalla.
+     * @param symbol Koordinaatteja vastaava merkki kartalla.
      */
     public Node(int x, int y, char symbol) {
         this.x = x;
@@ -84,16 +84,16 @@ public class Node implements Comparable<Node> {
     /**
      * Palauttaa edellisen solmun polulla lähtösolmuun.
      *
-     * @return Solmu.
+     * @return Edellinen solmu.
      */
     public Node getPrev() {
         return prev;
     }
 
     /**
-     * Palauttaa solmun koordinaatteja vastaavan symbolin kartalla.
+     * Palauttaa solmun merkin.
      *
-     * @return Symboli.
+     * @return Merkki.
      */
     public char getSymbol() {
         return symbol;
@@ -153,22 +153,34 @@ public class Node implements Comparable<Node> {
         this.prev = prev;
     }
 
-    public void setSymbol(char symbol) {
-        this.symbol = symbol;
-    }
-
+    /**
+     * Kertoo kuuluuko solmu suljettuun joukkoon.
+     *
+     * @return Totuusarvo.
+     */
     public boolean isClosed() {
         return symbol == 'c';
     }
 
+    /**
+     * Merkitsee solmun kuuluvaksi suljettuun joukkoon.
+     */
     public void setClosed() {
         symbol = 'c';
     }
 
+    /**
+     * Merkitsee solmun kuuluvaksi lyhimpään polkuun.
+     */
     public void setPath() {
         symbol = 'P';
     }
 
+    /**
+     * Alustaa solmun.
+     *
+     * @param origSymbol Solmua vastaava alkuperäinen merkki kartalla.
+     */
     public void init(char origSymbol) {
         dist = Integer.MAX_VALUE;
         heapIdx = 0;

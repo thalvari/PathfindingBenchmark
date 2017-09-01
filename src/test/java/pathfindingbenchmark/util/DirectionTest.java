@@ -5,13 +5,12 @@
  */
 package pathfindingbenchmark.util;
 
-import pathfindingbenchmark.grid.Node;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *
@@ -19,14 +18,12 @@ import pathfindingbenchmark.grid.Grid;
  */
 public class DirectionTest {
 
-    private Grid grid;
     private Direction dir1;
     private Direction dir2;
     private Direction dir3;
 
     @Before
     public void setUp() {
-        grid = new Grid("empty_4");
         dir1 = new Direction(new Node(0, 0, ' '), new Node(1, 0, ' '));
         dir2 = new Direction(0, -1);
         dir3 = new Direction(1, -1);

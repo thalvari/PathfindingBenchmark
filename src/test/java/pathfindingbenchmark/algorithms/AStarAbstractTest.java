@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,13 +39,13 @@ public class AStarAbstractTest {
     }
 
     @Test
-    public void testGetRoundedCost1() {
+    public void testGetRoundedDist1() {
         algo1.run(10, 10, 10, 6);
         assertEquals("4", getRoundedDist(algo1, 6));
     }
 
     @Test
-    public void testGetRoundedCost2() {
+    public void testGetRoundedDist2() {
         algo1.run(26, 15, 3, 11);
         assertEquals("24.6569", getRoundedDist(algo1, 6));
     }
@@ -77,17 +78,6 @@ public class AStarAbstractTest {
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
         assertTrue(out.contains("@TTTTTTT@@@@@@@@@@@@@@@@@@@@@@"));
-    }
-
-    private void printMarkedMap(AStarAbstract algo, Grid grid) {
-        algo.markPath();
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                System.out.print(grid.getNode(x, y).getSymbol());
-            }
-
-            System.out.println();
-        }
     }
 
     @Test
@@ -131,11 +121,42 @@ public class AStarAbstractTest {
         assertEquals(octileDist, algo3.heuristic(grid1.getNode(14, 4)));
     }
 
+    @Test
+    public void testMaxHeapSize() {
+        algo3.run(14, 4, 27, 9);
+        assertEquals(30, algo3.getMaxHeapSize());
+    }
+
+    @Test
+    public void testIsSolved1() {
+        algo3.run(14, 4, 27, 9);
+        assertTrue(algo3.isSolved());
+    }
+
+    @Test
+    public void testIsSolved2() {
+        Grid grid = new Grid("AR0011SR");
+        AStarAbstract algo = new Dijkstra(grid);
+        algo.run(50, 200, 75, 75);
+        assertFalse(algo.isSolved());
+    }
+
     private String getRoundedDist(AStarAbstract algo, int n) {
         return new BigDecimal(algo.getMinDist())
                 .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
                         new MathContext(n, RoundingMode.HALF_UP))
                 .stripTrailingZeros()
                 .toString();
+    }
+
+    private void printMarkedMap(AStarAbstract algo, Grid grid) {
+        algo.markPath();
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                System.out.print(grid.getNode(x, y).getSymbol());
+            }
+
+            System.out.println();
+        }
     }
 }

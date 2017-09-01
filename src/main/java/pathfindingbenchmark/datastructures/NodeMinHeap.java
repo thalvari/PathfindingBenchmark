@@ -123,7 +123,7 @@ public class NodeMinHeap {
     }
 
     /**
-     * Pienentää keossa olevan solmun etäisyyttä lähtösolmusta.
+     * Pienentää keossa olevan solmun etäisyyttä lähtösolmuun.
      *
      * @param node Solmu.
      * @param newDist Uusi etäisyys lähtösolmuun.
@@ -137,6 +137,11 @@ public class NodeMinHeap {
         }
     }
 
+    /**
+     * Palauttaa keon maksimikoon.
+     *
+     * @return Koko.
+     */
     public int getMaxHeapSize() {
         return maxHeapSize;
     }

@@ -50,4 +50,10 @@ public class MapReaderTest {
             }
         }
     }
+
+    @Test
+    public void testGetOrigSymbol() {
+        assertEquals('.', reader.getOrigSymbol(0, 0));
+        assertEquals('.', reader.getOrigSymbol(3, 3));
+    }
 }

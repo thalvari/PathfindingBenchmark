@@ -30,7 +30,7 @@ public class Grid {
     private final MapReader reader;
     private final int height;
     private final int width;
-    private Node[][] nodes;
+    private final Node[][] nodes;
 
     /**
      * Konstruktori käyttää kartanlukijaa verkon tallentamiseen.
@@ -77,11 +77,7 @@ public class Grid {
      * @return Totuusarvo.
      */
     public boolean isNodeInDirAdj(Node node, Direction dir) {
-        if (!isInBounds(node.getX() + dir.getX(), node.getY() + dir.getY())) {
-            return false;
-        }
-
-        return getNodeInDir(node, dir).isPassable()
+        return isNodeInDirPassable(node, dir)
                 && (!dir.isDiag()
                 || (getNode(node.getX(), node.getY() + dir.getY()).isPassable()
                 && getNode(node.getX() + dir.getX(), node.getY())
@@ -139,6 +135,11 @@ public class Grid {
                 + (DIAG_NODE_DIST - HOR_VER_NODE_DIST) * Math.min(xDif, yDif);
     }
 
+    /**
+     * Palauttaa kartan solmut sisältävän taulukon.
+     *
+     * @return Taulukko.
+     */
     public Node[][] getNodes() {
         return nodes;
     }

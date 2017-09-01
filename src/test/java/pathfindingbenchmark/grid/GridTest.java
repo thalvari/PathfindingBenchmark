@@ -7,6 +7,8 @@ package pathfindingbenchmark.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,7 @@ public class GridTest {
     public void testGrid1() {
         assertEquals(49, grid1.getHeight());
         assertEquals(49, grid1.getWidth());
+        assertNotNull(grid1.getNodes());
     }
 
     @Test
@@ -39,6 +42,7 @@ public class GridTest {
         Grid grid = new Grid("?");
         assertEquals(0, grid.getHeight());
         assertEquals(0, grid.getWidth());
+        assertNull(grid.getNodes());
         assertFalse(grid.isInBounds(0, 0));
     }
 
@@ -108,10 +112,20 @@ public class GridTest {
 
     @Test
     public void testInitNodes() {
-        grid2.getNode(0, 0).setSymbol('c');
-        grid2.getNode(3, 3).setSymbol('c');
+        grid2.getNode(0, 0).setClosed();
+        grid2.getNode(3, 3).setClosed();
         grid2.initNodes();
-        assertFalse(grid2.getNode(0, 0).getSymbol() == 'c');
-        assertFalse(grid2.getNode(3, 3).getSymbol() == 'c');
+        assertFalse(grid2.getNode(0, 0).isClosed());
+        assertFalse(grid2.getNode(3, 3).isClosed());
+    }
+
+    @Test
+    public void testIsInBounds() {
+        assertTrue(grid2.isInBounds(0, 0));
+        assertFalse(grid2.isInBounds(-1, 0));
+        assertFalse(grid2.isInBounds(0, -1));
+        assertTrue(grid2.isInBounds(3, 3));
+        assertFalse(grid2.isInBounds(4, 3));
+        assertFalse(grid2.isInBounds(3, 4));
     }
 }

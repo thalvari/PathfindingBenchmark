@@ -131,12 +131,20 @@ public class Wrapper {
     }
 
     public String getMinDist() {
-        return divideAndRound(algo.getMinDist(), Grid.HOR_VER_NODE_DIST);
+        if (algo.isSolved()) {
+            return divideAndRound(algo.getMinDist(), Grid.HOR_VER_NODE_DIST);
+        } else {
+            return "inf";
+        }
     }
 
     public String getAvgSuccListSize() {
-        return divideAndRound(algo.getSuccListTotalSize(),
-                closedNodeCount - 1);
+        int succListCount = closedNodeCount;
+        if (algo.isSolved()) {
+            succListCount--;
+        }
+
+        return divideAndRound(algo.getSuccListTotalSize(), succListCount);
     }
 
     public String getCpuTime() {

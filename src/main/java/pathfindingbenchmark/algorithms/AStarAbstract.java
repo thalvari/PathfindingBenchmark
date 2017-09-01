@@ -94,11 +94,7 @@ public abstract class AStarAbstract {
      * @return Heuristinen arvo.
      */
     protected int heuristic(Node node) {
-        int xDif = Math.abs(node.getX() - goal.getX());
-        int yDif = Math.abs(node.getY() - goal.getY());
-        return Grid.HOR_VER_NODE_DIST * Math.max(xDif, yDif)
-                + (Grid.DIAG_NODE_DIST - Grid.HOR_VER_NODE_DIST)
-                * Math.min(xDif, yDif);
+        return grid.getNodeDist(node, goal);
     }
 
     /**
@@ -128,10 +124,13 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa taulukkoesityksen kartasta, johon lyhin polku ja käsitellyt
-     * solmut on merkitty.
+     * Merkitsee lyhimmän polun verkkoon.
      */
     public void markPath() {
+        if (goal.getPrev() == null) {
+            return;
+        }
+
         Node prev = goal;
         while (prev != null) {
             prev.setPath();
@@ -166,7 +165,21 @@ public abstract class AStarAbstract {
         return succListTotalSize;
     }
 
+    /**
+     * Palauttaa keon maksimikoon.
+     *
+     * @return Koko.
+     */
     public int getMaxHeapSize() {
         return heap.getMaxHeapSize();
+    }
+
+    /**
+     * Kertoo onko lyhin polku löytynyt.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isSolved() {
+        return goal.getPrev() != null;
     }
 }
