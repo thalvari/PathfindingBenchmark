@@ -105,21 +105,9 @@ public class AStarAbstractTest {
     }
 
     @Test
-    public void testGetHeapDecKeyOperCount() {
+    public void testGetHeapOperCount() {
         algo3.run(14, 4, 27, 9);
-        assertEquals(9, algo3.getHeapDecKeyOperCount());
-    }
-
-    @Test
-    public void testGetHeapDelMinOperCount() {
-        algo1.run(14, 4, 27, 9);
-        assertEquals(165, algo1.getHeapDelMinOperCount());
-    }
-
-    @Test
-    public void testGetHeapInsertOperCount() {
-        algo1.run(14, 4, 27, 9);
-        assertEquals(168, algo1.getHeapInsertOperCount());
+        assertEquals(116, algo3.getHeapOperCount());
     }
 
     @Test

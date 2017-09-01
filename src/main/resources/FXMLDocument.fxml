@@ -75,8 +75,8 @@
                         <Label fx:id="lb3" />
                         <Label text="Avg succ list size:" />
                         <Label fx:id="lb4" />
-                        <Label text="Max heap size:" />
-                        <Label fx:id="lb11" />
+                        <Label text="Closed nodes:" />
+                        <Label fx:id="lb5" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" spacing="8">
@@ -84,11 +84,9 @@
                         <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                     <children>
-                        <Label text="Heap-inserts:" />
-                        <Label fx:id="lb5" />
-                        <Label text="Heap-del-mins:" />
+                        <Label text="Heap operations:" />
                         <Label fx:id="lb6" />
-                        <Label text="Heap-dec-keys:" />
+                        <Label text="Max heap size:" />
                         <Label fx:id="lb7" />
                     </children>
                 </HBox>

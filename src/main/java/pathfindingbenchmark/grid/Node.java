@@ -156,4 +156,24 @@ public class Node implements Comparable<Node> {
     public void setSymbol(char symbol) {
         this.symbol = symbol;
     }
+
+    public boolean isClosed() {
+        return symbol == 'c';
+    }
+
+    public void setClosed() {
+        symbol = 'c';
+    }
+
+    public void setPath() {
+        symbol = 'P';
+    }
+
+    public void init(char origSymbol) {
+        dist = Integer.MAX_VALUE;
+        heapIdx = 0;
+        heuristic = 0;
+        prev = null;
+        symbol = origSymbol;
+    }
 }

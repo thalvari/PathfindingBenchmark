@@ -178,11 +178,7 @@ public class Grid {
     public void initNodes() {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                nodes[y][x].setDist(Integer.MAX_VALUE);
-                nodes[y][x].setHeapIdx(0);
-                nodes[y][x].setHeuristic(0);
-                nodes[y][x].setPrev(null);
-                nodes[y][x].setSymbol(reader.getOrigSymbol(x, y));
+                nodes[y][x].init(reader.getOrigSymbol(x, y));
             }
         }
     }

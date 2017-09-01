@@ -31,10 +31,12 @@ public class Wrapper {
     private static final ThreadMXBean BEAN = ManagementFactory
             .getThreadMXBean();
 
-    private static long cpuTimeSum;
-    private static long usedMemorySum;
     private Grid grid;
     private AStarAbstract algo;
+    private long cpuTimeSum;
+    private long usedMemorySum;
+    private int passableNodeCount;
+    private int closedNodeCount;
 
     public AStarAbstract getAlgo() {
         return algo;
@@ -57,6 +59,7 @@ public class Wrapper {
     public void setGrid(String mapName) {
         grid = new Grid(mapName);
         algo = null;
+        calcPassableNodeCount();
     }
 
     public WritableImage getMapAsWritebleImage() {
@@ -101,14 +104,6 @@ public class Wrapper {
         }
     }
 
-    public int getHeight() {
-        return grid.getHeight();
-    }
-
-    public int getWidth() {
-        return grid.getWidth();
-    }
-
     public boolean checkCoordinates(int startX, int startY, int goalX,
             int goalY) {
 
@@ -131,6 +126,8 @@ public class Wrapper {
             usedMemorySum += RUNTIME.totalMemory() - RUNTIME.freeMemory()
                     - startUsedMemory;
         }
+
+        calcClosedNodeCount();
     }
 
     public String getMinDist() {
@@ -139,7 +136,7 @@ public class Wrapper {
 
     public String getAvgSuccListSize() {
         return divideAndRound(algo.getSuccListTotalSize(),
-                algo.getHeapDelMinOperCount() - 1);
+                closedNodeCount - 1);
     }
 
     public String getCpuTime() {
@@ -162,13 +159,19 @@ public class Wrapper {
                 .toString();
     }
 
-    /**
-     * Palauttaa läpikuljettavien solmujen määrän kartalla.
-     *
-     * @return Määrä.
-     */
-    public int getPassableNodeCount() {
-        int passableNodeCount = 0;
+    public void calcClosedNodeCount() {
+        closedNodeCount = 0;
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                if (grid.getNode(x, y).isClosed()) {
+                    closedNodeCount++;
+                }
+            }
+        }
+    }
+
+    public void calcPassableNodeCount() {
+        passableNodeCount = 0;
         for (int y = 0; y < grid.getHeight(); y++) {
             for (int x = 0; x < grid.getWidth(); x++) {
                 if (grid.getNode(x, y).isPassable()) {
@@ -176,11 +179,13 @@ public class Wrapper {
                 }
             }
         }
-
-        return passableNodeCount;
     }
 
-    public int getMaxHeapSize() {
-        return algo.getMaxHeapSize();
+    public String getClosedNodePercentage() {
+        return divideAndRound(100L * closedNodeCount, passableNodeCount) + " %";
+    }
+
+    public int getPassableNodeCount() {
+        return passableNodeCount;
     }
 }

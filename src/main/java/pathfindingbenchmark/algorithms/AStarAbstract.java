@@ -32,9 +32,7 @@ public abstract class AStarAbstract {
      */
     protected Node goal;
     private NodeMinHeap heap;
-    private int heapDecKeyOperCount;
-    private int heapDelMinOperCount;
-    private int heapInsertOperCount;
+    private int heapOperCount;
     private int succListTotalSize;
 
     /**
@@ -59,11 +57,11 @@ public abstract class AStarAbstract {
         init(startX, startY, goalX, goalY);
         start.setDist(0);
         heap.insert(start);
-        heapInsertOperCount++;
+        heapOperCount++;
         while (!heap.empty()) {
             Node node = heap.delMin();
-            heapDelMinOperCount++;
-            node.setSymbol('c');
+            heapOperCount++;
+            node.setClosed();
             if (node.equals(goal)) {
                 break;
             }
@@ -72,7 +70,7 @@ public abstract class AStarAbstract {
             succListTotalSize += succList.size();
             for (int i = 0; i < succList.size(); i++) {
                 Node succ = succList.get(i);
-                if (succ.getSymbol() != 'c') {
+                if (!succ.isClosed()) {
                     relax(node, succ);
                 }
             }
@@ -84,9 +82,7 @@ public abstract class AStarAbstract {
         start = grid.getNode(startX, startY);
         goal = grid.getNode(goalX, goalY);
         heap = new NodeMinHeap();
-        heapDecKeyOperCount = 0;
-        heapDelMinOperCount = 0;
-        heapInsertOperCount = 0;
+        heapOperCount = 0;
         succListTotalSize = 0;
     }
 
@@ -121,13 +117,12 @@ public abstract class AStarAbstract {
         if (newDist < succ.getDist()) {
             succ.setDist(newDist);
             succ.setPrev(node);
+            heapOperCount++;
             if (succ.getHeapIdx() != 0) {
                 heap.decKey(succ, newDist);
-                heapDecKeyOperCount++;
             } else {
                 succ.setHeuristic(heuristic(succ));
                 heap.insert(succ);
-                heapInsertOperCount++;
             }
         }
     }
@@ -139,7 +134,7 @@ public abstract class AStarAbstract {
     public void markPath() {
         Node prev = goal;
         while (prev != null) {
-            prev.setSymbol('P');
+            prev.setPath();
             prev = prev.getPrev();
         }
     }
@@ -154,30 +149,12 @@ public abstract class AStarAbstract {
     }
 
     /**
-     * Palauttaa keon dec-key-operaatioiden määrän.
+     * Palauttaa keko-operaatioiden määrän.
      *
      * @return Määrä.
      */
-    public int getHeapDecKeyOperCount() {
-        return heapDecKeyOperCount;
-    }
-
-    /**
-     * Palauttaa keon del-min-operaatioiden määrän.
-     *
-     * @return Määrä.
-     */
-    public int getHeapDelMinOperCount() {
-        return heapDelMinOperCount;
-    }
-
-    /**
-     * Palauttaa keon insert-operaatioiden määrän.
-     *
-     * @return Määrä.
-     */
-    public int getHeapInsertOperCount() {
-        return heapInsertOperCount;
+    public int getHeapOperCount() {
+        return heapOperCount;
     }
 
     /**

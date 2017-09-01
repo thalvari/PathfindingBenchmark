@@ -62,8 +62,6 @@ public class FXMLDocumentController implements Initializable {
     private Label lb9;
     @FXML
     private Label lb10;
-    @FXML
-    private Label lb11;
 
     public FXMLDocumentController() {
         wrapper = new Wrapper();
@@ -72,7 +70,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void cbHandler(Event event) {
         wrapper.setGrid((String) cb.getValue());
-        lb1.setText(wrapper.getWidth() + " x " + wrapper.getHeight());
+        lb1.setText(wrapper.getGrid().getWidth() + " x "
+                + wrapper.getGrid().getHeight());
+
         lb2.setText("" + wrapper.getPassableNodeCount());
         lb3.setText("");
         lb4.setText("");
@@ -82,7 +82,6 @@ public class FXMLDocumentController implements Initializable {
         lb8.setText("");
         lb9.setText("");
         lb10.setText("");
-        lb11.setText("");
         tf1.clear();
         tf2.clear();
         tf3.clear();
@@ -123,12 +122,11 @@ public class FXMLDocumentController implements Initializable {
     private void showResults() {
         lb3.setText(wrapper.getMinDist());
         lb4.setText(wrapper.getAvgSuccListSize());
-        lb5.setText("" + wrapper.getAlgo().getHeapInsertOperCount());
-        lb6.setText("" + wrapper.getAlgo().getHeapDelMinOperCount());
-        lb7.setText("" + wrapper.getAlgo().getHeapDecKeyOperCount());
+        lb5.setText("" + wrapper.getClosedNodePercentage());
+        lb6.setText("" + wrapper.getAlgo().getHeapOperCount());
+        lb7.setText("" + wrapper.getAlgo().getMaxHeapSize());
         lb8.setText(wrapper.getCpuTime());
         lb9.setText(wrapper.getUsedMemory());
-        lb11.setText("" + wrapper.getMaxHeapSize());
     }
 
     @Override
