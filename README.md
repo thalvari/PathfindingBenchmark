@@ -3,6 +3,7 @@ Ohjelma tuettujen reitinhakualgoritmien suorituskyvyn vertailuun.
 
 ### Dokumentaatio
 - [Javadoc](https://htmlpreview.github.io/?https://github.com/thalvari/PathfindingBenchmark/blob/master/dokumentaatio/javadoc/index.html)
+- [Käyttöohjeet](https://github.com/thalvari/PathfindingBenchmark/blob/master/dokumentaatio/käyttöohjeet.md)
 - [Määrittelydokumentti](https://github.com/thalvari/PathfindingBenchmark/blob/master/dokumentaatio/maarittelydokumentti.md)
 - [Testausdokumentti](https://github.com/thalvari/PathfindingBenchmark/blob/master/dokumentaatio/testausdokumentti.md)
 - [Toteutusdokumentti](https://github.com/thalvari/PathfindingBenchmark/blob/master/dokumentaatio/toteutusdokumentti.md)

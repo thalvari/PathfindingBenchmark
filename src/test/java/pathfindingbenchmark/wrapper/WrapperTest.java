@@ -40,7 +40,6 @@ public class WrapperTest {
         assertNull(wrapper.getAlgo());
         assertEquals(21, wrapper.getGrid().getHeight());
         assertEquals(30, wrapper.getGrid().getWidth());
-        assertEquals(168, wrapper.getPassableNodeCount());
     }
 
     @Test
@@ -87,7 +86,9 @@ public class WrapperTest {
         wrapper1.runAlgo(0, 0, 3, 3);
         WritableImage mapAsWritableImage = wrapper1.getMapAsWritableImage();
         PixelReader pixelReader = mapAsWritableImage.getPixelReader();
-        int height = Wrapper.IMAGE_SCALE_FACTOR * wrapper1.getGrid().getHeight();
+        int height = Wrapper.IMAGE_SCALE_FACTOR * wrapper1.getGrid()
+                .getHeight();
+
         int width = Wrapper.IMAGE_SCALE_FACTOR * wrapper1.getGrid().getWidth();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -105,50 +106,50 @@ public class WrapperTest {
     @Test
     public void testCheckCoordinates1() {
         Wrapper wrapper = new Wrapper();
-        assertFalse(wrapper.checkCoordinates(2, 0, 3, 0));
+        assertFalse(wrapper.checkStartGoal(2, 0, 3, 0));
     }
 
     @Test
     public void testCheckCoordinates2() {
-        assertFalse(wrapper2.checkCoordinates(-1, 0, 3, 0));
+        assertFalse(wrapper2.checkStartGoal(-1, 0, 3, 0));
     }
 
     @Test
     public void testCheckCoordinates3() {
-        assertFalse(wrapper2.checkCoordinates(2, 0, -1, 0));
+        assertFalse(wrapper2.checkStartGoal(2, 0, -1, 0));
     }
 
     @Test
     public void testCheckCoordinates4() {
-        assertFalse(wrapper2.checkCoordinates(0, 0, 3, 0));
+        assertFalse(wrapper2.checkStartGoal(0, 0, 3, 0));
     }
 
     @Test
     public void testCheckCoordinates5() {
-        assertFalse(wrapper2.checkCoordinates(2, 0, 1, 0));
+        assertFalse(wrapper2.checkStartGoal(2, 0, 1, 0));
     }
 
     @Test
     public void testCheckCoordinates6() {
-        assertTrue(wrapper2.checkCoordinates(2, 0, 4, 0));
+        assertTrue(wrapper2.checkStartGoal(2, 0, 4, 0));
     }
 
     @Test
     public void testGetMinDist1() {
         wrapper1.runAlgo(0, 0, 3, 3);
-        assertEquals("4.243", wrapper1.getMinDist());
+        assertEquals("4.243", wrapper1.getPathLen());
     }
 
     @Test
     public void testGetMinDist2() {
         wrapper2.runAlgo(2, 0, 6, 0);
-        assertEquals("inf", wrapper2.getMinDist());
+        assertEquals("inf", wrapper2.getPathLen());
     }
 
     @Test
     public void testGetAvgSuccListSize1() {
         wrapper2.runAlgo(2, 0, 4, 0);
-        assertEquals("1.5", wrapper2.getAvgSuccListSize());
+        assertEquals("1.500", wrapper2.getAvgSuccListSize());
     }
 
     @Test
@@ -160,7 +161,7 @@ public class WrapperTest {
     @Test
     public void testGetAvgSuccListSize3() {
         wrapper2.runAlgo(2, 0, 2, 0);
-        assertEquals("0", wrapper2.getAvgSuccListSize());
+        assertEquals("0.000", wrapper2.getAvgSuccListSize());
     }
 
     @Test
@@ -178,6 +179,6 @@ public class WrapperTest {
     @Test
     public void testGetClosedNodePercentage() {
         wrapper2.runAlgo(2, 0, 4, 0);
-        assertEquals("75 %", wrapper2.getClosedNodePercentage());
+        assertEquals("75.000 %", wrapper2.getClosedNodePercentage());
     }
 }

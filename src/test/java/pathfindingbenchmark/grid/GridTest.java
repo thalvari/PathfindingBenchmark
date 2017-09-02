@@ -35,6 +35,7 @@ public class GridTest {
         assertEquals(49, grid1.getHeight());
         assertEquals(49, grid1.getWidth());
         assertNotNull(grid1.getNodes());
+        assertEquals(2054, grid1.getPassableNodeCount());
     }
 
     @Test
@@ -44,6 +45,7 @@ public class GridTest {
         assertEquals(0, grid.getWidth());
         assertNull(grid.getNodes());
         assertFalse(grid.isInBounds(0, 0));
+        assertEquals(0, grid.getPassableNodeCount());
     }
 
     @Test
@@ -117,6 +119,7 @@ public class GridTest {
         grid2.initNodes();
         assertFalse(grid2.getNode(0, 0).isClosed());
         assertFalse(grid2.getNode(3, 3).isClosed());
+        assertEquals(16, grid2.getPassableNodeCount());
     }
 
     @Test

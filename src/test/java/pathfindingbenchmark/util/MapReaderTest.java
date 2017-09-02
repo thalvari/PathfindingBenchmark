@@ -30,12 +30,8 @@ public class MapReaderTest {
     }
 
     @Test
-    public void testGetHeight() {
+    public void testMapReader() {
         assertEquals(4, reader.getHeight());
-    }
-
-    @Test
-    public void testGetWidth() {
         assertEquals(4, reader.getWidth());
     }
 
@@ -55,5 +51,11 @@ public class MapReaderTest {
     public void testGetOrigSymbol() {
         assertEquals('.', reader.getOrigSymbol(0, 0));
         assertEquals('.', reader.getOrigSymbol(3, 3));
+    }
+
+    @Test
+    public void testPassableNodeCount() {
+        reader.initNodes();
+        assertEquals(16, reader.getPassableNodeCount());
     }
 }

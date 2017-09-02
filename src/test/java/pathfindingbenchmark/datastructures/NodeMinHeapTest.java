@@ -91,7 +91,7 @@ public class NodeMinHeapTest {
     }
 
     @Test
-    public void testDecKey() {
+    public void testDecKey1() {
         insertNode(1, 1, 3);
         insertNode(2, 2, 3);
         insertNode(3, 1, 1);
@@ -100,15 +100,41 @@ public class NodeMinHeapTest {
         insertNode(6, 1, 2);
         insertNode(7, 3, 1);
         insertNode(8, 8, 8);
-        Node node9 = new Node(9, 0, ' ');
-        node9.setDist(4);
-        node9.setHeuristic(2);
-        heap.insert(node9);
-        heap.decKey(node9, 1);
+        Node node = new Node(9, 0, ' ');
+        node.setDist(4);
+        node.setHeuristic(2);
+        heap.insert(node);
+        heap.decKey(node, 1);
         int[] expected = {3, 5, 9, 6, 7, 1, 2, 4, 8};
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals(expected[i], heap.delMin().getX());
         }
+    }
+
+    @Test
+    public void testDecKey2() {
+        Node node1 = new Node(1, 0, ' ');
+        node1.setDist(1);
+        heap.insert(node1);
+        Node node2 = new Node(2, 0, ' ');
+        node2.setDist(2);
+        heap.insert(node2);
+        heap.decKey(node2, 0);
+        Assert.assertEquals(2, heap.delMin().getX());
+        Assert.assertEquals(1, heap.delMin().getX());
+    }
+
+    @Test
+    public void testDecKey3() {
+        Node node1 = new Node(1, 0, ' ');
+        node1.setDist(1);
+        heap.insert(node1);
+        Node node2 = new Node(2, 0, ' ');
+        node2.setDist(2);
+        heap.insert(node2);
+        heap.decKey(node2, 1);
+        Assert.assertEquals(1, heap.delMin().getX());
+        Assert.assertEquals(2, heap.delMin().getX());
     }
 
     private void insertNode(int x, int dist, int heuristic) {

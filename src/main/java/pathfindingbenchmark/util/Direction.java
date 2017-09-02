@@ -39,6 +39,51 @@ public class Direction {
         y = calcY(node1, node2);
     }
 
+    /**
+     * Palauttaa edettävän suunnan vaaka-akselilla.
+     *
+     * @return Arvo.
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * Palauttaa edettävän suunnan pysty-akselilla.
+     *
+     * @return Arvo.
+     */
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * Kertoo edetäänkö viistoon.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isDiag() {
+        return x != 0 && y != 0;
+    }
+
+    /**
+     * Kertoo edetäänkö oikealle tai vasemmalle.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isHor() {
+        return x != 0 && y == 0;
+    }
+
+    /**
+     * Kertoo edetäänkö ylös tai alas.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isVer() {
+        return x == 0 && y != 0;
+    }
+
     private int calcX(Node node1, Node node2) {
         int xDif = node2.getX() - node1.getX();
         if (xDif == 0) {
@@ -55,50 +100,5 @@ public class Direction {
         } else {
             return yDif / Math.abs(yDif);
         }
-    }
-
-    /**
-     * Palauttaa suuntavektorin arvon vaaka-akselilla.
-     *
-     * @return Arvo.
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * Palauttaa suuntavektorin arvon pysty-akselilla.
-     *
-     * @return Arvo.
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * Kertoo osoittaako vektori viistoon.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isDiag() {
-        return x != 0 && y != 0;
-    }
-
-    /**
-     * Kertoo osoittaako vektori oikealle tai vasemmalle.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isHor() {
-        return x != 0 && y == 0;
-    }
-
-    /**
-     * Kertoo osoittaako vektori ylös tai alas.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isVer() {
-        return x == 0 && y != 0;
     }
 }

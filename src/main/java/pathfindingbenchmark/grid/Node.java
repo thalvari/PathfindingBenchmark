@@ -5,9 +5,11 @@
  */
 package pathfindingbenchmark.grid;
 
+import javafx.scene.paint.Color;
+
 /**
- * Verkon solmun toteutus. Solmujen keskinäinen järjestys määräytyy ensin
- * prioriteetin, sitten heuristisen arvon perusteella.
+ * Solmun toteutus. Solmujen keskinäinen järjestys määräytyy ensin prioriteetin,
+ * sitten heuristisen arvon perusteella.
  *
  * @author thalvari
  */
@@ -35,15 +37,6 @@ public class Node implements Comparable<Node> {
         dist = Integer.MAX_VALUE;
     }
 
-    /**
-     * Kertoo onko solmu läpikuljettavissa.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isPassable() {
-        return symbol != '@' && symbol != 'O' && symbol != 'T' && symbol != 'W';
-    }
-
     @Override
     public int compareTo(Node o) {
         if (getPriority() == o.getPriority()) {
@@ -53,14 +46,36 @@ public class Node implements Comparable<Node> {
         }
     }
 
-    private int getPriority() {
-        return dist + heuristic;
-    }
-
     @Override
     public boolean equals(Object obj) {
         Node o = (Node) obj;
         return x == o.x && y == o.y;
+    }
+
+    /**
+     * Palauttaa solmun symbolia vastaavan värin.
+     *
+     * @return Väri.
+     */
+    public Color getColor() {
+        switch (symbol) {
+            case '.':
+            case 'G':
+                return Color.GREY;
+            case '@':
+            case 'O':
+                return Color.BLACK;
+            case 'T':
+                return Color.GREEN;
+            case 'S':
+                return Color.PURPLE;
+            case 'W':
+                return Color.BLUE;
+            case 'c':
+                return Color.YELLOW;
+            default:
+                return Color.RED;
+        }
     }
 
     /**
@@ -82,7 +97,7 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Palauttaa edellisen solmun polulla lähtösolmuun.
+     * Palauttaa edellisen solmun polulla lähtösolmusta.
      *
      * @return Edellinen solmu.
      */
@@ -118,6 +133,44 @@ public class Node implements Comparable<Node> {
     }
 
     /**
+     * Alustaa solmun.
+     *
+     * @param origSymbol Solmua vastaava alkuperäinen merkki kartalla.
+     */
+    public void init(char origSymbol) {
+        dist = Integer.MAX_VALUE;
+        heapIdx = 0;
+        heuristic = 0;
+        prev = null;
+        symbol = origSymbol;
+    }
+
+    /**
+     * Kertoo kuuluuko solmu suljettuun joukkoon.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isClosed() {
+        return symbol == 'c';
+    }
+
+    /**
+     * Kertoo onko solmu läpikuljettavissa.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isPassable() {
+        return symbol != '@' && symbol != 'O' && symbol != 'T' && symbol != 'W';
+    }
+
+    /**
+     * Merkitsee solmun kuuluvaksi suljettuun joukkoon.
+     */
+    public void setClosed() {
+        symbol = 'c';
+    }
+
+    /**
      * Päivittää solmun etäisyyden lähtösolmusta.
      *
      * @param dist Uusi etäisyys.
@@ -145,31 +198,6 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Asettaa edeltävän solmun polulla lähtösolmuun.
-     *
-     * @param prev Solmu.
-     */
-    public void setPrev(Node prev) {
-        this.prev = prev;
-    }
-
-    /**
-     * Kertoo kuuluuko solmu suljettuun joukkoon.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isClosed() {
-        return symbol == 'c';
-    }
-
-    /**
-     * Merkitsee solmun kuuluvaksi suljettuun joukkoon.
-     */
-    public void setClosed() {
-        symbol = 'c';
-    }
-
-    /**
      * Merkitsee solmun kuuluvaksi lyhimpään polkuun.
      */
     public void setPath() {
@@ -177,15 +205,15 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Alustaa solmun.
+     * Asettaa edeltävän solmun polulla lähtösolmusta.
      *
-     * @param origSymbol Solmua vastaava alkuperäinen merkki kartalla.
+     * @param prev Solmu.
      */
-    public void init(char origSymbol) {
-        dist = Integer.MAX_VALUE;
-        heapIdx = 0;
-        heuristic = 0;
-        prev = null;
-        symbol = origSymbol;
+    public void setPrev(Node prev) {
+        this.prev = prev;
+    }
+
+    private int getPriority() {
+        return dist + heuristic;
     }
 }

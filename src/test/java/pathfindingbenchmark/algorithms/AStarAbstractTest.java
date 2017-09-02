@@ -42,13 +42,13 @@ public class AStarAbstractTest {
     @Test
     public void testGetRoundedDist1() {
         algo1.run(10, 10, 10, 6);
-        assertEquals("4", getRoundedDist(algo1, 6));
+        assertEquals("4", getRoundedPathLen(algo1, 6));
     }
 
     @Test
     public void testGetRoundedDist2() {
         algo1.run(26, 15, 3, 11);
-        assertEquals("24.6569", getRoundedDist(algo1, 6));
+        assertEquals("24.6569", getRoundedPathLen(algo1, 6));
     }
 
     @Test
@@ -92,13 +92,30 @@ public class AStarAbstractTest {
         assertTrue(out.contains("cPcc"));
         assertTrue(out.contains("ccPc"));
         assertTrue(out.contains("cccP"));
-        assertTrue(out.contains("\n"));
+    }
+
+    @Test
+    public void testGetMarkedMap3() {
+        Grid grid = new Grid("test");
+        AStarAbstract algo = new Dijkstra(grid);
+        algo.run(4, 0, 6, 0);
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outStream));
+        printMarkedMap(algo, grid);
+        String out = outStream.toString();
+        assertTrue(out.contains("@OcccTSW"));
     }
 
     @Test
     public void testGetHeapOperCount() {
         algo3.run(14, 4, 27, 9);
         assertEquals(116, algo3.getHeapOperCount());
+    }
+
+    @Test
+    public void testGetClosedNodeCount() {
+        algo1.run(14, 4, 27, 9);
+        assertEquals(165, algo1.getClosedNodeCount());
     }
 
     @Test
@@ -143,21 +160,29 @@ public class AStarAbstractTest {
     }
 
     @Test
+    public void testIsSolved3() {
+        algo3.run(14, 4, 14, 4);
+        assertTrue(algo3.isSolved());
+    }
+
+    @Test
     public void testInit() {
         algo2.run(0, 0, 3, 3);
+        assertEquals(16, algo2.getClosedNodeCount());
         assertEquals(32, algo2.getHeapOperCount());
         assertEquals(7, algo2.getMaxHeapSize());
         assertEquals(81, algo2.getSuccListTotalSize());
         algo2.run(3, 3, 0, 0);
         assertEquals(new Node(3, 3, ' '), algo2.start);
         assertEquals(new Node(0, 0, ' '), algo2.goal);
+        assertEquals(16, algo2.getClosedNodeCount());
         assertEquals(32, algo2.getHeapOperCount());
         assertEquals(7, algo2.getMaxHeapSize());
         assertEquals(81, algo2.getSuccListTotalSize());
     }
 
-    private String getRoundedDist(AStarAbstract algo, int n) {
-        return new BigDecimal(algo.getMinDist())
+    private String getRoundedPathLen(AStarAbstract algo, int n) {
+        return new BigDecimal(algo.getPathLen())
                 .divide(BigDecimal.valueOf(Grid.HOR_VER_NODE_DIST),
                         new MathContext(n, RoundingMode.HALF_UP))
                 .stripTrailingZeros()

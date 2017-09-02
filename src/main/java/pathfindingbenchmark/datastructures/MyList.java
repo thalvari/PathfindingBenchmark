@@ -35,12 +35,21 @@ public class MyList<T> {
         length++;
     }
 
-    private void checkIfFull() {
-        if (length == array.length) {
-            Object[] newArray = new Object[array.length * 2];
-            System.arraycopy(array, 0, newArray, 0, length);
-            array = newArray;
+    /**
+     * Tarkastaa sisältääkö lista tietyn alkion.
+     *
+     * @param t Alkio.
+     * @return Totuusarvo.
+     */
+    @SuppressWarnings("unchecked")
+    public boolean contains(T t) {
+        for (int i = 0; i < length; i++) {
+            if (t.equals((T) array[i])) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
@@ -63,20 +72,11 @@ public class MyList<T> {
         return length;
     }
 
-    /**
-     * Tarkastaa sisältääkö lista tietyn alkion.
-     *
-     * @param t Alkio.
-     * @return Totuusarvo.
-     */
-    @SuppressWarnings("unchecked")
-    public boolean contains(T t) {
-        for (int i = 0; i < length; i++) {
-            if (t.equals((T) array[i])) {
-                return true;
-            }
+    private void checkIfFull() {
+        if (length == array.length) {
+            Object[] newArray = new Object[array.length * 2];
+            System.arraycopy(array, 0, newArray, 0, length);
+            array = newArray;
         }
-
-        return false;
     }
 }

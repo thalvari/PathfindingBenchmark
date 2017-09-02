@@ -18,6 +18,11 @@ import pathfindingbenchmark.grid.Node;
 public abstract class AStarAbstract {
 
     /**
+     * Maalisolmun indeksi.
+     */
+    protected Node goal;
+
+    /**
      * Käytettävä verkko.
      */
     protected final Grid grid;
@@ -26,11 +31,7 @@ public abstract class AStarAbstract {
      * Lähtösolmun indeksi.
      */
     protected Node start;
-
-    /**
-     * Maalisolmun indeksi.
-     */
-    protected Node goal;
+    private int closedNodeCount;
     private NodeMinHeap heap;
     private int heapOperCount;
     private int succListTotalSize;
@@ -42,6 +43,75 @@ public abstract class AStarAbstract {
      */
     public AStarAbstract(Grid grid) {
         this.grid = grid;
+    }
+
+    /**
+     * Palauttaa suljettuun joukoon kuuluvien solmujen määrän.
+     *
+     * @return Määrä.
+     */
+    public int getClosedNodeCount() {
+        return closedNodeCount;
+    }
+
+    /**
+     * Palauttaa keko-operaatioiden määrän.
+     *
+     * @return Määrä.
+     */
+    public int getHeapOperCount() {
+        return heapOperCount;
+    }
+
+    /**
+     * Palauttaa keon maksimikoon.
+     *
+     * @return Koko.
+     */
+    public int getMaxHeapSize() {
+        return heap.getMaxHeapSize();
+    }
+
+    /**
+     * Palauttaa polun pituuden.
+     *
+     * @return Pituus.
+     */
+    public int getPathLen() {
+        return goal.getDist();
+    }
+
+    /**
+     * Palauttaa kaikkien tutkittujen seuraajalistojen kokojen summan.
+     *
+     * @return Summa.
+     */
+    public int getSuccListTotalSize() {
+        return succListTotalSize;
+    }
+
+    /**
+     * Kertoo onko lyhin polku löytynyt.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean isSolved() {
+        return start.equals(goal) || goal.getPrev() != null;
+    }
+
+    /**
+     * Merkitsee lyhimmän polun verkkoon.
+     */
+    public void markPath() {
+        if (!isSolved()) {
+            return;
+        }
+
+        Node prev = goal;
+        while (prev != null) {
+            prev.setPath();
+            prev = prev.getPrev();
+        }
     }
 
     /**
@@ -62,6 +132,7 @@ public abstract class AStarAbstract {
             Node node = heap.delMin();
             heapOperCount++;
             node.setClosed();
+            closedNodeCount++;
             if (node.equals(goal)) {
                 break;
             }
@@ -77,13 +148,15 @@ public abstract class AStarAbstract {
         }
     }
 
-    private void init(int startX, int startY, int goalX, int goalY) {
-        grid.initNodes();
-        start = grid.getNode(startX, startY);
-        goal = grid.getNode(goalX, goalY);
-        heap = new NodeMinHeap();
-        heapOperCount = 0;
-        succListTotalSize = 0;
+    /**
+     * Palauttaa listan naapurisolmuista tai JPS:n tapauksessa listan
+     * hyppysolmuista.
+     *
+     * @param node Solmu.
+     * @return Lista seuraajasolmuista.
+     */
+    protected MyList<Node> getSuccList(Node node) {
+        return grid.createAdjList(node);
     }
 
     /**
@@ -97,15 +170,14 @@ public abstract class AStarAbstract {
         return grid.getNodeDist(node, goal);
     }
 
-    /**
-     * Palauttaa listan naapurisolmuista tai JPS:n tapauksessa listan
-     * hyppysolmuista.
-     *
-     * @param node Solmu.
-     * @return Lista seuraajasolmuista.
-     */
-    protected MyList<Node> getSuccList(Node node) {
-        return grid.createAdjList(node);
+    private void init(int startX, int startY, int goalX, int goalY) {
+        grid.initNodes();
+        start = grid.getNode(startX, startY);
+        goal = grid.getNode(goalX, goalY);
+        heap = new NodeMinHeap();
+        closedNodeCount = 0;
+        heapOperCount = 0;
+        succListTotalSize = 0;
     }
 
     private void relax(Node node, Node succ) {
@@ -121,65 +193,5 @@ public abstract class AStarAbstract {
                 heap.insert(succ);
             }
         }
-    }
-
-    /**
-     * Merkitsee lyhimmän polun verkkoon.
-     */
-    public void markPath() {
-        if (goal.getPrev() == null && !start.equals(goal)) {
-            return;
-        }
-
-        Node prev = goal;
-        while (prev != null) {
-            prev.setPath();
-            prev = prev.getPrev();
-        }
-    }
-
-    /**
-     * Palauttaa solmun etäisyyden lähtösolmuun.
-     *
-     * @return Etäisyys.
-     */
-    public int getMinDist() {
-        return goal.getDist();
-    }
-
-    /**
-     * Palauttaa keko-operaatioiden määrän.
-     *
-     * @return Määrä.
-     */
-    public int getHeapOperCount() {
-        return heapOperCount;
-    }
-
-    /**
-     * Palauttaa kaikkien tutkittujen seuraajalistojen kokojen summan.
-     *
-     * @return Summa.
-     */
-    public int getSuccListTotalSize() {
-        return succListTotalSize;
-    }
-
-    /**
-     * Palauttaa keon maksimikoon.
-     *
-     * @return Koko.
-     */
-    public int getMaxHeapSize() {
-        return heap.getMaxHeapSize();
-    }
-
-    /**
-     * Kertoo onko lyhin polku löytynyt.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean isSolved() {
-        return goal.getPrev() != null;
     }
 }

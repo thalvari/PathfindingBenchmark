@@ -26,17 +26,6 @@ public class MapReader {
         MAP_NAMES = getMapNames();
     }
 
-    private MyList<String> mapData;
-
-    /**
-     * Konstruktori.
-     *
-     * @param mapName Kartan nimi.
-     */
-    public MapReader(String mapName) {
-        readMap(mapName);
-    }
-
     private static MyList<String> getMapNames() {
         MyList<String> mapNames = new MyList<>();
         try {
@@ -50,14 +39,16 @@ public class MapReader {
         return mapNames;
     }
 
-    private void readMap(String mapName) {
-        mapData = new MyList<>();
-        try {
-            Files.lines(Paths.get("maps/" + mapName + ".map"))
-                    .forEach(mapData::add);
-        } catch (Exception e) {
-            mapData = null;
-        }
+    private MyList<String> mapData;
+    private int passableNodeCount;
+
+    /**
+     * Konstruktori.
+     *
+     * @param mapName Kartan nimi.
+     */
+    public MapReader(String mapName) {
+        readMap(mapName);
     }
 
     /**
@@ -71,6 +62,26 @@ public class MapReader {
         } else {
             return Integer.parseInt(mapData.get(1).split(" ")[1]);
         }
+    }
+
+    /**
+     * Palauttaa kartan tietyissä koordinaateissa olevan merkin.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @return Merkki.
+     */
+    public char getOrigSymbol(int x, int y) {
+        return mapData.get(4 + y).charAt(x);
+    }
+
+    /**
+     * Palauttaa läpikuljettavien solmujen määrän.
+     *
+     * @return Määrä.
+     */
+    public int getPassableNodeCount() {
+        return passableNodeCount;
     }
 
     /**
@@ -89,7 +100,7 @@ public class MapReader {
     /**
      * Palauttaa kartan esityksen solmuja sisältävänä taulukkona.
      *
-     * @return Solmuja sisältävä taulukko.
+     * @return Taulukko.
      */
     public Node[][] initNodes() {
         if (mapData == null) {
@@ -100,20 +111,22 @@ public class MapReader {
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
                 nodes[y][x] = new Node(x, y, getOrigSymbol(x, y));
+                if (nodes[y][x].isPassable()) {
+                    passableNodeCount++;
+                }
             }
         }
 
         return nodes;
     }
 
-    /**
-     * Palauttaa kartan tietyissä koordinaateissa olevan merkin.
-     *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @return Merkki.
-     */
-    public char getOrigSymbol(int x, int y) {
-        return mapData.get(4 + y).charAt(x);
+    private void readMap(String mapName) {
+        mapData = new MyList<>();
+        try {
+            Files.lines(Paths.get("maps/" + mapName + ".map"))
+                    .forEach(mapData::add);
+        } catch (Exception e) {
+            mapData = null;
+        }
     }
 }

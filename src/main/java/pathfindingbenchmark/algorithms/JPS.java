@@ -42,25 +42,6 @@ public class JPS extends AStarAbstract {
         return succList;
     }
 
-    private MyList<Node> getPruned(Node node) {
-        Node parent = node.getPrev();
-        if (parent == null) {
-            return grid.createAdjList(node);
-        }
-
-        MyList<Node> pruned = new MyList<>();
-        Direction dir = new Direction(parent, node);
-        if (dir.isDiag()) { // Tarkistetaan karsimissäännöt viistoon edetessä.
-            checkPruningRulesWhenDirDiag(node, dir, pruned);
-        } else if (dir.isHor()) { // Karsimissäännöt vaakasuuntaan edetessä.
-            checkPruningRulesWhenDirHor(node, dir, pruned);
-        } else { // Karsimissäännöt pystysuuntaan edetessä.
-            checkPruningRulesWhenDirVer(node, dir, pruned);
-        }
-
-        return pruned;
-    }
-
     private void checkPruningRulesWhenDirDiag(Node node, Direction dir,
             MyList<Node> pruned) {
 
@@ -157,6 +138,25 @@ public class JPS extends AStarAbstract {
         if (grid.isNodeInDirAdj(node, forcedAdjDir4) && forcedPossibleRight) {
             pruned.add(grid.getNodeInDir(node, forcedAdjDir4));
         }
+    }
+
+    private MyList<Node> getPruned(Node node) {
+        Node parent = node.getPrev();
+        if (parent == null) {
+            return grid.createAdjList(node);
+        }
+
+        MyList<Node> pruned = new MyList<>();
+        Direction dir = new Direction(parent, node);
+        if (dir.isDiag()) { // Tarkistetaan karsimissäännöt viistoon edetessä.
+            checkPruningRulesWhenDirDiag(node, dir, pruned);
+        } else if (dir.isHor()) { // Karsimissäännöt vaakasuuntaan edetessä.
+            checkPruningRulesWhenDirHor(node, dir, pruned);
+        } else { // Karsimissäännöt pystysuuntaan edetessä.
+            checkPruningRulesWhenDirVer(node, dir, pruned);
+        }
+
+        return pruned;
     }
 
     private Node jump(Node parent, Direction dir) {

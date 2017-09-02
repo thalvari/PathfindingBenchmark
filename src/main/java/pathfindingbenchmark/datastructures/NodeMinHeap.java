@@ -15,15 +15,61 @@ import pathfindingbenchmark.grid.Node;
 public class NodeMinHeap {
 
     private static final int INIT_ARR_LEN = 8;
-    private Node[] nodes;
     private int length;
     private int maxHeapSize;
+    private Node[] nodes;
 
     /**
      * Konstruktori.
      */
     public NodeMinHeap() {
         nodes = new Node[INIT_ARR_LEN];
+    }
+
+    /**
+     * Pienentää keossa olevan solmun etäisyyttä lähtösolmuun.
+     *
+     * @param node Solmu.
+     * @param newDist Uusi etäisyys lähtösolmuun.
+     */
+    public void decKey(Node node, int newDist) {
+        node.setDist(newDist);
+        int idx = node.getHeapIdx();
+        while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
+            swap(idx, parent(idx));
+            idx = parent(idx);
+        }
+    }
+
+    /**
+     * Poistaa pienimmän prioriteetin solmun keosta.
+     *
+     * @return Solmu.
+     */
+    public Node delMin() {
+        Node node = getNode(1);
+        setNode(getNode(length), 1);
+        length--;
+        heapify(1);
+        return node;
+    }
+
+    /**
+     * Kertoo onko keko tyhjä.
+     *
+     * @return Totuusarvo.
+     */
+    public boolean empty() {
+        return length == 0;
+    }
+
+    /**
+     * Palauttaa keon maksimikoon.
+     *
+     * @return Koko.
+     */
+    public int getMaxHeapSize() {
+        return maxHeapSize;
     }
 
     /**
@@ -59,28 +105,6 @@ public class NodeMinHeap {
         return nodes[idx - 1];
     }
 
-    private int parent(int idx) {
-        return idx / 2;
-    }
-
-    private void setNode(Node node, int idx) {
-        node.setHeapIdx(idx);
-        nodes[idx - 1] = node;
-    }
-
-    /**
-     * Poistaa pienimmän prioriteetin solmun keosta.
-     *
-     * @return Solmu.
-     */
-    public Node delMin() {
-        Node node = getNode(1);
-        setNode(getNode(length), 1);
-        length--;
-        heapify(1);
-        return node;
-    }
-
     private void heapify(int idx) {
         int left = left(idx);
         int right = right(idx);
@@ -103,46 +127,22 @@ public class NodeMinHeap {
         return 2 * idx;
     }
 
+    private int parent(int idx) {
+        return idx / 2;
+    }
+
     private int right(int idx) {
         return 2 * idx + 1;
+    }
+
+    private void setNode(Node node, int idx) {
+        node.setHeapIdx(idx);
+        nodes[idx - 1] = node;
     }
 
     private void swap(int idx1, int idx2) {
         Node node = getNode(idx1);
         setNode(getNode(idx2), idx1);
         setNode(node, idx2);
-    }
-
-    /**
-     * Kertoo onko keko tyhjä.
-     *
-     * @return Totuusarvo.
-     */
-    public boolean empty() {
-        return length == 0;
-    }
-
-    /**
-     * Pienentää keossa olevan solmun etäisyyttä lähtösolmuun.
-     *
-     * @param node Solmu.
-     * @param newDist Uusi etäisyys lähtösolmuun.
-     */
-    public void decKey(Node node, int newDist) {
-        node.setDist(newDist);
-        int idx = node.getHeapIdx();
-        while (idx > 1 && node.compareTo(getNode(parent(idx))) < 0) {
-            swap(idx, parent(idx));
-            idx = parent(idx);
-        }
-    }
-
-    /**
-     * Palauttaa keon maksimikoon.
-     *
-     * @return Koko.
-     */
-    public int getMaxHeapSize() {
-        return maxHeapSize;
     }
 }

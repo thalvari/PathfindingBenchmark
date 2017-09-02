@@ -26,118 +26,124 @@ import pathfindingbenchmark.wrapper.Wrapper;
  */
 public class FXMLDocumentController implements Initializable {
 
-    private final Wrapper wrapper;
+    @FXML
+    private ToggleGroup algoToggleGroup;
+    @FXML
+    private Label avgSuccListSizeLabel;
+    @FXML
+    private Label closedNodeLabel;
+    @FXML
+    private Label cpuTimeLabel;
+    @FXML
+    private Label errorLabel;
+    @FXML
+    private TextField goalXTextField;
+    @FXML
+    private TextField goalYTextField;
+    @FXML
+    private Label heapOperLabel;
+    @FXML
+    private ComboBox mapComboBox;
+    @FXML
+    private ImageView mapImageView;
+    @FXML
+    private Label mapSizeLabel;
+    @FXML
+    private Label maxHeapSizeLabel;
+    @FXML
+    private Label nodeLabel;
+    @FXML
+    private Label pathLenLabel;
     @FXML
     private BorderPane root;
     @FXML
-    private ComboBox cb;
+    private TextField startXTextField;
     @FXML
-    private ToggleGroup tg;
+    private TextField startYTextField;
     @FXML
-    private ImageView iv;
-    @FXML
-    private TextField tf1;
-    @FXML
-    private TextField tf2;
-    @FXML
-    private TextField tf3;
-    @FXML
-    private TextField tf4;
-    @FXML
-    private Label lb1;
-    @FXML
-    private Label lb2;
-    @FXML
-    private Label lb3;
-    @FXML
-    private Label lb4;
-    @FXML
-    private Label lb5;
-    @FXML
-    private Label lb6;
-    @FXML
-    private Label lb7;
-    @FXML
-    private Label lb8;
-    @FXML
-    private Label lb9;
-    @FXML
-    private Label lb10;
+    private Label usedMemoryLabel;
+    private final Wrapper wrapper;
 
     public FXMLDocumentController() {
         wrapper = new Wrapper();
-    }
-
-    @FXML
-    private void cbHandler(Event event) {
-        wrapper.setGrid((String) cb.getValue());
-        lb1.setText(wrapper.getGrid().getWidth() + " x "
-                + wrapper.getGrid().getHeight());
-
-        lb2.setText("" + wrapper.getPassableNodeCount());
-        lb3.setText("");
-        lb4.setText("");
-        lb5.setText("");
-        lb6.setText("");
-        lb7.setText("");
-        lb8.setText("");
-        lb9.setText("");
-        lb10.setText("");
-        tf1.clear();
-        tf2.clear();
-        tf3.clear();
-        tf4.clear();
-        iv.setImage(wrapper.getMapAsWritableImage());
-        root.getScene().getWindow().sizeToScene();
-    }
-
-    @FXML
-    private void btHandler(Event event) {
-        int startX;
-        int startY;
-        int goalX;
-        int goalY;
-        try {
-            startX = Integer.parseInt(tf1.getText());
-            startY = Integer.parseInt(tf2.getText());
-            goalX = Integer.parseInt(tf3.getText());
-            goalY = Integer.parseInt(tf4.getText());
-        } catch (NumberFormatException e) {
-            lb10.setText("Out of bounds");
-            return;
-        }
-
-        if (!wrapper.checkCoordinates(startX, startY, goalX, goalY)) {
-            lb10.setText("Out of bounds");
-            return;
-        }
-
-        lb10.setText("");
-        wrapper.setAlgo(((RadioButton) tg.getSelectedToggle()).getText());
-        wrapper.runAlgo(startX, startY, goalX, goalY);
-        showResults();
-        iv.setImage(wrapper.getMapAsWritableImage());
-        root.getScene().getWindow().sizeToScene();
-    }
-
-    private void showResults() {
-        lb3.setText(wrapper.getMinDist());
-        lb4.setText(wrapper.getAvgSuccListSize());
-        lb5.setText("" + wrapper.getClosedNodePercentage());
-        lb6.setText("" + wrapper.getAlgo().getHeapOperCount());
-        lb7.setText("" + wrapper.getAlgo().getMaxHeapSize());
-        lb8.setText(wrapper.getCpuTime());
-        lb9.setText(wrapper.getUsedMemory());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (MapReader.MAP_NAMES != null) {
             for (int i = 0; i < MapReader.MAP_NAMES.size(); i++) {
-                cb.getItems().add(MapReader.MAP_NAMES.get(i));
+                mapComboBox.getItems().add(MapReader.MAP_NAMES.get(i));
             }
         } else {
-            lb10.setText("No maps");
+            errorLabel.setText("No maps");
         }
+    }
+
+    @FXML
+    private void handleFindButton(Event event) {
+        int startX;
+        int startY;
+        int goalX;
+        int goalY;
+        try {
+            startX = Integer.parseInt(startXTextField.getText());
+            startY = Integer.parseInt(startYTextField.getText());
+            goalX = Integer.parseInt(goalXTextField.getText());
+            goalY = Integer.parseInt(goalYTextField.getText());
+        } catch (NumberFormatException e) {
+            errorLabel.setText("Out of bounds");
+            return;
+        }
+
+        if (!wrapper.checkStartGoal(startX, startY, goalX, goalY)) {
+            errorLabel.setText("Out of bounds");
+            return;
+        }
+
+        errorLabel.setText("");
+        wrapper.setAlgo(((RadioButton) algoToggleGroup.getSelectedToggle())
+                .getText());
+
+        wrapper.runAlgo(startX, startY, goalX, goalY);
+        showResults();
+        root.getScene().getWindow().sizeToScene();
+    }
+
+    @FXML
+    private void handleMapComboBox(Event event) {
+        wrapper.setGrid((String) mapComboBox.getValue());
+        showNewMap();
+        root.getScene().getWindow().sizeToScene();
+    }
+
+    private void showNewMap() {
+        avgSuccListSizeLabel.setText("");
+        closedNodeLabel.setText("");
+        cpuTimeLabel.setText("");
+        errorLabel.setText("");
+        goalXTextField.clear();
+        goalYTextField.clear();
+        heapOperLabel.setText("");
+        mapImageView.setImage(wrapper.getMapAsWritableImage());
+        mapSizeLabel.setText(wrapper.getGrid().getWidth() + " x "
+                + wrapper.getGrid().getHeight());
+
+        maxHeapSizeLabel.setText("");
+        nodeLabel.setText("" + wrapper.getGrid().getPassableNodeCount());
+        pathLenLabel.setText("");
+        startXTextField.clear();
+        startYTextField.clear();
+        usedMemoryLabel.setText("");
+    }
+
+    private void showResults() {
+        avgSuccListSizeLabel.setText(wrapper.getAvgSuccListSize());
+        closedNodeLabel.setText("" + wrapper.getClosedNodePercentage());
+        cpuTimeLabel.setText(wrapper.getCpuTime());
+        heapOperLabel.setText("" + wrapper.getAlgo().getHeapOperCount());
+        mapImageView.setImage(wrapper.getMapAsWritableImage());
+        maxHeapSizeLabel.setText("" + wrapper.getAlgo().getMaxHeapSize());
+        pathLenLabel.setText(wrapper.getPathLen());
+        usedMemoryLabel.setText(wrapper.getUsedMemory());
     }
 }

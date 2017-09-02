@@ -17,23 +17,22 @@ import pathfindingbenchmark.util.MapReader;
 public class Grid {
 
     /**
-     * Kahden solmun etäisyys liikuttaessa pysty- tai vaakatasossa.
-     */
-    public static final int HOR_VER_NODE_DIST = 13860;
-
-    /**
-     * Kahden solmun etäisyys liikuttaessa viistoon. Tämän ja ylläolevan luvun
+     * Kahden solmun etäisyys liikuttaessa viistoon. Tämän ja allaolevan luvun
      * suhde on noin sqrt(2).
      */
     public static final int DIAG_NODE_DIST = 19601;
+    /**
+     * Kahden solmun etäisyys liikuttaessa pysty- tai vaakasuuntaan.
+     */
+    public static final int HOR_VER_NODE_DIST = 13860;
 
-    private final MapReader reader;
     private final int height;
-    private final int width;
     private final Node[][] nodes;
+    private final MapReader reader;
+    private final int width;
 
     /**
-     * Konstruktori käyttää kartanlukijaa verkon tallentamiseen.
+     * Konstruktori käyttää kartanlukijaa verkon lukemiseen taulukoksi.
      *
      * @param mapName Kartan nimi.
      */
@@ -48,7 +47,7 @@ public class Grid {
      * Palauttaa listan naapurisolmuista.
      *
      * @param node Solmu.
-     * @return Solmulista.
+     * @return Lista naapureista.
      */
     public MyList<Node> createAdjList(Node node) {
         MyList<Node> adjList = new MyList<>();
@@ -70,55 +69,23 @@ public class Grid {
     }
 
     /**
-     * Tarkastaa voidaanko annetussa suunnassa olevaan solmuun siirtyä.
+     * Palauttaa kartan korkeuden.
      *
-     * @param node Solmu.
-     * @param dir Suunta.
-     * @return Totuusarvo.
+     * @return Korkeus.
      */
-    public boolean isNodeInDirAdj(Node node, Direction dir) {
-        return isNodeInDirPassable(node, dir)
-                && (!dir.isDiag()
-                || (getNode(node.getX(), node.getY() + dir.getY()).isPassable()
-                && getNode(node.getX() + dir.getX(), node.getY())
-                .isPassable()));
+    public int getHeight() {
+        return height;
     }
 
     /**
-     * Tarkastaa sijaitsevatko annetut koordinaatit kartalla.
+     * Palauttaa tietyissä koordinaateissa sijaitsevan solmun.
      *
      * @param x X-koordinaatti.
      * @param y Y-koordinaatti.
-     * @return Totuusarvo.
+     * @return Solmu.
      */
-    public boolean isInBounds(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-
-    /**
-     * Palauttaa annetussa suunnassa olevan solmun.
-     *
-     * @param node Solmu.
-     * @param dir Suunta.
-     * @return Totuusarvo.
-     */
-    public Node getNodeInDir(Node node, Direction dir) {
-        return getNode(node.getX() + dir.getX(), node.getY() + dir.getY());
-    }
-
-    /**
-     * Kertoo onko annetussa suunnassa oleva solmu läpikuljettavissa.
-     *
-     * @param node Solmu.
-     * @param dir Suunta.
-     * @return Totuusarvo.
-     */
-    public boolean isNodeInDirPassable(Node node, Direction dir) {
-        if (!isInBounds(node.getX() + dir.getX(), node.getY() + dir.getY())) {
-            return false;
-        }
-
-        return getNodeInDir(node, dir).isPassable();
+    public Node getNode(int x, int y) {
+        return nodes[y][x];
     }
 
     /**
@@ -136,6 +103,17 @@ public class Grid {
     }
 
     /**
+     * Palauttaa annetussa suunnassa olevan solmun.
+     *
+     * @param node Solmu.
+     * @param dir Suunta.
+     * @return Solmu.
+     */
+    public Node getNodeInDir(Node node, Direction dir) {
+        return getNode(node.getX() + dir.getX(), node.getY() + dir.getY());
+    }
+
+    /**
      * Palauttaa kartan solmut sisältävän taulukon.
      *
      * @return Taulukko.
@@ -145,12 +123,12 @@ public class Grid {
     }
 
     /**
-     * Palauttaa kartan korkeuden.
+     * Palauttaa läpikuljettavien solmujen määrän kartalla.
      *
-     * @return Korkeus.
+     * @return Määrä.
      */
-    public int getHeight() {
-        return height;
+    public int getPassableNodeCount() {
+        return reader.getPassableNodeCount();
     }
 
     /**
@@ -163,17 +141,6 @@ public class Grid {
     }
 
     /**
-     * Palauttaa tietyissä koordinaateissa sijaitsevan solmun.
-     *
-     * @param x X-koordinaatti.
-     * @param y Y-koordinaatti.
-     * @return Solmu.
-     */
-    public Node getNode(int x, int y) {
-        return nodes[y][x];
-    }
-
-    /**
      * Alustaa kaikki verkon solmut.
      */
     public void initNodes() {
@@ -182,5 +149,46 @@ public class Grid {
                 nodes[y][x].init(reader.getOrigSymbol(x, y));
             }
         }
+    }
+
+    /**
+     * Tarkastaa sijaitsevatko annetut koordinaatit kartalla.
+     *
+     * @param x X-koordinaatti.
+     * @param y Y-koordinaatti.
+     * @return Totuusarvo.
+     */
+    public boolean isInBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    /**
+     * Tarkastaa voidaanko annetussa suunnassa olevaan solmuun siirtyä.
+     *
+     * @param node Solmu.
+     * @param dir Suunta.
+     * @return Totuusarvo.
+     */
+    public boolean isNodeInDirAdj(Node node, Direction dir) {
+        return isNodeInDirPassable(node, dir)
+                && (!dir.isDiag()
+                || (getNode(node.getX(), node.getY() + dir.getY()).isPassable()
+                && getNode(node.getX() + dir.getX(), node.getY())
+                        .isPassable()));
+    }
+
+    /**
+     * Kertoo onko annetussa suunnassa oleva solmu läpikuljettavissa.
+     *
+     * @param node Solmu.
+     * @param dir Suunta.
+     * @return Totuusarvo.
+     */
+    public boolean isNodeInDirPassable(Node node, Direction dir) {
+        if (!isInBounds(node.getX() + dir.getX(), node.getY() + dir.getY())) {
+            return false;
+        }
+
+        return getNodeInDir(node, dir).isPassable();
     }
 }

@@ -24,23 +24,23 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
             <fx:define>
-                <ToggleGroup fx:id="tg" />
+                <ToggleGroup fx:id="algoToggleGroup" />
             </fx:define>
             <children>
                 <Label text="Map:" />
-                <ComboBox fx:id="cb" onAction="#cbHandler"
+                <ComboBox fx:id="mapComboBox" onAction="#handleMapComboBox"
                           promptText="Select" />
                 <RadioButton selected="true" text="Dijkstra"
-                             toggleGroup="$tg" />
-                <RadioButton text="AStar" toggleGroup="$tg" />
-                <RadioButton text="JPS" toggleGroup="$tg" />
-                <Button onAction="#btHandler" text="Find path" />
-                <Label text="" fx:id="lb10" />
+                             toggleGroup="$algoToggleGroup" />
+                <RadioButton text="AStar" toggleGroup="$algoToggleGroup" />
+                <RadioButton text="JPS" toggleGroup="$algoToggleGroup" />
+                <Button onAction="#handleFindButton" text="Find path" />
+                <Label text="" fx:id="errorLabel" />
             </children>
         </HBox>
     </top>
     <center>
-        <ImageView fx:id="iv" fitHeight="512" fitWidth="512"
+        <ImageView fx:id="mapImageView" fitHeight="512" fitWidth="512"
                    preserveRatio="true" />
     </center>
     <left>
@@ -50,16 +50,29 @@
             </padding>
             <children>
                 <Label text="startX:" />
-                <TextField fx:id="tf1" prefColumnCount="2" />
+                <TextField fx:id="startXTextField" prefColumnCount="2" />
                 <Label text="startY:" />
-                <TextField fx:id="tf2" prefColumnCount="2" />
+                <TextField fx:id="startYTextField" prefColumnCount="2" />
                 <Label text="goalX:" />
-                <TextField fx:id="tf3" prefColumnCount="2" />
+                <TextField fx:id="goalXTextField" prefColumnCount="2" />
                 <Label text="goalY:" />
-                <TextField fx:id="tf4" prefColumnCount="2" />
+                <TextField fx:id="goalYTextField" prefColumnCount="2" />
             </children>
         </VBox>
     </left>
+    <right>
+        <VBox alignment="CENTER" spacing="8">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+            <children>
+                <Label text="Map size:" />
+                <Label fx:id="mapSizeLabel" />
+                <Label text="Nodes:" />
+                <Label fx:id="nodeLabel" />
+            </children>
+        </VBox>
+    </right>
     <bottom>
         <VBox alignment="CENTER">
             <padding>
@@ -72,11 +85,11 @@
                     </padding>
                     <children>
                         <Label text="Path length:" />
-                        <Label fx:id="lb3" />
+                        <Label fx:id="pathLenLabel" />
                         <Label text="Avg succ list size:" />
-                        <Label fx:id="lb4" />
+                        <Label fx:id="avgSuccListSizeLabel" />
                         <Label text="Closed nodes:" />
-                        <Label fx:id="lb5" />
+                        <Label fx:id="closedNodeLabel" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" spacing="8">
@@ -85,9 +98,9 @@
                     </padding>
                     <children>
                         <Label text="Heap operations:" />
-                        <Label fx:id="lb6" />
+                        <Label fx:id="heapOperLabel" />
                         <Label text="Max heap size:" />
-                        <Label fx:id="lb7" />
+                        <Label fx:id="maxHeapSizeLabel" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" spacing="8">
@@ -96,25 +109,12 @@
                     </padding>
                     <children>
                         <Label text="CPU time:" />
-                        <Label fx:id="lb8" />
+                        <Label fx:id="cpuTimeLabel" />
                         <Label text="Used memory:" />
-                        <Label fx:id="lb9" />
+                        <Label fx:id="usedMemoryLabel" />
                     </children>
                 </HBox>
             </children>
         </VBox>
     </bottom>
-    <right>
-        <VBox alignment="CENTER" spacing="8">
-            <padding>
-                <Insets bottom="10" left="10" right="10" top="10" />
-            </padding>
-            <children>
-                <Label text="Size:" />
-                <Label fx:id="lb1" />
-                <Label text="Nodes:" />
-                <Label fx:id="lb2" />
-            </children>
-        </VBox>
-    </right>
 </BorderPane>
