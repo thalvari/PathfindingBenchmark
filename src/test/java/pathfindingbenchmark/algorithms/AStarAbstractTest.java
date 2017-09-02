@@ -1,6 +1,6 @@
 /*
- * To change this license header, chccse License Headers in Project Properties.
- * To change this template file, chccse Tccls | Templates
+ * To change this lioense header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package pathfindingbenchmark.algorithms;
@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import pathfindingbenchmark.grid.Grid;
+import pathfindingbenchmark.grid.Node;
 
 /**
  *
@@ -139,6 +140,20 @@ public class AStarAbstractTest {
         AStarAbstract algo = new Dijkstra(grid);
         algo.run(50, 200, 75, 75);
         assertFalse(algo.isSolved());
+    }
+
+    @Test
+    public void testInit() {
+        algo2.run(0, 0, 3, 3);
+        assertEquals(32, algo2.getHeapOperCount());
+        assertEquals(7, algo2.getMaxHeapSize());
+        assertEquals(81, algo2.getSuccListTotalSize());
+        algo2.run(3, 3, 0, 0);
+        assertEquals(new Node(3, 3, ' '), algo2.start);
+        assertEquals(new Node(0, 0, ' '), algo2.goal);
+        assertEquals(32, algo2.getHeapOperCount());
+        assertEquals(7, algo2.getMaxHeapSize());
+        assertEquals(81, algo2.getSuccListTotalSize());
     }
 
     private String getRoundedDist(AStarAbstract algo, int n) {

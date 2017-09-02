@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pathfindingbenchmark.gui;
+package pathfindingbenchmark.wrapper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
@@ -20,12 +20,16 @@ import pathfindingbenchmark.grid.Grid;
 import pathfindingbenchmark.grid.Node;
 
 /**
+ * Luokka muuttaa algoritmiluokkien tulokset GUI:n haluamaan muotoon.
  *
  * @author thalvari
  */
 public class Wrapper {
 
-    private static final int IMAGE_SCALE_FACTOR = 6;
+    /**
+     * Yliskaalauskerroin kartan kuvalle, jotta rajat pysyvät terävinä.
+     */
+    protected static final int IMAGE_SCALE_FACTOR = 8;
     private static final int SAMPLE_SIZE = 25;
     private static final Runtime RUNTIME = Runtime.getRuntime();
     private static final ThreadMXBean BEAN = ManagementFactory
@@ -38,14 +42,29 @@ public class Wrapper {
     private int passableNodeCount;
     private int closedNodeCount;
 
+    /**
+     * Palauttaa algoritmin.
+     *
+     * @return Algoritmi.
+     */
     public AStarAbstract getAlgo() {
         return algo;
     }
 
+    /**
+     * Palauttaa verkon.
+     *
+     * @return Verkko.
+     */
     public Grid getGrid() {
         return grid;
     }
 
+    /**
+     * Asettaa algoritmin.
+     *
+     * @param algoName Algoritmin nimi.
+     */
     public void setAlgo(String algoName) {
         if (algoName.equals("Dijkstra")) {
             algo = new Dijkstra(grid);
@@ -56,24 +75,33 @@ public class Wrapper {
         }
     }
 
+    /**
+     * Asettaa verkon.
+     *
+     * @param mapName Kartan nimi.
+     */
     public void setGrid(String mapName) {
         grid = new Grid(mapName);
         algo = null;
         calcPassableNodeCount();
     }
 
-    public WritableImage getMapAsWritebleImage() {
-        WritableImage writableImage = new WritableImage(
-                IMAGE_SCALE_FACTOR * grid.getWidth(),
-                IMAGE_SCALE_FACTOR * grid.getHeight());
-
+    /**
+     * Palauttaa kartan kuvaoliona.
+     *
+     * @return Kuvaolio.
+     */
+    public WritableImage getMapAsWritableImage() {
+        int height = IMAGE_SCALE_FACTOR * grid.getHeight();
+        int width = IMAGE_SCALE_FACTOR * grid.getWidth();
+        WritableImage writableImage = new WritableImage(width, height);
         PixelWriter pixelWriter = writableImage.getPixelWriter();
         if (algo != null) {
             algo.markPath();
         }
 
-        for (int y = 0; y < IMAGE_SCALE_FACTOR * grid.getHeight(); y++) {
-            for (int x = 0; x < IMAGE_SCALE_FACTOR * grid.getWidth(); x++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 pixelWriter.setColor(x, y, getColor(grid.getNode(
                         x / IMAGE_SCALE_FACTOR,
                         y / IMAGE_SCALE_FACTOR)));
@@ -104,6 +132,15 @@ public class Wrapper {
         }
     }
 
+    /**
+     * Tarkastaa lähtö- ja maalikoordinaatit.
+     *
+     * @param startX Lähtösolmun x-koordinaatti.
+     * @param startY Lähtösolmun y-koordinaatti.
+     * @param goalX Maalisolmun x-koordinaatti.
+     * @param goalY Maalisolmun y-koordinaatti.
+     * @return Totuusarvo.
+     */
     public boolean checkCoordinates(int startX, int startY, int goalX,
             int goalY) {
 
@@ -114,6 +151,14 @@ public class Wrapper {
                 && grid.getNode(goalX, goalY).isPassable();
     }
 
+    /**
+     * Ajaa algoritmin.
+     *
+     * @param startX Lähtösolmun x-koordinaatti.
+     * @param startY Lähtösolmun y-koordinaatti.
+     * @param goalX Maalisolmun x-koordinaatti.
+     * @param goalY Maalisolmun y-koordinaatti.
+     */
     public void runAlgo(int startX, int startY, int goalX, int goalY) {
         cpuTimeSum = 0;
         usedMemorySum = 0;
@@ -130,6 +175,11 @@ public class Wrapper {
         calcClosedNodeCount();
     }
 
+    /**
+     * Palauttaa pienimmän etäisyyden lähdöstä maaliin.
+     *
+     * @return Etäisyys.
+     */
     public String getMinDist() {
         if (algo.isSolved()) {
             return divideAndRound(algo.getMinDist(), Grid.HOR_VER_NODE_DIST);
@@ -138,6 +188,11 @@ public class Wrapper {
         }
     }
 
+    /**
+     * Palauttaa seuraajalistojen keskimääräisen koon.
+     *
+     * @return Koko.
+     */
     public String getAvgSuccListSize() {
         int succListCount = closedNodeCount;
         if (algo.isSolved()) {
@@ -147,10 +202,20 @@ public class Wrapper {
         return divideAndRound(algo.getSuccListTotalSize(), succListCount);
     }
 
+    /**
+     * Palauttaa suoritusajan.
+     *
+     * @return Suoritusaika.
+     */
     public String getCpuTime() {
         return divideAndRound(cpuTimeSum, SAMPLE_SIZE * 1000000L) + " ms";
     }
 
+    /**
+     * Palauttaa käytetyn muistin.
+     *
+     * @return Käytetty muisti.
+     */
     public String getUsedMemory() {
         return divideAndRound(usedMemorySum, SAMPLE_SIZE * 1024L * 1024L)
                 + " MB";
@@ -167,7 +232,7 @@ public class Wrapper {
                 .toString();
     }
 
-    public void calcClosedNodeCount() {
+    private void calcClosedNodeCount() {
         closedNodeCount = 0;
         for (int y = 0; y < grid.getHeight(); y++) {
             for (int x = 0; x < grid.getWidth(); x++) {
@@ -178,7 +243,7 @@ public class Wrapper {
         }
     }
 
-    public void calcPassableNodeCount() {
+    private void calcPassableNodeCount() {
         passableNodeCount = 0;
         for (int y = 0; y < grid.getHeight(); y++) {
             for (int x = 0; x < grid.getWidth(); x++) {
@@ -189,10 +254,20 @@ public class Wrapper {
         }
     }
 
+    /**
+     * Palauttaa suljettujen solmujen osuuden prosentteina.
+     *
+     * @return Osuus.
+     */
     public String getClosedNodePercentage() {
         return divideAndRound(100L * closedNodeCount, passableNodeCount) + " %";
     }
 
+    /**
+     * Palauttaa läpikuljettavien solmujen määrän.
+     *
+     * @return Määrä.
+     */
     public int getPassableNodeCount() {
         return passableNodeCount;
     }

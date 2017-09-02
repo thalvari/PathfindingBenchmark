@@ -18,6 +18,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import pathfindingbenchmark.util.MapReader;
+import pathfindingbenchmark.wrapper.Wrapper;
 
 /**
  *
@@ -86,7 +87,7 @@ public class FXMLDocumentController implements Initializable {
         tf2.clear();
         tf3.clear();
         tf4.clear();
-        iv.setImage(wrapper.getMapAsWritebleImage());
+        iv.setImage(wrapper.getMapAsWritableImage());
         root.getScene().getWindow().sizeToScene();
     }
 
@@ -115,7 +116,7 @@ public class FXMLDocumentController implements Initializable {
         wrapper.setAlgo(((RadioButton) tg.getSelectedToggle()).getText());
         wrapper.runAlgo(startX, startY, goalX, goalY);
         showResults();
-        iv.setImage(wrapper.getMapAsWritebleImage());
+        iv.setImage(wrapper.getMapAsWritableImage());
         root.getScene().getWindow().sizeToScene();
     }
 

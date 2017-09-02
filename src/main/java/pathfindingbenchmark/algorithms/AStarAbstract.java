@@ -127,7 +127,7 @@ public abstract class AStarAbstract {
      * Merkitsee lyhimmän polun verkkoon.
      */
     public void markPath() {
-        if (goal.getPrev() == null) {
+        if (goal.getPrev() == null && !start.equals(goal)) {
             return;
         }
 
