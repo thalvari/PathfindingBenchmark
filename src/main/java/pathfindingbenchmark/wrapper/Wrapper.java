@@ -33,7 +33,7 @@ public class Wrapper {
             .getThreadMXBean();
 
     private static final Runtime RUNTIME = Runtime.getRuntime();
-    private static final int SAMPLE_SIZE = 100;
+    private static final int SAMPLE_SIZE = 35;
 
     private AStarAbstract algo;
     private long cpuTimeSum;

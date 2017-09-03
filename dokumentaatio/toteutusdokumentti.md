@@ -33,9 +33,15 @@ Koska pahimmillaan kaikki solmut voivat olla keossa samanaikaisesti, on kaikkien
 
 ## Suorituskykyvertailu
 ### Yleistä
-Algoritmeja vertaillaan graafisen käyttöliittymän avulla, joka näyttää käyttäjälle mm. kuvan kartasta, johon on merkitty suljettuun joukkoon kuuluvat, eli keosta poistetut, solmut keltaisella sekä lyhimmällä polulla olevat solmut punaisella. Muut tavat vertailla algoritmien suorituskykyä on toteutettu erilaisten laskureiden ja järjestelmäkutsujen avulla. Nämä ovat lyhimmän polun pituus, keosta poistettuja solmuja laajennettaessa luodun vieras- tai seuraajalistan keskimääräinen koko, suljettuun joukkoon kuuluvien solmujen osuus, keko-operaatioiden määrä, keon maksimikoko, suoritusaika sekä käytetyn muistin määrä. Kaikki edellä mainitut näkyvät käyttäjälle GUI:ssa.
+Algoritmeja vertaillaan graafisen käyttöliittymän avulla, joka näyttää käyttäjälle mm. kuvan kartasta, johon on merkitty suljettuun joukkoon kuuluvat, eli keosta poistetut, solmut keltaisella sekä lyhimmällä polulla olevat solmut punaisella. Muut tavat vertailla algoritmien suorituskykyä on toteutettu erilaisten laskureiden ja järjestelmäkutsujen avulla. Nämä ovat lyhimmän polun pituus, keosta poistettuja solmuja laajennettaessa luodun vieras- tai seuraajalistan keskimääräinen koko, suljettuun joukkoon kuuluvien solmujen osuus, keko-operaatioiden määrä, keon maksimikoko, suoritusaika sekä käytetyn muistin määrä. Kaksi viimeksi mainittua lasketaan keskiarvona koodissa määritellyn näytekoon mukaisesta määrästä peräkkäisiä algoritmin suoriuksia. Kaikki edellä mainitut näkyvät käyttäjälle GUI:ssa.
 
 ### Havainnot
+Allaolevassa tyypillisessä kartassa, jossa lyhin polku maaliin ei ole alusta saakka täysin selvä, Dijkstra etenee tasaiseti joka suuntaan löytäen maalin, kun lähes kaikki solmut ovat jo suljetussa joukossa. A* taas lähtee etenemään suoraan kohti maalia. Kun se havaitsee että suora reitti ei käy se lähtee etsimään vaihtoehtoisia polkuja. Kun se jossain vaiheessa saa vainun maalista, loppu on varsin suoraviivainen. Tämä näkyy suljetun joukon huomattavasti pienemmästä koosta. JPS puolestaan yrittää samalla lailla ensin suorinta reittiä, kunnes sekin löytää oikean reitin. Avoimella kartalla se kuitenkin pystyy hyppimään pitkälle, jolloin sen tarvitsee läpikäydä vain alle prosentti kaikista solmuista, mikä tekee siitä nopean.
+
+![AR0011SR-dijkstra](AR0011SR-dijkstra.png)
+![AR0011SR-astar](AR0011SR-astar.png)
+![AR0011SR-jps](AR0011SR-jps.png)
+
 Todella tiheissä labyrinteissä A*:n heuristiikasta ei ole mitään hyötyä, joten sen suoritusaika on Dijkstran tasoa, mutta JPS osaa hyppiä suorien osuuksien yli.
 
 ![maze512-1-0-dijkstra](maze512-1-0-dijkstra.png)
