@@ -1,7 +1,7 @@
 # Toteutusdokumentti
 
 ## Luokkakaavio
-![Luokkakaavio](luokkakaavio.png)
+![Luokkakaavio](kuvat/luokkakaavio.png)
 
 ## Ohjelman rakenne
 Ohjelma on jaettu kuuteen pakkaukseen, jotka ovat algoritmit, tietorakenteet, verkko, käyttöliittymä, muut apuluokat ja wrapperi. Toteutuksessa on pyritty siihen, että kullakin algoritmilla olisi suorituksensa alussa mahdollisimman tasapuoliset lähtökohdat, joten niillä on käytettävissä vain verkkoa esittävä taulukko solmu-olioita. Käytössä ei ole esim. valmiiksi tehtyjä vieruslistoja, koska tällöin ei juurikaan vieruslistoja hyödyntävä JPS olisi alakynnessä.
@@ -38,27 +38,27 @@ Algoritmeja vertaillaan graafisen käyttöliittymän avulla, joka näyttää kä
 ### Havainnot
 Allaolevassa tyypillisessä kartassa, jossa lyhin polku maaliin ei ole alusta saakka täysin selvä, Dijkstra etenee tasaiseti joka suuntaan löytäen maalin, kun lähes kaikki solmut ovat jo suljetussa joukossa. A* taas lähtee etenemään suoraan kohti maalia. Kun se havaitsee että suora reitti ei käy se lähtee etsimään vaihtoehtoisia polkuja. Kun se jossain vaiheessa saa vainun maalista, loppu on varsin suoraviivainen. Tämä näkyy suljetun joukon huomattavasti pienemmästä koosta. JPS puolestaan yrittää samalla lailla ensin suorinta reittiä, kunnes sekin löytää oikean reitin. Avoimella kartalla se kuitenkin pystyy hyppimään pitkälle, jolloin sen tarvitsee läpikäydä vain alle prosentti kaikista solmuista, mikä tekee siitä nopean.
 
-![AR0011SR-dijkstra](AR0011SR-dijkstra.png)
-![AR0011SR-astar](AR0011SR-astar.png)
-![AR0011SR-jps](AR0011SR-jps.png)
+![AR0011SR-dijkstra](kuvat/AR0011SR-dijkstra.png)
+![AR0011SR-astar](kuvat/AR0011SR-astar.png)
+![AR0011SR-jps](kuvat/AR0011SR-jps.png)
 
 Todella tiheissä labyrinteissä A*:n heuristiikasta ei ole mitään hyötyä, joten sen suoritusaika on Dijkstran tasoa, mutta JPS osaa hyppiä suorien osuuksien yli.
 
-![maze512-1-0-dijkstra](maze512-1-0-dijkstra.png)
-![maze512-1-0-astar](maze512-1-0-astar.png)
-![maze512-1-0-jps](maze512-1-0-jps.png)
+![maze512-1-0-dijkstra](kuvat/maze512-1-0-dijkstra.png)
+![maze512-1-0-astar](kuvat/maze512-1-0-astar.png)
+![maze512-1-0-jps](kuvat/maze512-1-0-jps.png)
 
 Ei niin tiheissä labyrinteissä sama juttu Dijkstran ja A*:n osalta. Nyt heuristiikan hyödyttömyys näkyy erityisesti keko-operaatioiden määrässä ja keon maksimikoossa, koska A* joutuu etsimään vaihtoehtoisia reittejä. JPS taas pystyy hyppimään paljon pidempiä matkoja ja on todella nopea.
 
-![maze512-32-0-dijkstra](maze512-32-0-dijkstra.png)
-![maze512-32-0-astar](maze512-32-0-astar.png)
-![maze512-32-0-jps](maze512-32-0-jps.png)
+![maze512-32-0-dijkstra](kuvat/maze512-32-0-dijkstra.png)
+![maze512-32-0-astar](kuvat/maze512-32-0-astar.png)
+![maze512-32-0-jps](kuvat/maze512-32-0-jps.png)
 
 Kartoissa, jotka ovat tyypiltään tiheitä metsiä, heuristiikka nousee arvoonsa ja A* on todella hyvä. Toisaalta nyt JPS ei pysty karsimaan niin monia naapureita koska sen sääntöihin sopivia hyppysolmuja löytyy joka puolelta. Tämä näkyy JPS:n seuraajalistan koon korkeassa keskiarvossa sekä keko-operaatioiden tavallista korkeammassa määrässä suhteessa A*:een. Tämä taitaa olla yksi JPS:n pahimpia tapauksia.
 
-![random512-10-0-dijkstra](random512-10-0-dijkstra.png)
-![random512-10-0-astar](random512-10-0-astar.png)
-![random512-10-0-jps](random512-10-0-jps.png)
+![random512-10-0-dijkstra](kuvat/random512-10-0-dijkstra.png)
+![random512-10-0-astar](kuvat/random512-10-0-astar.png)
+![random512-10-0-jps](kuvat/random512-10-0-jps.png)
 
 
 ## Lähteet
