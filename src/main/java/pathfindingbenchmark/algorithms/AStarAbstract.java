@@ -120,8 +120,8 @@ public abstract class AStarAbstract {
      *
      * @param startX Lähtösolmun x-koordinaatti.
      * @param startY Lähtösolmun y-koordinaatti.
-     * @param goalY Maalisolmun x-koordinaatti.
-     * @param goalX Maalisolmun y-koordinaatti.
+     * @param goalX Maalisolmun x-koordinaatti.
+     * @param goalY Maalisolmun y-koordinaatti.
      */
     public void run(int startX, int startY, int goalX, int goalY) {
         init(startX, startY, goalX, goalY);

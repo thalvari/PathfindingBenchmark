@@ -14,29 +14,30 @@ Grid-pakkaus sisältää samannimisen luokan Grid, joka puolestaan sisältää t
 
 GUI-pakkaus sisältää graafisen käyttöliittymän. Itse graafisten komponenttien määrittely löytyy resurssitiedostosta FXMLDocument, mutta mm. tapahtumankäsittelijät sijaitsevat FXMLDocumentController-luokassa.
 
-Util-pakkauksen sisältöön kuuluu JPS:n käyttämä Direction, joka kertoo mihin suuntaan ollaan etenemässä, sekä kartanlukijaa kuvaava luokka MapReader. MapReader osaa mm. kertoa mitä karttoja on tarjolla maps/ -kansiossa. Se osaa myös luoda yksittäisestä map-tiedostosta solmuolioita sisältävän taulukon.
+Util-pakkauksen sisältöön kuuluu JPS:n käyttämä Direction, joka kertoo mihin suuntaan ollaan etenemässä, sekä kartanlukijaa kuvaava luokka MapReader. MapReader osaa mm. kertoa mitä karttoja on tarjolla maps-kansiossa. Se osaa myös luoda yksittäisestä map-tiedostosta solmuolioita sisältävän taulukon.
 
 Wrapper pakkauksessa sijaitsee käyttöliittymän aktiivisesti hyödyntämä Wrapper-luokka, joka muokkaa algoritmiluokkien tarjoamat tulokset käyttäjälle esitettävään muotoon.
 
 ## Vaativuusanalyysi ja vaativuuksien vertailu
-Listan osalta get ja size operaatiot ovat vakioaikaisia ja add-operaatio tasoitetusti vakioaikainen, koska raskas yksiulotteisen taulukon koon kasvatusoperaatio suoritetaan harvoin. Contains-operaation aikavaativuus on lineaarinen, koska se käy tarvittaessa koko taulukon läpi. Listan tilavaativuus on lineaarinen lukujen määrän suhteen.
+Listan osalta get ja size operaatiot ovat vakioaikaisia ja add-operaatio tasoitetusti vakioaikainen, koska raskas yksiulotteisen taulukon koon kasvatusoperaatio suoritetaan vain harvoin. Contains-operaation aikavaativuus on lineaarinen, koska se käy tarvittaessa koko taulukon läpi. Listan tilavaativuus on lineaarinen lukujen määrän suhteen.
 
 Koska minimikeko on toteutettu binäärikekona, on sen kaikkien toteutettujen operaatioiden aikavaativuus O(log |V|). Koska keon koko riippuu sen sisältämien solmujen määrästä on sen tilavaativuus O(|V|).
 
-Koska toteutettu Dijkstran algoritmi lisää ja poistaa jokaisen solmun keosta korkeintaan kerran, suorittaa heap-dec-key-operaation korkeintaan kaarien määrän verran ja keko-operaatioilla on edellä mainittu logaritminen aikavaativuus, niin Dijkstran toteutuksen aikavaativuus on O((|E| + |V|) log |V|).
+Koska toteutettu Dijkstran algoritmi lisää ja poistaa jokaisen solmun keosta korkeintaan kerran, suorittaa heap-dec-key-operaation korkeintaan kaarien määrän verran ja keko-operaatioilla on edellämainittu logaritminen aikavaativuus, niin Dijkstran toteutuksen aikavaativuus on O((|E| + |V|) log |V|).
 
 Koska A*:n toteutus eroaa Dijkstrasta vain valkioaikaisen heuristisen funktion osalta, on sen toteutuksen aikavaativuus myös O((|E| + |V|) log |V|).
 
-JPS:n toteutus eroaa A*:n toteutuksesta vain funktion, joka etsii keosta poistetulle solmulle sen seuraajat, osalta. JPS:n toteutuksessa tämän funktion ensimmäinen osa käy läpi kerran kaikki maksimissaan kahdeksan vierussolmua karsien, joten tämä vaihe on vakioaikainen. Toinen vaihe on rekursiivinen, alkaen jokaisesta jäljelle jääneestä naapurista, edetään suoraa pitkin kunnes vastaan tulee sääntöjen mukainen hyppysolmu, maalisolmu tai seinä. Hyppysolmun löytäminen merkitsee sitä, ettei ylihypättyjä solmuja koskaan edes laiteta kekoon. Jos taas törmätään seinään, naapurille ei löydy seuraajaa, joten se hylätään. Jos ajatellaan JPS:n pahimmaksi tapaukseksi tilanne, jossa JPS onnistuu karsimaan mahdollisimman pienen määrän naapureita, myös rekursioiden jäädessä mahdollisimman lyhyeksi, jotta juuri minkään solmun yli ei voida hypätä. Kartta olisi siis jonkinlainen tiheä "metsä". Tällöin keon koko ja keko-operaatioiden määrä olisi mahdollisimman suuri, mutta todella lyhyiden rekursioiden takia seuraajalistan etsiminen olisi vakioaikaista, jolloin JPS:n aikavativuus olisi yhä A*:n O((|E| + |V|) log |V|).
+JPS:n toteutus eroaa A*:n toteutuksesta vain funktion, joka etsii keosta poistetulle solmulle sen seuraajat, osalta. JPS:n toteutuksessa tämän funktion ensimmäinen osa käy läpi kerran kaikki maksimissaan kahdeksan vierussolmua karsien, joten tämä vaihe on vakioaikainen. Toinen vaihe on rekursiivinen, missä alkaen jokaisesta jäljelle jääneestä naapurista, edetään suoraa pitkin kunnes vastaan tulee sääntöjen mukainen hyppysolmu, maalisolmu tai seinä. Hyppysolmun löytäminen merkitsee sitä, ettei ylihypättyjä solmuja koskaan edes laiteta kekoon. Jos taas törmätään seinään, naapurille ei löydy seuraajaa, joten se hylätään. Ajatellaan JPS:n pahimmaksi tapaukseksi tilanne, jossa JPS onnistuu karsimaan mahdollisimman pienen määrän naapureita, myös rekursioiden jäädessä mahdollisimman lyhyeksi, jotta juuri minkään solmun yli ei voida hypätä. Kartta olisi siis jonkinlainen tiheä "metsä". Tällöin keon koko ja keko-operaatioiden määrä olisi mahdollisimman suuri, mutta todella lyhyiden rekursioiden takia seuraajalistan etsiminen olisi vakioaikaista, jolloin JPS:n aikavativuus olisi yhä A*:n O((|E| + |V|) log |V|).
 
 Koska pahimmillaan kaikki solmut voivat olla keossa samanaikaisesti, on kaikkien kolmen algoritmin tilavaativuus O(|V|).
 
 ## Suorituskykyvertailu
+
 ### Yleistä
 Algoritmeja vertaillaan graafisen käyttöliittymän avulla, joka näyttää käyttäjälle mm. kuvan kartasta, johon on merkitty suljettuun joukkoon kuuluvat, eli keosta poistetut, solmut keltaisella sekä lyhimmällä polulla olevat solmut punaisella. Muut tavat vertailla algoritmien suorituskykyä on toteutettu erilaisten laskureiden ja järjestelmäkutsujen avulla. Nämä ovat lyhimmän polun pituus, keosta poistettuja solmuja laajennettaessa luodun vieras- tai seuraajalistan keskimääräinen koko, suljettuun joukkoon kuuluvien solmujen osuus, keko-operaatioiden määrä, keon maksimikoko, suoritusaika sekä käytetyn muistin määrä. Kaksi viimeksi mainittua lasketaan keskiarvona koodissa määritellyn näytekoon mukaisesta määrästä peräkkäisiä algoritmin suoriuksia. Kaikki edellä mainitut näkyvät käyttäjälle GUI:ssa.
 
 ### Havainnot
-Allaolevassa tyypillisessä kartassa, jossa lyhin polku maaliin ei ole alusta saakka täysin selvä, Dijkstra etenee tasaiseti joka suuntaan löytäen maalin, kun lähes kaikki solmut ovat jo suljetussa joukossa. A* taas lähtee etenemään suoraan kohti maalia. Kun se havaitsee että suora reitti ei käy se lähtee etsimään vaihtoehtoisia polkuja. Kun se jossain vaiheessa saa vainun maalista, loppu on varsin suoraviivainen. Tämä näkyy suljetun joukon huomattavasti pienemmästä koosta. JPS puolestaan yrittää samalla lailla ensin suorinta reittiä, kunnes sekin löytää oikean reitin. Avoimella kartalla se kuitenkin pystyy hyppimään pitkälle, jolloin sen tarvitsee läpikäydä vain alle prosentti kaikista solmuista, mikä tekee siitä nopean.
+Allaolevassa tyypillisessä kartassa, jossa lyhin polku maaliin ei ole alusta saakka täysin selvä, Dijkstra etenee tasaiseti joka suuntaan löytäen maalin, kun lähes kaikki solmut ovat jo suljetussa joukossa. A* taas lähtee etenemään suoraan kohti maalia. Kun se havaitsee että suora reitti ei käy, se lähtee etsimään vaihtoehtoisia polkuja. Kun se jossain vaiheessa saa vainun maalista, loppu on varsin suoraviivainen. Tämä näkyy suljetun joukon huomattavasti pienemmässä koossa. JPS puolestaan yrittää samalla lailla ensin suorinta reittiä, kunnes sekin löytää oikean reitin. Avoimella kartalla se kuitenkin pystyy hyppimään pitkälle, jolloin sen tarvitsee läpikäydä vain alle prosentti kaikista solmuista, mikä tekee siitä nopean.
 
 ![AR0011SR-dijkstra](kuvat/AR0011SR-dijkstra.png)
 ![AR0011SR-astar](kuvat/AR0011SR-astar.png)
@@ -60,6 +61,8 @@ Kartoissa, jotka ovat tyypiltään tiheitä metsiä, heuristiikka nousee arvoons
 ![random512-10-0-astar](kuvat/random512-10-0-astar.png)
 ![random512-10-0-jps](kuvat/random512-10-0-jps.png)
 
+## Puutteet
+Lähtö- ja maalisolmujen valitseminen klikkaamalla karttaa käyttöliittymässä.
 
 ## Lähteet
 - TiRa-kurssin materiaali.
